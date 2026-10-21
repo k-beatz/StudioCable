@@ -6,7 +6,7 @@ import { useProjectStore, type Selection } from './projectStore';
 const cache = new WeakMap<Project, Map<string, Trace | undefined>>();
 
 export function traceForSelection(project: Project, selection: Selection): Trace | undefined {
-  if (!selection) return undefined;
+  if (!selection || selection.kind === 'group') return undefined;
   const key = JSON.stringify(selection);
   let byKey = cache.get(project);
   if (!byKey) cache.set(project, (byKey = new Map()));

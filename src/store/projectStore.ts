@@ -14,6 +14,7 @@ export type Selection =
   | { kind: 'device' | 'cable'; id: string }
   /** `id` is the device, `portId` the port on it. */
   | { kind: 'port'; id: string; portId: string }
+  | { kind: 'group'; id: string }
   | null;
 
 interface ProjectState {
@@ -23,6 +24,13 @@ interface ProjectState {
   selection: Selection;
   /** Highlight the signal flow of the current selection. */
   showSignalFlow: boolean;
+  /** View preferences (remembered on this device, not stored in the project). */
+  cableStyle: CableStyle;
+  dimUnusedPorts: boolean;
+  /** Pedalboard currently opened in the diagram (null = main level). */
+  openBoardId: string | null;
+  /** System (group) currently highlighted. */
+  focusGroupId: string | null;
 
   /** Apply an edit and record it for undo. */
   apply: (fn: (p: Project) => Project) => void;
@@ -31,6 +39,34 @@ interface ProjectState {
   replaceProject: (p: Project) => void;
   select: (s: Selection) => void;
   setShowSignalFlow: (on: boolean) => void;
+  setCableStyle: (style: CableStyle) => void;
+  setDimUnusedPorts: (on: boolean) => void;
+  openBoard: (id: string | null) => void;
+  setFocusGroup: (id: string | null) => void;
+}
+
+export type CableStyle = 'orthogonal' | 'curved';
+
+const PREFS_KEY = 'studiocable.prefs';
+
+function loadPrefs(): { cableStyle: CableStyle; dimUnusedPorts: boolean } {
+  try {
+    const raw = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}');
+    return {
+      cableStyle: raw.cableStyle === 'curved' ? 'curved' : 'orthogonal',
+      dimUnusedPorts: raw.dimUnusedPorts === true,
+    };
+  } catch {
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false };
+  }
+}
+
+function savePrefs(prefs: { cableStyle: CableStyle; dimUnusedPorts: boolean }) {
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+  } catch {
+    // Not critical.
+  }
 }
 
 function loadAutosave(): Project {
@@ -49,6 +85,9 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   future: [],
   selection: null,
   showSignalFlow: true,
+  ...loadPrefs(),
+  openBoardId: null,
+  focusGroupId: null,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -68,9 +107,19 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     if (!next) return;
     set({ project: next, past: [...past, project], future: future.slice(1) });
   },
-  replaceProject: (p) => set({ project: p, past: [], future: [], selection: null }),
+  replaceProject: (p) => set({ project: p, past: [], future: [], selection: null, openBoardId: null, focusGroupId: null }),
   select: (selection) => set({ selection }),
   setShowSignalFlow: (showSignalFlow) => set({ showSignalFlow }),
+  setCableStyle: (cableStyle) => {
+    set({ cableStyle });
+    savePrefs({ cableStyle, dimUnusedPorts: get().dimUnusedPorts });
+  },
+  setDimUnusedPorts: (dimUnusedPorts) => {
+    set({ dimUnusedPorts });
+    savePrefs({ cableStyle: get().cableStyle, dimUnusedPorts });
+  },
+  openBoard: (openBoardId) => set({ openBoardId, selection: null }),
+  setFocusGroup: (focusGroupId) => set({ focusGroupId }),
 }));
 
 // Autosave (debounced) whenever the project changes.

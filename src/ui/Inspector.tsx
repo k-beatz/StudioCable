@@ -1,6 +1,21 @@
 import { newId } from '../core/ids';
-import type { Cable, DeviceInstance, Project } from '../core/model';
-import { addDevice, describeEnd, removeCable, removeDevice, updateCable, updateDevice } from '../core/project';
+import type { Cable, DeviceInstance, Group, Project } from '../core/model';
+import type { Trace } from '../core/signalFlow';
+import {
+  addDevice,
+  addGroup,
+  childrenOf,
+  describeEnd,
+  GROUP_COLORS,
+  removeCable,
+  removeDevice,
+  removeGroup,
+  setContainer,
+  toggleInGroup,
+  updateCable,
+  updateDevice,
+  updateGroup,
+} from '../core/project';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
@@ -16,9 +31,13 @@ export function Inspector() {
   const select = useProjectStore((s) => s.select);
   if (!selection) return null;
 
-  const device = selection.kind !== 'cable' ? project.devices.find((d) => d.id === selection.id) : undefined;
+  const device =
+    selection.kind === 'device' || selection.kind === 'port'
+      ? project.devices.find((d) => d.id === selection.id)
+      : undefined;
   const cable = selection.kind === 'cable' ? project.cables.find((c) => c.id === selection.id) : undefined;
-  if (!device && !cable) return null;
+  const group = selection.kind === 'group' ? project.groups.find((g) => g.id === selection.id) : undefined;
+  if (!device && !cable && !group) return null;
   const trace = traceForSelection(project, selection);
 
   return (
@@ -31,8 +50,14 @@ export function Inspector() {
         <PortInspector device={device} portId={selection.portId} project={project} />
       )}
       {cable && <CableInspector cable={cable} project={project} />}
-      <h3>{t('flow.title')}</h3>
-      <SignalPathList trace={trace} />
+      {group && <GroupInspector group={group} project={project} />}
+      {!group && (
+        <>
+          <h3>{t('flow.title')}</h3>
+          <SignalPathList trace={trace} />
+          {trace && trace.cableIds.size > 0 && <SaveTraceAsSystem trace={trace} project={project} />}
+        </>
+      )}
     </aside>
   );
 }
@@ -93,6 +118,8 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           </ul>
         </div>
       )}
+      <BoardField device={device} project={project} />
+      <SystemsField kind="device" id={device.id} project={project} />
       <h3>{t('device.ports')}</h3>
       <ul className="port-list">
         {template?.ports.map((p) => (
@@ -229,6 +256,7 @@ function CableInspector({ cable, project }: { cable: Cable; project: Project }) 
         <span>{t('cable.note')}</span>
         <CommitInput value={cable.note ?? ''} onCommit={(v) => update({ note: v || undefined })} />
       </label>
+      <SystemsField kind="cable" id={cable.id} project={project} />
       <div className="button-row">
         <button onClick={() => update({ ends: [cable.ends[1], cable.ends[0]] })}>{t('cable.swap')}</button>
         <button
@@ -239,6 +267,193 @@ function CableInspector({ cable, project }: { cable: Cable; project: Project }) 
           }}
         >
           {t('cable.delete')}
+        </button>
+      </div>
+    </>
+  );
+}
+
+// ---------- Systems and boards ----------
+
+/** Chips for the systems a device or cable belongs to, plus "add to system". */
+function SystemsField({ kind, id, project }: { kind: 'device' | 'cable'; id: string; project: Project }) {
+  const apply = useProjectStore((s) => s.apply);
+  const member = (g: Group) => (kind === 'device' ? g.deviceIds : g.cableIds).includes(id);
+  const inGroups = project.groups.filter(member);
+  const others = project.groups.filter((g) => !member(g));
+  return (
+    <div className="field">
+      <span>{t('systems.title')}</span>
+      <div className="chip-row">
+        {inGroups.map((g) => (
+          <span key={g.id} className="system-tag" style={{ borderColor: g.color }}>
+            <span className="system-chip__dot" style={{ background: g.color }} />
+            {g.name}
+            <button
+              className="system-tag__remove"
+              aria-label={t('systems.removeFrom', { name: g.name })}
+              onClick={() => apply((p) => toggleInGroup(p, g.id, kind, id))}
+            >
+              ✕
+            </button>
+          </span>
+        ))}
+        <select
+          className="compact-select"
+          value=""
+          aria-label={t('systems.addTo')}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === '__new') {
+              apply((p) => addGroup(p, t('systems.defaultName', { n: p.groups.length + 1 }), kind === 'device' ? { deviceIds: [id] } : { cableIds: [id] }).project);
+            } else if (v) {
+              apply((p) => toggleInGroup(p, v, kind, id));
+            }
+          }}
+        >
+          <option value="">{t('systems.addTo')}</option>
+          {others.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.name}
+            </option>
+          ))}
+          <option value="__new">{t('systems.new')}</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+/** For pedals: which board they sit on. For boards: open it and list what is on it. */
+function BoardField({ device, project }: { device: DeviceInstance; project: Project }) {
+  const apply = useProjectStore((s) => s.apply);
+  const openBoard = useProjectStore((s) => s.openBoard);
+  const isBoard = project.templates[device.templateId]?.category === 'pedalboard';
+  if (isBoard) {
+    const children = childrenOf(project, device.id);
+    return (
+      <div className="field">
+        <span>{t('board.contents')}</span>
+        <div>{children.length ? children.map((c) => c.name).join(', ') : '—'}</div>
+        <button className="primary" onClick={() => openBoard(device.id)}>
+          {t('board.openFull')}
+        </button>
+      </div>
+    );
+  }
+  const boards = project.devices.filter((d) => project.templates[d.templateId]?.category === 'pedalboard');
+  if (boards.length === 0) return null;
+  return (
+    <label className="field">
+      <span>{t('board.placeOn')}</span>
+      <select
+        value={device.containerId ?? ''}
+        onChange={(e) => apply((p) => setContainer(p, device.id, e.target.value || null))}
+      >
+        <option value="">{t('board.mainLevel')}</option>
+        {boards.map((b) => (
+          <option key={b.id} value={b.id}>
+            {b.name}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+/**
+ * Saves the traced signal path as a system. Devices that are only partly on
+ * the path (e.g. a mixer with other cables) are marked through their cables only.
+ */
+function SaveTraceAsSystem({ trace, project }: { trace: Trace; project: Project }) {
+  const apply = useProjectStore((s) => s.apply);
+  const selection = useProjectStore((s) => s.selection);
+  const setFocusGroup = useProjectStore((s) => s.setFocusGroup);
+  const select = useProjectStore((s) => s.select);
+  const save = () => {
+    const fullyOnPath = [...trace.deviceIds].filter((deviceId) =>
+      project.cables.every((c) =>
+        c.ends.every((e) => e.deviceId !== deviceId || trace.portKeys.has(`${e.deviceId}/${e.portId}`)),
+      ),
+    );
+    const startName =
+      selection && selection.kind !== 'group' && selection.kind !== 'cable'
+        ? project.devices.find((d) => d.id === selection.id)?.name
+        : undefined;
+    let id = '';
+    apply((p) => {
+      const r = addGroup(p, startName ?? t('systems.defaultName', { n: p.groups.length + 1 }), {
+        deviceIds: fullyOnPath,
+        cableIds: [...trace.cableIds],
+      });
+      id = r.group.id;
+      return r.project;
+    });
+    setFocusGroup(id);
+    select({ kind: 'group', id });
+  };
+  return (
+    <div className="button-row">
+      <button onClick={save}>{t('systems.saveTrace')}</button>
+    </div>
+  );
+}
+
+function GroupInspector({ group, project }: { group: Group; project: Project }) {
+  const apply = useProjectStore((s) => s.apply);
+  const select = useProjectStore((s) => s.select);
+  const setFocusGroup = useProjectStore((s) => s.setFocusGroup);
+  const devices = project.devices.filter((d) => group.deviceIds.includes(d.id));
+  const cables = project.cables.filter((c) => group.cableIds.includes(c.id));
+  return (
+    <>
+      <h2>{group.name}</h2>
+      <label className="field">
+        <span>{t('device.name')}</span>
+        <CommitInput value={group.name} onCommit={(name) => apply((p) => updateGroup(p, group.id, { name: name || group.name }))} />
+      </label>
+      <div className="field">
+        <span>{t('systems.color')}</span>
+        <div className="swatches">
+          {GROUP_COLORS.map((c) => (
+            <button
+              key={c}
+              className={'swatch' + (c === group.color ? ' active' : '')}
+              style={{ background: c }}
+              aria-label={c}
+              aria-pressed={c === group.color}
+              onClick={() => apply((p) => updateGroup(p, group.id, { color: c }))}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="field">
+        <span>{t('systems.devices')}</span>
+        <div>{devices.length ? devices.map((d) => d.name).join(', ') : '—'}</div>
+      </div>
+      <div className="field">
+        <span>{t('systems.cables')}</span>
+        <div className="chip-row">
+          {cables.length
+            ? cables.map((c) => (
+                <button key={c.id} className="link-button" onClick={() => select({ kind: 'cable', id: c.id })}>
+                  {c.label}
+                </button>
+              ))
+            : '—'}
+        </div>
+      </div>
+      <p className="muted">{t('systems.hint')}</p>
+      <div className="button-row">
+        <button
+          className="danger"
+          onClick={() => {
+            apply((p) => removeGroup(p, group.id));
+            setFocusGroup(null);
+            select(null);
+          }}
+        >
+          {t('systems.delete')}
         </button>
       </div>
     </>

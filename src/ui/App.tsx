@@ -1,7 +1,7 @@
 import { ReactFlowProvider, useReactFlow, type Node, type XYPosition } from '@xyflow/react';
 import { useEffect, useState } from 'react';
 import type { DeviceTemplate } from '../core/model';
-import { addDevice, createProject, FILE_EXTENSION, parseProject, ProjectParseError, serializeProject } from '../core/project';
+import { addDevice, createProject, setContainer, FILE_EXTENSION, parseProject, ProjectParseError, serializeProject } from '../core/project';
 import { t, type MessageKey } from '../i18n';
 import { openTextFile, saveTextFile } from '../platform/files';
 import { useAnalysis } from '../store/analysis';
@@ -43,10 +43,12 @@ function Shell() {
     ).length;
     const name = template.model + (sameModel ? ` ${sameModel + 1}` : '');
     let createdId = '';
+    const boardId = useProjectStore.getState().openBoardId;
     apply((p) => {
       const r = addDevice(p, template, name, findFreeSpot(flow.getNodes(), center));
       createdId = r.device.id;
-      return r.project;
+      // Inside an open board, new devices go onto that board.
+      return boardId && template.category !== 'pedalboard' ? setContainer(r.project, r.device.id, boardId) : r.project;
     });
     setAdding(false);
     setView('graph');

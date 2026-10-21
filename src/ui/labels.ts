@@ -4,16 +4,16 @@ import { t } from '../i18n';
 
 /** Signal colors. Always shown together with a text badge, never color alone. */
 export const SIGNAL_COLORS: Record<SignalType, string> = {
-  mic: '#e5534b',
-  'line-bal': '#4f9cf9',
-  'line-unbal': '#8fc8ff',
-  instrument: '#f0a020',
-  speaker: '#ff4fa3',
-  headphone: '#b07cff',
-  'digital-audio': '#2fbf71',
-  midi: '#e0c341',
-  clock: '#9aa4b2',
-  data: '#34c3c3',
+  mic: '#ff7a6b',
+  'line-bal': '#6aa8ff',
+  'line-unbal': '#a7cbff',
+  instrument: '#ffb547',
+  speaker: '#ff5fa2',
+  headphone: '#c39bff',
+  'digital-audio': '#4fd1a5',
+  midi: '#e6c84a',
+  clock: '#9aa6b8',
+  data: '#3fd0c9',
 };
 
 export const SEVERITY_ICONS: Record<Severity, string> = { error: '⛔', warning: '⚠️', info: 'ℹ️' };

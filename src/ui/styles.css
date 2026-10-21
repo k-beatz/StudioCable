@@ -1,38 +1,59 @@
 :root {
-  --bg: #15171c;
-  --panel: #1e2129;
-  --panel-2: #262a34;
-  --border: #353a47;
-  --text: #e8eaf0;
-  --muted: #9aa1b2;
-  --accent: #4f9cf9;
-  --danger: #e5534b;
-  --warning: #f0a020;
+  /* Design C "Modern Console": navy ground, rounded cards, signal colours. */
+  --bg: #0e1524;
+  --panel: #172238;
+  --panel-2: #1d2a44;
+  --panel-3: #24344f;
+  --border: #263452;
+  --text: #e6ecf7;
+  --muted: #93a1ba;
+  --accent: #4d8ff5;
+  --danger: #ff6b5e;
+  --warning: #ffb547;
+  --trace: #ffb547;
+  --canvas-dot: #1d2740;
+  --icon-socket: #0e1524;
+  --icon-plug: #2d3e60;
+  --icon-pin: #e6ecf7;
   --touch: 44px;
   color-scheme: dark;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
   font-size: 15px;
 }
 
 /* Dark is the default; light follows the system unless a theme is forced. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
-    --bg: #f3f4f7;
+    --bg: #eef2f8;
     --panel: #ffffff;
-    --panel-2: #eef0f4;
-    --border: #d5d9e2;
-    --text: #1b1e25;
-    --muted: #5d6475;
+    --panel-2: #f3f6fb;
+    --panel-3: #e3e9f3;
+    --border: #d3dbe8;
+    --text: #14203a;
+    --muted: #5a6780;
+    --accent: #2f6fe0;
+    --trace: #d98200;
+    --canvas-dot: #cfd8e6;
+    --icon-socket: #ffffff;
+    --icon-plug: #dfe5ef;
+    --icon-pin: #14203a;
     color-scheme: light;
   }
 }
 :root[data-theme='light'] {
-  --bg: #f3f4f7;
+  --bg: #eef2f8;
   --panel: #ffffff;
-  --panel-2: #eef0f4;
-  --border: #d5d9e2;
-  --text: #1b1e25;
-  --muted: #5d6475;
+  --panel-2: #f3f6fb;
+  --panel-3: #e3e9f3;
+  --border: #d3dbe8;
+  --text: #14203a;
+  --muted: #5a6780;
+  --accent: #2f6fe0;
+  --trace: #d98200;
+  --canvas-dot: #cfd8e6;
+  --icon-socket: #ffffff;
+  --icon-plug: #dfe5ef;
+  --icon-pin: #14203a;
   color-scheme: light;
 }
 
@@ -335,21 +356,30 @@ select {
 /* ---------- Device nodes ---------- */
 
 .device-node {
-  min-width: 220px;
+  min-width: 210px;
   background: var(--panel);
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
   font-size: 12px;
 }
 .device-node.selected {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent), 0 8px 24px rgb(0 0 0 / 0.25);
+}
+.device-node.in-trace {
+  border-color: var(--trace);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--trace) 18%, transparent), 0 8px 24px rgb(0 0 0 / 0.25);
 }
 .device-node__header {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border);
-  background: var(--panel-2);
-  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 8px;
+}
+.device-node__titles {
+  min-width: 0;
+  flex: 1;
 }
 .device-node__name {
   font-weight: 700;
@@ -357,12 +387,33 @@ select {
 }
 .device-node__model {
   color: var(--muted);
+  font-size: 11px;
+}
+.category-chip {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-3);
+  color: var(--text);
+}
+.group-dots {
+  display: flex;
+  gap: 4px;
+}
+.group-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  border: 2px solid var(--panel);
 }
 .device-node__ports {
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  padding: 6px 0;
+  padding: 2px 0 8px;
 }
 .device-node__col {
   display: flex;
@@ -377,40 +428,57 @@ select {
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 30px;
-  padding: 0 14px;
+  height: 32px;
+  padding: 0 16px;
   white-space: nowrap;
 }
 .port-row--right {
   flex-direction: row-reverse;
 }
+.port-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 .port-badge {
   font-size: 9px;
-  font-weight: 700;
-  color: #000;
-  padding: 1px 4px;
-  border-radius: 4px;
-  min-width: 30px;
-  text-align: center;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+.port-group-mark {
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+}
+.port-row--unused {
+  opacity: 0.3;
 }
 
-/* Port handles: large enough for fingers. */
+/* Port handles carry the connector symbol; the hit area stays finger-sized. */
 .react-flow__handle.port-handle {
-  width: 16px;
-  height: 16px;
-  border-width: 3px;
-  background: var(--panel);
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 13px;
+  background: transparent;
+  display: grid;
+  place-items: center;
 }
-.react-flow__handle.port-handle.connected {
-  border-color: var(--text) !important;
+.react-flow__handle.port-handle .connector-icon {
+  pointer-events: none;
+}
+.react-flow__handle.port-handle.connected .connector-icon {
+  filter: drop-shadow(0 0 3px var(--glow));
 }
 @media (pointer: coarse) {
   .react-flow__handle.port-handle {
-    width: 22px;
-    height: 22px;
+    width: 34px;
+    height: 34px;
   }
   .port-row {
-    height: 36px;
+    height: 38px;
   }
 }
 
@@ -770,4 +838,207 @@ select {
 .result-count {
   margin: 8px 0 0;
   font-size: 0.85rem;
+}
+
+/* ---------- Design C additions ---------- */
+
+.port-row--traced {
+  background: color-mix(in srgb, var(--trace) 14%, transparent);
+}
+.device-node--board {
+  background: color-mix(in srgb, var(--panel) 85%, var(--warning) 15%);
+  border-style: dashed;
+}
+.board-open {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+}
+.board-empty {
+  padding: 4px 14px 14px;
+  color: var(--muted);
+  max-width: 220px;
+  white-space: normal;
+}
+.external-node {
+  min-width: 170px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px dashed;
+  background: var(--panel-2);
+  font-size: 12px;
+}
+.external-node__title {
+  font-weight: 700;
+}
+.external-node__subtitle {
+  color: var(--muted);
+  font-size: 11px;
+}
+.react-flow__handle.external-handle {
+  width: 8px;
+  height: 8px;
+  min-width: 0;
+  min-height: 0;
+  border: none;
+  background: var(--muted);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.breadcrumb__back {
+  min-height: 36px;
+  border-radius: 9px;
+  font-weight: 700;
+}
+.breadcrumb__here {
+  padding-right: 10px;
+  font-weight: 700;
+}
+.view-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 520px;
+}
+.segmented--small {
+  padding: 3px;
+}
+.segmented--small button {
+  min-height: 32px;
+  font-size: 12px;
+  padding: 0 10px;
+}
+.toggle {
+  border-radius: 10px;
+}
+.react-flow__edge.dimmed {
+  opacity: 0.18;
+}
+.device-node.dimmed {
+  opacity: 0.35;
+}
+
+/* ---------- Systems ---------- */
+
+.top-left-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: min(520px, 60vw);
+}
+.systems-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.systems-panel__title {
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.system-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 17px;
+  border: 1.5px solid var(--border);
+  background: var(--panel-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.system-chip.active {
+  background: var(--panel-3);
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px currentColor;
+}
+.system-chip--add {
+  width: 34px;
+  padding: 0;
+  justify-content: center;
+  font-size: 18px;
+}
+.system-chip__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.system-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 2px 2px 10px;
+  border-radius: 16px;
+  border: 1.5px solid;
+  font-size: 12px;
+  font-weight: 600;
+}
+.system-tag__remove {
+  min-height: 28px;
+  width: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+}
+.compact-select {
+  width: auto;
+  min-height: 34px;
+  font-size: 12px;
+}
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.swatch {
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+  border-radius: 17px;
+  border: 2px solid transparent;
+}
+.swatch.active {
+  border-color: var(--text);
+}
+.react-flow {
+  --xy-minimap-mask-background-color: color-mix(in srgb, var(--bg) 70%, transparent);
+  --xy-minimap-node-background-color: var(--panel-3);
+  --xy-controls-button-background-color-hover: var(--panel-3);
+}
+.react-flow__controls-button:disabled {
+  background: var(--panel);
+  opacity: 0.4;
+}
+.segmented--small button {
+  white-space: nowrap;
 }
