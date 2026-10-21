@@ -1,0 +1,42 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-hpm1000",
+  "manufacturer": "Behringer",
+  "model": "HPM1000",
+  "category": "headphones",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/677b80e67bf548d19e29bf65ebe79394/QSG_BE_0403-AAB_HPM1000_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0403-AAB"
+    }
+  ],
+  "notes": "Studio headphones with a 3.5 mm stereo plug and an included 6.3 mm adapter (both listed as connectors).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Plug"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "male"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "male"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-umc1820",
+  "manufacturer": "Behringer",
+  "model": "U-PHORIA UMC1820",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/2b9a46d7e1104b78b8881f726c18a4d0/QSG_BE_0805-AAN_UMC1820_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0805-AAN"
+    }
+  ],
+  "notes": "8 XLR/6.35 mm TRS combo inputs (2 front, 6 rear); LINE/INST switching applies to the front inputs 1-2. MAIN OUT and LINE OUT 3-10 are balanced 6.35 mm TRS; LINE OUT levels are controlled only by the DAW. Two stereo headphone outputs. OPT I/O switch: S/PDIF mode (optical in = ch 9-10) or ADAT mode (optical in = ch 11-18, out = 13-20; coax S/PDIF in 9-10, out 11-12). MIDI IN/OUT 5-pin DIN, USB type B, external power adapter (not listed).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal",
+        "instrument"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE OUT 3",
+        "LINE OUT 4",
+        "LINE OUT 5",
+        "LINE OUT 6",
+        "LINE OUT 7",
+        "LINE OUT 8",
+        "LINE OUT 9",
+        "LINE OUT 10"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 1"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OPTICAL IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "none"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 8
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OPTICAL OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "none"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 8
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "S/PDIF IN (coax)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "S/PDIF OUT (coax)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8",
+        "OPTICAL IN",
+        "S/PDIF IN (coax)"
+      ],
+      "to": [
+        "USB",
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "PHONES 1",
+        "PHONES 2"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "LINE OUT 3",
+        "LINE OUT 4",
+        "LINE OUT 5",
+        "LINE OUT 6",
+        "LINE OUT 7",
+        "LINE OUT 8",
+        "LINE OUT 9",
+        "LINE OUT 10",
+        "PHONES 1",
+        "PHONES 2",
+        "OPTICAL OUT",
+        "S/PDIF OUT (coax)"
+      ]
+    },
+    {
+      "from": "MIDI IN",
+      "to": "USB"
+    },
+    {
+      "from": "USB",
+      "to": "MIDI OUT"
+    }
+  ]
+}

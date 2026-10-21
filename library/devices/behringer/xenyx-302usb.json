@@ -1,0 +1,168 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-xenyx-302usb",
+  "manufacturer": "Behringer",
+  "model": "Xenyx 302USB",
+  "category": "mixer",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/9e7cded0947e4fdaab6a7e1eb5172972/QSG_BE_0601-ADN_XENYX-302USB_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0601-ADN"
+    }
+  ],
+  "notes": "Small mixer with USB interface. MIC IN is an XLR/6.35 mm combo jack; HEADSET MIC IN and the headphone output are 3.5 mm TRS mini jacks. LINE IN, 2-TRACK IN and MAIN OUT are unbalanced RCA pairs. LINE/USB FROM selects LINE IN or USB playback for the line channel; 2-TRACK TO and LINE/USB TO send those sources to the phones or the main mix. USB type B; powered by an external USB power supply (not listed). Jack labels are partly hidden in the panel drawing and were named after the controls description.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIC IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "HEADSET MIC IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "2-TRACK IN L",
+        "2-TRACK IN R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES (headset)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data",
+      "channels": 2
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MIC IN",
+        "HEADSET MIC IN",
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "PHONES (headset)",
+        "USB"
+      ]
+    },
+    {
+      "from": [
+        "2-TRACK IN L",
+        "2-TRACK IN R",
+        "USB"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "PHONES (headset)"
+      ]
+    }
+  ]
+}

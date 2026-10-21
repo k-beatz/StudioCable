@@ -1,0 +1,37 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-sl-85s",
+  "manufacturer": "Behringer",
+  "model": "SL 85S",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/d1b351ec43444a49bd90f57555137494/QSG_BE_0502-AAG_SL-85S_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0502-AAG"
+    }
+  ],
+  "notes": "Dynamic cardioid (with on/off switch) microphone. Output: 3-pin XLR (gender not stated; male by convention). No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

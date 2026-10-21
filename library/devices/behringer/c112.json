@@ -1,0 +1,37 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-c112",
+  "manufacturer": "Behringer",
+  "model": "C112",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/7036754e3189478ba9a34671389b3df3/QSG_BE_0503-AAC_C112_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0503-AAC"
+    }
+  ],
+  "notes": "Large-diaphragm dynamic (bass drum) microphone. Output: gold-plated 3-pin XLR (gender not stated; male by convention). No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

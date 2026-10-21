@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "rode-nt5",
+  "manufacturer": "R\u00d8DE",
+  "model": "NT5",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "NT5 product page and specifications (R\u00d8DE)",
+      "url": "https://rode.com/en/microphones/small-diaphragm-condenser/nt5"
+    }
+  ],
+  "notes": "Condenser microphone. Output: 3-pin XLR, balanced (gender not stated; male by convention). Needs phantom power. Power requirements: P48.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

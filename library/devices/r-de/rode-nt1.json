@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "rode-nt1",
+  "manufacturer": "R\u00d8DE",
+  "model": "NT1",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "NT1 product page and specifications (R\u00d8DE)",
+      "url": "https://rode.com/en/microphones/studio-condenser/nt1"
+    }
+  ],
+  "notes": "Condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Power requirements: P24 and P48.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

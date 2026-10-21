@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "rode-m5",
+  "manufacturer": "R\u00d8DE",
+  "model": "M5",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "M5 product page and specifications (R\u00d8DE)",
+      "url": "https://rode.com/en/microphones/small-diaphragm-condenser/m5"
+    }
+  ],
+  "notes": "Condenser microphone. Output: XLR, balanced (gender not stated; male by convention). Needs phantom power. Power requirements: P24 and P48. Usually sold as a matched pair.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "rode-podmic",
+  "manufacturer": "R\u00d8DE",
+  "model": "PodMic",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "PodMic product page and specifications (R\u00d8DE)",
+      "url": "https://rode.com/en/microphones/broadcast/podmic"
+    }
+  ],
+  "notes": "Dynamic microphone. Output: XLR (gender not stated; male by convention). No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

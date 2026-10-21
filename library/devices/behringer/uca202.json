@@ -1,0 +1,122 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-uca202",
+  "manufacturer": "Behringer",
+  "model": "U-Control UCA202",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "User Manual (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/d21445cd042b4b28860e7d325520c6e2/M_BE_0805-AAC_UCA202_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0805-AAC"
+    }
+  ],
+  "notes": "Small USB audio interface, USB bus-powered. Line in/out are unbalanced RCA, digital S/PDIF output on TOSLINK, 3.5 mm stereo headphone jack. USB 1.1 type A (attached cable, so the device side is a plug).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE OUT L",
+        "LINE OUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OPTICAL OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "none"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-a",
+          "gender": "male"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "to": [
+        "USB",
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "LINE OUT L",
+        "LINE OUT R",
+        "OPTICAL OUT",
+        "PHONES"
+      ]
+    }
+  ]
+}

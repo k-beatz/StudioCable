@@ -1,0 +1,37 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-ecm8000",
+  "manufacturer": "Behringer",
+  "model": "ECM8000",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/6b94ba6c73134d639789cbff481c1fa6/QSG_BE_0506-AAA_ECM8000_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0506-AAA"
+    }
+  ],
+  "notes": "Measurement electret condenser microphone. Output: gold-plated XLR (gender not stated; male by convention). Needs phantom power. Works with phantom power from +15 to +48 V. Omnidirectional, for room measurement and RTA.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

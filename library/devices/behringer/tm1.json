@@ -1,0 +1,37 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-tm1",
+  "manufacturer": "Behringer",
+  "model": "TM1",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/88990c40562547a29a4023fa663f2ec7/QSG_BE_0504-AAJ-TM1_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0504-AAJ"
+    }
+  ],
+  "notes": "Large-diaphragm condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Sold as a recording package; the guide asks for +48 V phantom power.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "neumann-kms-105",
+  "manufacturer": "Neumann",
+  "model": "KMS 105",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "KMS 105 product page and technical data (Neumann)",
+      "url": "https://www.neumann.com/en-en/products/microphones/kms-105/"
+    }
+  ],
+  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

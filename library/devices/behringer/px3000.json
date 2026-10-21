@@ -1,0 +1,542 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-px3000",
+  "manufacturer": "Behringer",
+  "model": "Ultrapatch Pro PX3000",
+  "category": "patchbay",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/f19711d2bb094d03ad6f1f2982918629/QSG_BE_0804-AAC_PX3000_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0804-AAC"
+    }
+  ],
+  "notes": "48-point balanced patchbay: 24 channels, each with A (top) and B (bottom) jacks on the front and on the rear (6.35 mm, balanced). Each channel can be switched to NORMAL, HALF-NORMAL or THRU mode. Modelled here in HALF-NORMAL mode: rear A feeds rear B until a plug is inserted into front B; front A taps the signal without breaking it. In NORMAL mode a plug in front A also breaks the connection; in THRU mode rear and front jacks are only connected straight through. The rear A jacks are listed as inputs (signal into the patchbay) and the rear B jacks as outputs.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "1A rear",
+        "2A rear",
+        "3A rear",
+        "4A rear",
+        "5A rear",
+        "6A rear",
+        "7A rear",
+        "8A rear",
+        "9A rear",
+        "10A rear",
+        "11A rear",
+        "12A rear",
+        "13A rear",
+        "14A rear",
+        "15A rear",
+        "16A rear",
+        "17A rear",
+        "18A rear",
+        "19A rear",
+        "20A rear",
+        "21A rear",
+        "22A rear",
+        "23A rear",
+        "24A rear"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "1B front",
+        "2B front",
+        "3B front",
+        "4B front",
+        "5B front",
+        "6B front",
+        "7B front",
+        "8B front",
+        "9B front",
+        "10B front",
+        "11B front",
+        "12B front",
+        "13B front",
+        "14B front",
+        "15B front",
+        "16B front",
+        "17B front",
+        "18B front",
+        "19B front",
+        "20B front",
+        "21B front",
+        "22B front",
+        "23B front",
+        "24B front"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "1B rear",
+        "2B rear",
+        "3B rear",
+        "4B rear",
+        "5B rear",
+        "6B rear",
+        "7B rear",
+        "8B rear",
+        "9B rear",
+        "10B rear",
+        "11B rear",
+        "12B rear",
+        "13B rear",
+        "14B rear",
+        "15B rear",
+        "16B rear",
+        "17B rear",
+        "18B rear",
+        "19B rear",
+        "20B rear",
+        "21B rear",
+        "22B rear",
+        "23B rear",
+        "24B rear"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "1A front",
+        "2A front",
+        "3A front",
+        "4A front",
+        "5A front",
+        "6A front",
+        "7A front",
+        "8A front",
+        "9A front",
+        "10A front",
+        "11A front",
+        "12A front",
+        "13A front",
+        "14A front",
+        "15A front",
+        "16A front",
+        "17A front",
+        "18A front",
+        "19A front",
+        "20A front",
+        "21A front",
+        "22A front",
+        "23A front",
+        "24A front"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": "1A rear",
+      "to": "1B rear",
+      "breakWhenPatched": [
+        "1B front"
+      ]
+    },
+    {
+      "from": "1A rear",
+      "to": "1A front"
+    },
+    {
+      "from": "1B front",
+      "to": "1B rear"
+    },
+    {
+      "from": "2A rear",
+      "to": "2B rear",
+      "breakWhenPatched": [
+        "2B front"
+      ]
+    },
+    {
+      "from": "2A rear",
+      "to": "2A front"
+    },
+    {
+      "from": "2B front",
+      "to": "2B rear"
+    },
+    {
+      "from": "3A rear",
+      "to": "3B rear",
+      "breakWhenPatched": [
+        "3B front"
+      ]
+    },
+    {
+      "from": "3A rear",
+      "to": "3A front"
+    },
+    {
+      "from": "3B front",
+      "to": "3B rear"
+    },
+    {
+      "from": "4A rear",
+      "to": "4B rear",
+      "breakWhenPatched": [
+        "4B front"
+      ]
+    },
+    {
+      "from": "4A rear",
+      "to": "4A front"
+    },
+    {
+      "from": "4B front",
+      "to": "4B rear"
+    },
+    {
+      "from": "5A rear",
+      "to": "5B rear",
+      "breakWhenPatched": [
+        "5B front"
+      ]
+    },
+    {
+      "from": "5A rear",
+      "to": "5A front"
+    },
+    {
+      "from": "5B front",
+      "to": "5B rear"
+    },
+    {
+      "from": "6A rear",
+      "to": "6B rear",
+      "breakWhenPatched": [
+        "6B front"
+      ]
+    },
+    {
+      "from": "6A rear",
+      "to": "6A front"
+    },
+    {
+      "from": "6B front",
+      "to": "6B rear"
+    },
+    {
+      "from": "7A rear",
+      "to": "7B rear",
+      "breakWhenPatched": [
+        "7B front"
+      ]
+    },
+    {
+      "from": "7A rear",
+      "to": "7A front"
+    },
+    {
+      "from": "7B front",
+      "to": "7B rear"
+    },
+    {
+      "from": "8A rear",
+      "to": "8B rear",
+      "breakWhenPatched": [
+        "8B front"
+      ]
+    },
+    {
+      "from": "8A rear",
+      "to": "8A front"
+    },
+    {
+      "from": "8B front",
+      "to": "8B rear"
+    },
+    {
+      "from": "9A rear",
+      "to": "9B rear",
+      "breakWhenPatched": [
+        "9B front"
+      ]
+    },
+    {
+      "from": "9A rear",
+      "to": "9A front"
+    },
+    {
+      "from": "9B front",
+      "to": "9B rear"
+    },
+    {
+      "from": "10A rear",
+      "to": "10B rear",
+      "breakWhenPatched": [
+        "10B front"
+      ]
+    },
+    {
+      "from": "10A rear",
+      "to": "10A front"
+    },
+    {
+      "from": "10B front",
+      "to": "10B rear"
+    },
+    {
+      "from": "11A rear",
+      "to": "11B rear",
+      "breakWhenPatched": [
+        "11B front"
+      ]
+    },
+    {
+      "from": "11A rear",
+      "to": "11A front"
+    },
+    {
+      "from": "11B front",
+      "to": "11B rear"
+    },
+    {
+      "from": "12A rear",
+      "to": "12B rear",
+      "breakWhenPatched": [
+        "12B front"
+      ]
+    },
+    {
+      "from": "12A rear",
+      "to": "12A front"
+    },
+    {
+      "from": "12B front",
+      "to": "12B rear"
+    },
+    {
+      "from": "13A rear",
+      "to": "13B rear",
+      "breakWhenPatched": [
+        "13B front"
+      ]
+    },
+    {
+      "from": "13A rear",
+      "to": "13A front"
+    },
+    {
+      "from": "13B front",
+      "to": "13B rear"
+    },
+    {
+      "from": "14A rear",
+      "to": "14B rear",
+      "breakWhenPatched": [
+        "14B front"
+      ]
+    },
+    {
+      "from": "14A rear",
+      "to": "14A front"
+    },
+    {
+      "from": "14B front",
+      "to": "14B rear"
+    },
+    {
+      "from": "15A rear",
+      "to": "15B rear",
+      "breakWhenPatched": [
+        "15B front"
+      ]
+    },
+    {
+      "from": "15A rear",
+      "to": "15A front"
+    },
+    {
+      "from": "15B front",
+      "to": "15B rear"
+    },
+    {
+      "from": "16A rear",
+      "to": "16B rear",
+      "breakWhenPatched": [
+        "16B front"
+      ]
+    },
+    {
+      "from": "16A rear",
+      "to": "16A front"
+    },
+    {
+      "from": "16B front",
+      "to": "16B rear"
+    },
+    {
+      "from": "17A rear",
+      "to": "17B rear",
+      "breakWhenPatched": [
+        "17B front"
+      ]
+    },
+    {
+      "from": "17A rear",
+      "to": "17A front"
+    },
+    {
+      "from": "17B front",
+      "to": "17B rear"
+    },
+    {
+      "from": "18A rear",
+      "to": "18B rear",
+      "breakWhenPatched": [
+        "18B front"
+      ]
+    },
+    {
+      "from": "18A rear",
+      "to": "18A front"
+    },
+    {
+      "from": "18B front",
+      "to": "18B rear"
+    },
+    {
+      "from": "19A rear",
+      "to": "19B rear",
+      "breakWhenPatched": [
+        "19B front"
+      ]
+    },
+    {
+      "from": "19A rear",
+      "to": "19A front"
+    },
+    {
+      "from": "19B front",
+      "to": "19B rear"
+    },
+    {
+      "from": "20A rear",
+      "to": "20B rear",
+      "breakWhenPatched": [
+        "20B front"
+      ]
+    },
+    {
+      "from": "20A rear",
+      "to": "20A front"
+    },
+    {
+      "from": "20B front",
+      "to": "20B rear"
+    },
+    {
+      "from": "21A rear",
+      "to": "21B rear",
+      "breakWhenPatched": [
+        "21B front"
+      ]
+    },
+    {
+      "from": "21A rear",
+      "to": "21A front"
+    },
+    {
+      "from": "21B front",
+      "to": "21B rear"
+    },
+    {
+      "from": "22A rear",
+      "to": "22B rear",
+      "breakWhenPatched": [
+        "22B front"
+      ]
+    },
+    {
+      "from": "22A rear",
+      "to": "22A front"
+    },
+    {
+      "from": "22B front",
+      "to": "22B rear"
+    },
+    {
+      "from": "23A rear",
+      "to": "23B rear",
+      "breakWhenPatched": [
+        "23B front"
+      ]
+    },
+    {
+      "from": "23A rear",
+      "to": "23A front"
+    },
+    {
+      "from": "23B front",
+      "to": "23B rear"
+    },
+    {
+      "from": "24A rear",
+      "to": "24B rear",
+      "breakWhenPatched": [
+        "24B front"
+      ]
+    },
+    {
+      "from": "24A rear",
+      "to": "24A front"
+    },
+    {
+      "from": "24B front",
+      "to": "24B rear"
+    }
+  ]
+}

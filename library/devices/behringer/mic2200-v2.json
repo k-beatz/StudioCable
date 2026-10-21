@@ -1,0 +1,132 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-mic2200-v2",
+  "manufacturer": "Behringer",
+  "model": "Ultragain Pro MIC2200 V2",
+  "category": "preamp",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/edb44a2a6463473da0e17c9e5315fab2/QSG_BE_0838-AAS_ULTRAGAIN-PRO-MIC2200_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0838-AAS"
+    }
+  ],
+  "notes": "2-channel tube (12AX7) mic/line preamp with EQ (19\" rack). Per channel, from the specifications: XLR mic input, line input on XLR and 6.35 mm jack, servo-balanced output on XLR and 6.35 mm jack. Jack type (TRS) assumed from 'balanced and unbalanced'; XLR genders follow the usual convention (not stated).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIC IN 1",
+        "MIC IN 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE IN 1 (XLR)",
+        "LINE IN 2 (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE IN 1 (jack)",
+        "LINE IN 2 (jack)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 2 (XLR)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1 (jack)",
+        "OUTPUT 2 (jack)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MIC IN 1",
+        "LINE IN 1 (XLR)",
+        "LINE IN 1 (jack)"
+      ],
+      "to": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 1 (jack)"
+      ]
+    },
+    {
+      "from": [
+        "MIC IN 2",
+        "LINE IN 2 (XLR)",
+        "LINE IN 2 (jack)"
+      ],
+      "to": [
+        "OUTPUT 2 (XLR)",
+        "OUTPUT 2 (jack)"
+      ]
+    }
+  ]
+}

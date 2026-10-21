@@ -1,0 +1,142 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-multicom-pro-xl-mdx4600-v2",
+  "manufacturer": "Behringer",
+  "model": "Multicom Pro-XL MDX4600 V2",
+  "category": "outboard",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "MDX4600/MDX2600 Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/65ce7dd7371b4457922c8c560761bac5/MDX4600-MDX2600_QSG_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0817-ABC"
+    }
+  ],
+  "notes": "4-channel compressor/limiter/gate (19\" rack, IEC mains). Per channel: balanced inputs and outputs on XLR and 6.35 mm TRS (the two output connectors are wired in parallel). The quick start guide lists no sidechain jacks for this model. OPERATING LEVEL switch: -10 dBV or +4 dBu. XLR genders follow the usual convention (not stated).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1 (XLR)",
+        "INPUT 2 (XLR)",
+        "INPUT 3 (XLR)",
+        "INPUT 4 (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1 (TRS)",
+        "INPUT 2 (TRS)",
+        "INPUT 3 (TRS)",
+        "INPUT 4 (TRS)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 2 (XLR)",
+        "OUTPUT 3 (XLR)",
+        "OUTPUT 4 (XLR)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1 (TRS)",
+        "OUTPUT 2 (TRS)",
+        "OUTPUT 3 (TRS)",
+        "OUTPUT 4 (TRS)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT 1 (XLR)",
+        "INPUT 1 (TRS)"
+      ],
+      "to": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 1 (TRS)"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 2 (XLR)",
+        "INPUT 2 (TRS)"
+      ],
+      "to": [
+        "OUTPUT 2 (XLR)",
+        "OUTPUT 2 (TRS)"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 3 (XLR)",
+        "INPUT 3 (TRS)"
+      ],
+      "to": [
+        "OUTPUT 3 (XLR)",
+        "OUTPUT 3 (TRS)"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 4 (XLR)",
+        "INPUT 4 (TRS)"
+      ],
+      "to": [
+        "OUTPUT 4 (XLR)",
+        "OUTPUT 4 (TRS)"
+      ]
+    }
+  ]
+}
