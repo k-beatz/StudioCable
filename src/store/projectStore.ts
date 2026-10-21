@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Project } from '../core/model';
 import { createProject, parseProject, serializeProject } from '../core/project';
+import { blurActiveField } from '../ui/device';
 
 /**
  * App state with undo/redo. Because every core operation returns a new
@@ -31,6 +32,8 @@ interface ProjectState {
   openBoardId: string | null;
   /** System (group) currently highlighted. */
   focusGroupId: string | null;
+  /** Tap-to-connect: the port a new cable starts from, waiting for the second tap. */
+  pendingConnection: { deviceId: string; portId: string } | null;
 
   /** Apply an edit and record it for undo. */
   apply: (fn: (p: Project) => Project) => void;
@@ -43,6 +46,7 @@ interface ProjectState {
   setDimUnusedPorts: (on: boolean) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
+  startConnection: (from: { deviceId: string; portId: string } | null) => void;
 }
 
 export type CableStyle = 'orthogonal' | 'curved';
@@ -88,6 +92,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   ...loadPrefs(),
   openBoardId: null,
   focusGroupId: null,
+  pendingConnection: null,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -108,7 +113,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ project: next, past: [...past, project], future: future.slice(1) });
   },
   replaceProject: (p) => set({ project: p, past: [], future: [], selection: null, openBoardId: null, focusGroupId: null }),
-  select: (selection) => set({ selection }),
+  select: (selection) => {
+    blurActiveField();
+    set({ selection, pendingConnection: null });
+  },
   setShowSignalFlow: (showSignalFlow) => set({ showSignalFlow }),
   setCableStyle: (cableStyle) => {
     set({ cableStyle });
@@ -118,7 +126,11 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ dimUnusedPorts });
     savePrefs({ cableStyle: get().cableStyle, dimUnusedPorts });
   },
-  openBoard: (openBoardId) => set({ openBoardId, selection: null }),
+  openBoard: (openBoardId) => {
+    blurActiveField();
+    set({ openBoardId, selection: null, pendingConnection: null });
+  },
+  startConnection: (pendingConnection) => set({ pendingConnection }),
   setFocusGroup: (focusGroupId) => set({ focusGroupId }),
 }));
 

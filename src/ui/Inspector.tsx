@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { newId } from '../core/ids';
 import type { Cable, DeviceInstance, Group, Project } from '../core/model';
 import type { Trace } from '../core/signalFlow';
@@ -29,6 +30,7 @@ export function Inspector() {
   const selection = useProjectStore((s) => s.selection);
   const project = useProjectStore((s) => s.project);
   const select = useProjectStore((s) => s.select);
+  const [expanded, setExpanded] = useState(false);
   if (!selection) return null;
 
   const device =
@@ -41,7 +43,15 @@ export function Inspector() {
   const trace = traceForSelection(project, selection);
 
   return (
-    <aside className="inspector">
+    <aside className={'inspector' + (expanded ? ' inspector--expanded' : '')}>
+      <button
+        className="inspector__grabber narrow-only"
+        aria-label={expanded ? t('inspector.collapse') : t('inspector.expand')}
+        aria-expanded={expanded}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <span />
+      </button>
       <button className="inspector__close" onClick={() => select(null)} aria-label={t('inspector.close')}>
         ✕
       </button>
@@ -196,6 +206,17 @@ function PortInspector({ device, portId, project }: { device: DeviceInstance; po
                 </button>
               ))}
         </div>
+      </div>
+      <div className="button-row">
+        <button
+          className="primary"
+          onClick={() => {
+            select(null);
+            useProjectStore.getState().startConnection({ deviceId: device.id, portId });
+          }}
+        >
+          {t('connect.fromHere')}
+        </button>
       </div>
     </>
   );

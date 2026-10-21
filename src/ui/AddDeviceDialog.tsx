@@ -11,6 +11,7 @@ import {
 } from '../core/model';
 import { libraryToTemplate, matchesQuery } from '../core/library';
 import { t, type MessageKey } from '../i18n';
+import { isTouchDevice } from './device';
 import { LIBRARY } from '../library';
 
 interface Props {
@@ -84,7 +85,7 @@ function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
           placeholder={t('add.searchLibrary')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          autoFocus
+          autoFocus={!isTouchDevice()}
         />
         <select value={category} onChange={(e) => setCategory(e.target.value as DeviceCategory | '')}>
           <option value="">{t('add.allCategories')}</option>
@@ -147,7 +148,7 @@ function PresetList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
         placeholder={t('add.search')}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        autoFocus
+        autoFocus={!isTouchDevice()}
       />
       <ul className="preset-list">
         {presets.map((p) => (

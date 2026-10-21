@@ -9,6 +9,7 @@ import { useProjectStore } from '../store/projectStore';
 import { CategoryIcon } from './CategoryIcon';
 import { ConnectorIcon } from './ConnectorIcon';
 import { connectorsText, SIGNAL_COLORS } from './labels';
+import { connectPorts } from './connect';
 
 export type DeviceNodeType = Node<{ deviceId: string }, 'device'>;
 export type BoardNodeType = Node<{ deviceId: string }, 'board'>;
@@ -184,7 +185,8 @@ function usePortState() {
   const selection = useProjectStore((s) => s.selection);
   const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
   const select = useProjectStore((s) => s.select);
-  return { occupancy, highlight, groups, selection, dimUnused, select };
+  const pending = useProjectStore((s) => s.pendingConnection);
+  return { occupancy, highlight, groups, selection, dimUnused, select, pending };
 }
 
 function PortColumns({ rows, ports }: { rows: Row[]; ports: ReturnType<typeof usePortState> }) {
@@ -203,7 +205,13 @@ function PortColumns({ rows, ports }: { rows: Row[]; ports: ReturnType<typeof us
           ports.selection?.kind === 'port' && ports.selection.id === r.deviceId && ports.selection.portId === r.port.id
         }
         groups={ports.groups.byPort.get(key) ?? []}
-        onSelect={() => ports.select({ kind: 'port', id: r.deviceId, portId: r.port.id })}
+        pendingStart={ports.pending?.deviceId === r.deviceId && ports.pending.portId === r.port.id}
+        onSelect={() => {
+          const target = { deviceId: r.deviceId, portId: r.port.id };
+          // Second tap of tap-to-connect: create the cable.
+          if (ports.pending) connectPorts(ports.pending, target);
+          else ports.select({ kind: 'port', id: r.deviceId, portId: r.port.id });
+        }}
       />
     );
   };
@@ -225,17 +233,18 @@ interface PortRowProps {
   traced: boolean;
   selected: boolean;
   groups: Group[];
+  pendingStart: boolean;
   onSelect: () => void;
 }
 
-function PortRow({ row, side, connected, unused, traced, selected, groups, onSelect }: PortRowProps) {
+function PortRow({ row, side, connected, unused, traced, selected, groups, pendingStart, onSelect }: PortRowProps) {
   const { port } = row;
   const color = SIGNAL_COLORS[port.signal];
   const className =
     `port-row port-row--${side}` +
     (traced ? ' port-row--traced' : '') +
-    (selected ? ' port-row--selected' : '') +
-    (unused ? ' port-row--unused' : '');
+    (selected || pendingStart ? ' port-row--selected' : '') +
+    (unused && !pendingStart ? ' port-row--unused' : '');
   return (
     <div
       className={className}

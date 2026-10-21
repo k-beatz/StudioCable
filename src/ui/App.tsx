@@ -27,6 +27,7 @@ function Shell() {
   const [adding, setAdding] = useState(false);
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
   const project = useProjectStore((s) => s.project);
   const canUndo = useProjectStore((s) => s.past.length > 0);
   const canRedo = useProjectStore((s) => s.future.length > 0);
@@ -68,6 +69,12 @@ function Shell() {
   };
 
   const fileName = (project.name || 'project').replace(/[^\w\- ]+/g, '_') + FILE_EXTENSION;
+  const saveFile = () => saveTextFile(fileName, serializeProject(project));
+  /** Closes the "more" menu, then runs the menu entry's action. */
+  const fromMenu = (action: () => void) => () => {
+    setMoreOpen(false);
+    action();
+  };
 
   return (
     <div className="app">
@@ -76,26 +83,47 @@ function Shell() {
           {t('app.title')} <span className="tag">{t('app.prototype')}</span>
         </div>
         <div className="toolbar__group">
-          <button className="primary" onClick={() => setAdding(true)}>
-            + {t('toolbar.addDevice')}
+          <button className="primary" onClick={() => setAdding(true)} aria-label={t('toolbar.addDevice')}>
+            +<span className="wide-only"> {t('toolbar.addDevice')}</span>
           </button>
-          <button onClick={undo} disabled={!canUndo} aria-label={t('toolbar.undo')} title={t('toolbar.undo')}>
+          <button className="icon-button" onClick={undo} disabled={!canUndo} aria-label={t('toolbar.undo')} title={t('toolbar.undo')}>
             ↶
           </button>
-          <button onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
+          <button className="icon-button" onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
             ↷
           </button>
         </div>
-        <div className="toolbar__group">
+        <div className="toolbar__group wide-only">
           <button onClick={() => setConfirmingNew(true)}>{t('toolbar.new')}</button>
           <button onClick={openFile}>{t('toolbar.open')}</button>
-          <button onClick={() => saveTextFile(fileName, serializeProject(project))}>{t('toolbar.save')}</button>
+          <button onClick={saveFile}>{t('toolbar.save')}</button>
+        </div>
+        <div className="toolbar__more narrow-only">
+          <button className="icon-button" aria-label={t('toolbar.more')} aria-expanded={moreOpen} onClick={() => setMoreOpen(!moreOpen)}>
+            ⋯
+          </button>
+          {moreOpen && (
+            <>
+              <div className="menu-backdrop" onClick={() => setMoreOpen(false)} />
+              <div className="menu" role="menu">
+                <button role="menuitem" onClick={fromMenu(() => setConfirmingNew(true))}>
+                  {t('toolbar.new')}
+                </button>
+                <button role="menuitem" onClick={fromMenu(openFile)}>
+                  {t('toolbar.open')}
+                </button>
+                <button role="menuitem" onClick={fromMenu(saveFile)}>
+                  {t('toolbar.save')}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </header>
 
-      <nav className="segmented view-switch">
+      <nav className="segmented view-switch" aria-label={t('view.graph')}>
         {(['graph', 'cables', 'checks'] as const).map((v) => (
-          <button key={v} className={view === v ? 'active' : ''} onClick={() => setView(v)}>
+          <button key={v} className={view === v ? 'active' : ''} aria-current={view === v ? 'page' : undefined} onClick={() => setView(v)}>
             {t(`view.${v}`, { count: issues.length })}
           </button>
         ))}

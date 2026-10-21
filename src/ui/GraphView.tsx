@@ -14,7 +14,7 @@ import {
 } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
-import { addCable, getPort, removeCable, removeDevice, updateDevice } from '../core/project';
+import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
@@ -31,6 +31,8 @@ import {
 } from './DeviceNode';
 import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 import { SystemsPanel } from './SystemsPanel';
+import { connectPorts } from './connect';
+import { isTouchDevice } from './device';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 
@@ -115,6 +117,9 @@ export function GraphView() {
   const setDimUnused = useProjectStore((s) => s.setDimUnusedPorts);
   const openBoardId = useProjectStore((s) => s.openBoardId);
   const openBoard = useProjectStore((s) => s.openBoard);
+  const pending = useProjectStore((s) => s.pendingConnection);
+  const startConnection = useProjectStore((s) => s.startConnection);
+  const [optionsOpen, setOptionsOpen] = useState(false);
   const { byCable } = useAnalysis();
   const highlight = useHighlight();
   const groups = useGroupIndex();
@@ -194,27 +199,11 @@ export function GraphView() {
     return result;
   }, [project, boardId, byCable, selection, highlight, groups, cableStyle]);
 
-  const onConnect = useCallback(
-    (c: Connection) => {
-      if (!c.sourceHandle || !c.targetHandle) return;
-      if (c.source.startsWith('ext-') || c.target.startsWith('ext-')) return;
-      let from = parseHandleId(c.source, c.sourceHandle);
-      let to = parseHandleId(c.target, c.targetHandle);
-      if (from.deviceId === to.deviceId && from.portId === to.portId) return;
-      // Store the cable as output -> input, whichever way it was drawn.
-      const fromPort = getPort(project, from);
-      const toPort = getPort(project, to);
-      if (fromPort?.direction === 'in' || toPort?.direction === 'out') [from, to] = [to, from];
-      let newId = '';
-      apply((p) => {
-        const r = addCable(p, from, to);
-        newId = r.cable.id;
-        return r.project;
-      });
-      select({ kind: 'cable', id: newId });
-    },
-    [project, apply, select],
-  );
+  const onConnect = useCallback((c: Connection) => {
+    if (!c.sourceHandle || !c.targetHandle) return;
+    if (c.source.startsWith('ext-') || c.target.startsWith('ext-')) return;
+    connectPorts(parseHandleId(c.source, c.sourceHandle), parseHandleId(c.target, c.targetHandle));
+  }, []);
 
   return (
     <ReactFlow<DiagramNode, Edge>
@@ -252,7 +241,7 @@ export function GraphView() {
       fitView
     >
       <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />
-      <Controls showInteractive={false} />
+      <Controls showInteractive={false} showZoom={!isTouchDevice()} />
       {!board && <MiniMap pannable zoomable className="minimap" />}
       <Panel position="top-left">
         <div className="top-left-stack">
@@ -268,27 +257,48 @@ export function GraphView() {
         </div>
       </Panel>
       <Panel position="top-right">
-        <div className="view-options">
-          <div className="segmented segmented--small" role="group" aria-label={t('view.cableStyle')}>
-            <button className={cableStyle === 'orthogonal' ? 'active' : ''} onClick={() => setCableStyle('orthogonal')}>
-              {t('view.cablesOrthogonal')}
+        <div className="view-options-wrap">
+          <button
+            className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
+            aria-expanded={optionsOpen}
+            onClick={() => setOptionsOpen(!optionsOpen)}
+          >
+            {t('view.options')}
+          </button>
+          <div className={'view-options' + (optionsOpen ? ' open' : '')}>
+            <div className="segmented segmented--small" role="group" aria-label={t('view.cableStyle')}>
+              <button className={cableStyle === 'orthogonal' ? 'active' : ''} onClick={() => setCableStyle('orthogonal')}>
+                {t('view.cablesOrthogonal')}
+              </button>
+              <button className={cableStyle === 'curved' ? 'active' : ''} onClick={() => setCableStyle('curved')}>
+                {t('view.cablesCurved')}
+              </button>
+            </div>
+            <button
+              className={'toggle' + (dimUnused ? ' active' : '')}
+              aria-pressed={dimUnused}
+              onClick={() => setDimUnused(!dimUnused)}
+            >
+              {t('view.dimUnused')}
             </button>
-            <button className={cableStyle === 'curved' ? 'active' : ''} onClick={() => setCableStyle('curved')}>
-              {t('view.cablesCurved')}
+            <button
+              className={'toggle' + (showSignalFlow ? ' active' : '')}
+              aria-pressed={showSignalFlow}
+              onClick={() => setShowSignalFlow(!showSignalFlow)}
+            >
+              〰 {t('flow.toggle')}
             </button>
           </div>
-          <button className={'toggle' + (dimUnused ? ' active' : '')} aria-pressed={dimUnused} onClick={() => setDimUnused(!dimUnused)}>
-            {t('view.dimUnused')}
-          </button>
-          <button
-            className={'toggle' + (showSignalFlow ? ' active' : '')}
-            aria-pressed={showSignalFlow}
-            onClick={() => setShowSignalFlow(!showSignalFlow)}
-          >
-            〰 {t('flow.toggle')}
-          </button>
         </div>
       </Panel>
+      {pending && (
+        <Panel position="bottom-center">
+          <div className="connect-banner" role="status">
+            <span>{t('connect.pick')}</span>
+            <button onClick={() => startConnection(null)}>{t('connect.cancel')}</button>
+          </div>
+        </Panel>
+      )}
     </ReactFlow>
   );
 }

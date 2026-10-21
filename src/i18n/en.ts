@@ -83,6 +83,15 @@ export const en = {
   'library.sources': 'Sources',
 
   'inspector.close': 'Close',
+  'inspector.expand': 'Show more',
+  'inspector.collapse': 'Show less',
+
+  'connect.fromHere': 'Connect a cable from here',
+  'connect.pick': 'Now tap the port to connect to',
+  'connect.cancel': 'Cancel',
+
+  'toolbar.more': 'More',
+  'view.options': 'View',
   'inspector.empty': 'Select a device or a cable to edit it.',
 
   'add.title': 'Add device',
