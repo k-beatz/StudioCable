@@ -34,6 +34,20 @@ export const en = {
   'cable.none': 'No cables yet. In the diagram, drag from one port to another to connect them.',
   'cable.filter': 'Filter…',
 
+  'flow.title': 'Signal flow',
+  'flow.toggle': 'Signal flow',
+  'flow.upstream': 'Comes from',
+  'flow.downstream': 'Goes to',
+  'flow.none': 'No signal path yet. Connect cables to see where the signal goes.',
+  'flow.onlyPath': 'Only cables in the signal flow',
+  'flow.hint': 'Select a device, port or cable to see its signal flow.',
+
+  'port.device': 'Device',
+  'port.signal': 'Signal',
+  'port.alsoAccepts': 'Also accepts',
+  'port.connector': 'Connector',
+  'port.cables': 'Cables',
+
   'checks.none': 'No problems found.',
   'checks.empty': 'Nothing to check yet.',
 
@@ -154,7 +168,7 @@ export const en = {
   'preset.compressor2': 'Generic stereo compressor',
   'preset.diBox': 'Generic passive DI box',
   'preset.mixer8': 'Generic 8-channel mixer',
-  'preset.patchbay24': 'Generic 24-point patchbay',
+  'preset.patchbay24': 'Generic 24-point patchbay (half-normalled)',
   'preset.activeMonitor': 'Generic active monitor',
   'preset.headphones': 'Generic headphones',
   'preset.dynamicMic': 'Generic microphone',

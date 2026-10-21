@@ -602,3 +602,116 @@ select {
   box-shadow: 0 4px 16px rgb(0 0 0 / 0.3);
   z-index: 200;
 }
+
+/* ---------- Signal flow ---------- */
+
+.device-node,
+.react-flow__edge {
+  transition: opacity 0.15s;
+}
+.device-node.dimmed,
+.react-flow__edge.dimmed {
+  opacity: 0.2;
+}
+.port-row {
+  cursor: pointer;
+  border-radius: 6px;
+}
+.port-row--traced {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.port-row--selected {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.toggle {
+  min-height: 36px;
+  font-size: 0.85rem;
+  background: var(--panel);
+}
+.toggle.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .react-flow__edge.animated path {
+    animation: none;
+  }
+}
+
+.signal-paths h4 {
+  margin: 10px 0 4px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.signal-paths ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.signal-path {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 10px;
+  background: var(--panel-2);
+  border-radius: 8px;
+}
+.signal-path__stop {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.signal-path__stop small {
+  color: var(--muted);
+}
+/* Cable between two stops: a short vertical line with the cable ID. */
+.signal-path__cable {
+  min-height: 30px;
+  margin-left: 6px;
+  padding: 0 10px;
+  border: none;
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
+  background: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.signal-path__cable::before {
+  content: '↓ ';
+}
+.muted {
+  color: var(--muted);
+}
+.clickable {
+  cursor: pointer;
+}
+.align-left {
+  text-align: left;
+  padding-left: 0;
+}
+.table-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch);
+}
+.checkbox input {
+  width: 20px;
+  min-height: 20px;
+}
+.data-table tr.traced td {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}

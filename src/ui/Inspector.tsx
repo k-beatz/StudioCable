@@ -4,7 +4,9 @@ import { addDevice, describeEnd, removeCable, removeDevice, updateCable, updateD
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
+import { traceForSelection } from '../store/trace';
 import { CommitInput } from './CommitInput';
+import { SignalPathList } from './SignalPathList';
 import { CABLE_COLORS, connectorsText, issueText, SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 
 /** Edit panel for the selected device or cable. */
@@ -14,17 +16,23 @@ export function Inspector() {
   const select = useProjectStore((s) => s.select);
   if (!selection) return null;
 
-  const device = selection.kind === 'device' ? project.devices.find((d) => d.id === selection.id) : undefined;
+  const device = selection.kind !== 'cable' ? project.devices.find((d) => d.id === selection.id) : undefined;
   const cable = selection.kind === 'cable' ? project.cables.find((c) => c.id === selection.id) : undefined;
   if (!device && !cable) return null;
+  const trace = traceForSelection(project, selection);
 
   return (
     <aside className="inspector">
       <button className="inspector__close" onClick={() => select(null)} aria-label={t('inspector.close')}>
         ✕
       </button>
-      {device && <DeviceInspector device={device} project={project} />}
+      {device && selection.kind === 'device' && <DeviceInspector device={device} project={project} />}
+      {device && selection.kind === 'port' && (
+        <PortInspector device={device} portId={selection.portId} project={project} />
+      )}
       {cable && <CableInspector cable={cable} project={project} />}
+      <h3>{t('flow.title')}</h3>
+      <SignalPathList trace={trace} />
     </aside>
   );
 }
@@ -69,7 +77,7 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
       <h3>{t('device.ports')}</h3>
       <ul className="port-list">
         {template?.ports.map((p) => (
-          <li key={p.id}>
+          <li key={p.id} className="clickable" onClick={() => select({ kind: 'port', id: device.id, portId: p.id })}>
             <span className="port-badge" style={{ background: SIGNAL_COLORS[p.signal] }}>
               {t(`signalShort.${p.signal}`)}
             </span>
@@ -91,6 +99,57 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
         >
           {t('device.delete')}
         </button>
+      </div>
+    </>
+  );
+}
+
+function PortInspector({ device, portId, project }: { device: DeviceInstance; portId: string; project: Project }) {
+  const select = useProjectStore((s) => s.select);
+  const port = project.templates[device.templateId]?.ports.find((p) => p.id === portId);
+  if (!port) return null;
+  const cables = project.cables.filter((c) => c.ends.some((e) => e.deviceId === device.id && e.portId === portId));
+
+  return (
+    <>
+      <h2>{port.label}</h2>
+      <div className="field">
+        <span>{t('port.device')}</span>
+        <button className="link-button align-left" onClick={() => select({ kind: 'device', id: device.id })}>
+          {device.name}
+        </button>
+      </div>
+      <div className="field">
+        <span>{t('port.signal')}</span>
+        <div>
+          <span className="port-badge" style={{ background: SIGNAL_COLORS[port.signal] }}>
+            {t(`signalShort.${port.signal}`)}
+          </span>{' '}
+          {t(`signal.${port.signal}`)} · {t(`direction.${port.direction}`)}
+          {port.channels && port.channels > 1 ? ` · ${port.channels} ch` : ''}
+        </div>
+      </div>
+      {port.alsoAccepts && port.alsoAccepts.length > 0 && (
+        <div className="field">
+          <span>{t('port.alsoAccepts')}</span>
+          <div>{port.alsoAccepts.map((sig) => t(`signal.${sig}`)).join(', ')}</div>
+        </div>
+      )}
+      <div className="field">
+        <span>{t('port.connector')}</span>
+        <div>{connectorsText(port.connectors)}</div>
+      </div>
+      <div className="field">
+        <span>{t('port.cables')}</span>
+        <div>
+          {cables.length === 0
+            ? '—'
+            : cables.map((c) => (
+                <button key={c.id} className="link-button" onClick={() => select({ kind: 'cable', id: c.id })}>
+                  {c.label}
+                </button>
+              ))}
+        </div>
       </div>
     </>
   );

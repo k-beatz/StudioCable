@@ -21,8 +21,8 @@ export interface GenericSpec {
   model: string;
   category: DeviceCategory;
   groups: PortGroup[];
-  /** Pairs of port labels that are connected internally (e.g. preamp in -> out). */
-  routing?: { from: string; to: string }[];
+  /** Internal paths by port label (e.g. preamp in -> out). */
+  routing?: { from: string; to: string; breakWhenPatched?: string[] }[];
 }
 
 export function buildTemplate(spec: GenericSpec, origin: 'generic' | 'custom' = 'generic'): DeviceTemplate {
@@ -41,7 +41,9 @@ export function buildTemplate(spec: GenericSpec, origin: 'generic' | 'custom' = 
   const routing: InternalRoute[] = (spec.routing ?? []).flatMap((r) => {
     const from = byLabel.get(r.from);
     const to = byLabel.get(r.to);
-    return from && to ? [{ from, to }] : [];
+    if (!from || !to) return [];
+    const breaks = (r.breakWhenPatched ?? []).flatMap((l) => byLabel.get(l) ?? []);
+    return [breaks.length ? { from, to, breakWhenPatched: breaks } : { from, to }];
   });
   return {
     id: newId('t-'),
@@ -72,6 +74,21 @@ function channelRoutes(count: number, inLabel: string, outLabel: string) {
     from: count > 1 ? `${inLabel} ${i + 1}` : inLabel,
     to: count > 1 ? `${outLabel} ${i + 1}` : outLabel,
   }));
+}
+
+/**
+ * Half-normalled patchbay: top rear feeds bottom rear until something is
+ * plugged into bottom front. Top front taps the top signal without breaking it.
+ */
+function halfNormalled(count: number) {
+  return Array.from({ length: count }, (_, i) => {
+    const n = i + 1;
+    return [
+      { from: `Top Rear ${n}`, to: `Bottom Rear ${n}`, breakWhenPatched: [`Bottom Front ${n}`] },
+      { from: `Top Rear ${n}`, to: `Top Front ${n}` },
+      { from: `Bottom Front ${n}`, to: `Bottom Rear ${n}` },
+    ];
+  }).flat();
 }
 
 export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
@@ -170,13 +187,15 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
     key: 'patchbay24',
     spec: {
       manufacturer: 'Generic',
-      model: 'Patchbay 24 points (rear only)',
+      model: 'Patchbay 24 points (half-normalled)',
       category: 'patchbay',
       groups: [
         { count: 24, label: 'Top Rear', direction: 'in', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'line-bal' },
+        { count: 24, label: 'Bottom Front', direction: 'in', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'line-bal' },
         { count: 24, label: 'Bottom Rear', direction: 'out', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'line-bal' },
+        { count: 24, label: 'Top Front', direction: 'out', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'line-bal' },
       ],
-      routing: channelRoutes(24, 'Top Rear', 'Bottom Rear'),
+      routing: halfNormalled(24),
     },
   },
   {

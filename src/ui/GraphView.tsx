@@ -4,6 +4,7 @@ import {
   ConnectionMode,
   Controls,
   MiniMap,
+  Panel,
   ReactFlow,
   type Connection,
   type Edge,
@@ -14,7 +15,9 @@ import { addCable, getPort, removeCable, removeDevice, updateDevice } from '../c
 import type { DeviceInstance } from '../core/model';
 import { worstSeverity } from '../core/validation';
 import { useAnalysis } from '../store/analysis';
+import { t } from '../i18n';
 import { useProjectStore, type Selection } from '../store/projectStore';
+import { useTrace } from '../store/trace';
 import { DeviceNode, type DeviceNodeType } from './DeviceNode';
 import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 
@@ -39,6 +42,9 @@ export function GraphView() {
   const apply = useProjectStore((s) => s.apply);
   const select = useProjectStore((s) => s.select);
   const { byCable } = useAnalysis();
+  const trace = useTrace();
+  const showSignalFlow = useProjectStore((s) => s.showSignalFlow);
+  const setShowSignalFlow = useProjectStore((s) => s.setShowSignalFlow);
 
   // React Flow keeps measurement data on its nodes, so we hold them in local
   // state and only write positions back to the project when a drag ends.
@@ -60,6 +66,8 @@ export function GraphView() {
         const severity = worstSeverity(byCable.get(cable.id) ?? []);
         const selected = selection?.kind === 'cable' && selection.id === cable.id;
         const showIcon = severity === 'error' || severity === 'warning';
+        const traced = trace?.cableIds.has(cable.id) ?? false;
+        const dimmed = trace !== undefined && !traced;
         return {
           id: cable.id,
           source: from.deviceId,
@@ -70,16 +78,19 @@ export function GraphView() {
           label: (showIcon ? SEVERITY_ICONS[severity] + ' ' : '') + cable.label,
           labelBgPadding: [6, 3] as [number, number],
           labelBgBorderRadius: 4,
-          className: 'cable-edge' + (severity === 'error' ? ' cable-edge--error' : ''),
+          // Animated dashes show the signal direction along the traced path.
+          animated: traced,
+          zIndex: traced ? 1 : 0,
+          className: 'cable-edge' + (severity === 'error' ? ' cable-edge--error' : '') + (dimmed ? ' dimmed' : ''),
           style: {
             stroke: port ? SIGNAL_COLORS[port.signal] : undefined,
-            strokeWidth: selected ? 4 : 2.5,
-            strokeDasharray: severity === 'error' ? '6 4' : undefined,
+            strokeWidth: selected || traced ? 4 : 2.5,
+            strokeDasharray: severity === 'error' && !traced ? '6 4' : undefined,
           },
           interactionWidth: 28,
         };
       }),
-    [project, byCable, selection],
+    [project, byCable, selection, trace],
   );
 
   const onConnect = useCallback(
@@ -136,6 +147,15 @@ export function GraphView() {
       <Background gap={20} />
       <Controls showInteractive={false} />
       <MiniMap pannable zoomable className="minimap" />
+      <Panel position="top-right">
+        <button
+          className={'toggle' + (showSignalFlow ? ' active' : '')}
+          aria-pressed={showSignalFlow}
+          onClick={() => setShowSignalFlow(!showSignalFlow)}
+        >
+          〰 {t('flow.toggle')}
+        </button>
+      </Panel>
     </ReactFlow>
   );
 }

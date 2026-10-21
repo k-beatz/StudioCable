@@ -5,6 +5,7 @@ import { worstSeverity } from '../core/validation';
 import { t, type MessageKey } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
+import { traceForSelection } from '../store/trace';
 import { CommitInput } from './CommitInput';
 import { issueText, SEVERITY_ICONS } from './labels';
 
@@ -27,6 +28,8 @@ export function CableTable() {
   const select = useProjectStore((s) => s.select);
   const { byCable } = useAnalysis();
   const [filter, setFilter] = useState('');
+  const [onlyPath, setOnlyPath] = useState(false);
+  const trace = traceForSelection(project, selection);
   const [sort, setSort] = useState<{ key: SortKey; desc: boolean }>({ key: 'label', desc: false });
 
   const rows = useMemo(() => {
@@ -39,6 +42,7 @@ export function CableTable() {
     const q = filter.trim().toLowerCase();
     const list = project.cables
       .map((c) => ({ cable: c, from: text(c, 'from'), to: text(c, 'to') }))
+      .filter((r) => !onlyPath || !trace || trace.cableIds.has(r.cable.id))
       .filter(
         (r) => !q || COLUMNS.some((col) => text(r.cable, col.key).toLowerCase().includes(q)),
       );
@@ -50,7 +54,7 @@ export function CableTable() {
       return sort.desc ? -cmp : cmp;
     });
     return list;
-  }, [project, filter, sort]);
+  }, [project, filter, sort, onlyPath, trace]);
 
   const update = (id: string, patch: Partial<Cable>) => apply((p) => updateCable(p, id, patch));
 
@@ -58,13 +62,20 @@ export function CableTable() {
 
   return (
     <div className="table-view">
-      <input
-        className="filter-input"
-        type="search"
-        placeholder={t('cable.filter')}
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-      />
+      <div className="table-tools">
+        <input
+          className="filter-input"
+          type="search"
+          placeholder={t('cable.filter')}
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+        <label className="checkbox">
+          <input type="checkbox" checked={onlyPath} onChange={(e) => setOnlyPath(e.target.checked)} />
+          {t('flow.onlyPath')}
+        </label>
+        {onlyPath && !trace && <span className="muted">{t('flow.hint')}</span>}
+      </div>
       <div className="table-scroll">
         <table className="data-table">
           <thead>
@@ -86,7 +97,10 @@ export function CableTable() {
               const severity = worstSeverity(issues);
               const selected = selection?.kind === 'cable' && selection.id === cable.id;
               return (
-                <tr key={cable.id} className={selected ? 'selected' : undefined}>
+                <tr
+                  key={cable.id}
+                  className={(selected ? 'selected' : '') + (trace?.cableIds.has(cable.id) ? ' traced' : '')}
+                >
                   <td title={issues.map(issueText).join('\n')}>{severity ? SEVERITY_ICONS[severity] : ''}</td>
                   <td>
                     <button className="link-button" onClick={() => select({ kind: 'cable', id: cable.id })}>

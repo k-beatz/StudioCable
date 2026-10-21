@@ -10,13 +10,19 @@ import { createProject, parseProject, serializeProject } from '../core/project';
 const HISTORY_LIMIT = 200;
 const AUTOSAVE_KEY = 'studiocable.autosave';
 
-export type Selection = { kind: 'device' | 'cable'; id: string } | null;
+export type Selection =
+  | { kind: 'device' | 'cable'; id: string }
+  /** `id` is the device, `portId` the port on it. */
+  | { kind: 'port'; id: string; portId: string }
+  | null;
 
 interface ProjectState {
   project: Project;
   past: Project[];
   future: Project[];
   selection: Selection;
+  /** Highlight the signal flow of the current selection. */
+  showSignalFlow: boolean;
 
   /** Apply an edit and record it for undo. */
   apply: (fn: (p: Project) => Project) => void;
@@ -24,6 +30,7 @@ interface ProjectState {
   redo: () => void;
   replaceProject: (p: Project) => void;
   select: (s: Selection) => void;
+  setShowSignalFlow: (on: boolean) => void;
 }
 
 function loadAutosave(): Project {
@@ -41,6 +48,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   past: [],
   future: [],
   selection: null,
+  showSignalFlow: true,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -62,6 +70,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   },
   replaceProject: (p) => set({ project: p, past: [], future: [], selection: null }),
   select: (selection) => set({ selection }),
+  setShowSignalFlow: (showSignalFlow) => set({ showSignalFlow }),
 }));
 
 // Autosave (debounced) whenever the project changes.
