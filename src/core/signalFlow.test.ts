@@ -116,6 +116,16 @@ describe('signal flow', () => {
     expect(trace.portKeys.has(portKey(s.ref('Pre', 'Out 2')))).toBe(true);
   });
 
+  it('takes only one internal hop per device and skips unconnected ports', () => {
+    const s = studio();
+    // Interface routing is not defined, but the preamp is: Mic In 2 -> Out 2 is
+    // a dead end while Out 2 has no cable.
+    s.cable(['Iface', 'Line Out 2'], ['Pre', 'Mic In 2']);
+    expect(traceFromPort(s.project, s.ref('Iface', 'Line Out 2')).downstream.map((p) => describe_(s, p))).toEqual([
+      'Iface/Line Out 2 -> Pre/Mic In 2',
+    ]);
+  });
+
   it('ignores cables between two outputs', () => {
     const s = studio();
     s.cable(['Iface', 'Line Out 3'], ['Pre', 'Out 2']);

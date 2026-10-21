@@ -1,0 +1,125 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-xenyx-1202sfx",
+  "manufacturer": "Behringer",
+  "model": "Xenyx 1202SFX",
+  "category": "mixer",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Behringer product page (Quick Start Guide QSG_BE_0601-AHS_XENYX-1202SFX_WW under Downloads)",
+      "url": "https://www.behringer.com/product.html?modelCode=0601-AHS"
+    }
+  ],
+  "notes": "From the Quick Start Guide (controls 1-31, panel drawing, specifications). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB audio plays on stereo channel 11/12 until a jack is plugged into LINE IN 11/12; channel 11/12 has no mono function on L. The guide contradicts itself on MONITOR OUT: the controls section says unbalanced, the specifications say impedance-balanced TRS. Routing lists where a signal can go; what actually reaches an output depends on LEVEL, FX, STREAM TO MIX/MONITOR and FX TO MONITOR. DC power input not listed.",
+  "groups": [
+    {
+      "count": 4,
+      "label": "MIC",
+      "direction": "in",
+      "connectors": [{ "type": "xlr", "gender": "female" }],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["LINE IN 1", "LINE IN 2", "LINE IN 3", "LINE IN 4"],
+      "direction": "in",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal",
+      "alsoAccepts": ["line-unbal"]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINE IN 5/6 L",
+        "LINE IN 5/6 R",
+        "LINE IN 7/8 L",
+        "LINE IN 7/8 R",
+        "LINE IN 9/10 L",
+        "LINE IN 9/10 R",
+        "LINE IN 11/12 L",
+        "LINE IN 11/12 R"
+      ],
+      "direction": "in",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal",
+      "alsoAccepts": ["line-unbal"]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["STREAM IN L", "STREAM IN R"],
+      "direction": "in",
+      "connectors": [{ "type": "rca", "gender": "female" }],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["MAIN OUT L", "MAIN OUT R"],
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["MONITOR OUT L", "MONITOR OUT R"],
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 1,
+      "label": "FX SEND",
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 1,
+      "label": "PHONES",
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["STREAM OUT L", "STREAM OUT R"],
+      "direction": "out",
+      "connectors": [{ "type": "rca", "gender": "female" }],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 1,
+      "label": "USB",
+      "direction": "bidi",
+      "connectors": [{ "type": "usb-b", "gender": "female" }],
+      "signal": "data",
+      "channels": 2
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MIC 1", "MIC 2", "MIC 3", "MIC 4",
+        "LINE IN 1", "LINE IN 2", "LINE IN 3", "LINE IN 4",
+        "LINE IN 5/6 L", "LINE IN 5/6 R", "LINE IN 7/8 L", "LINE IN 7/8 R",
+        "LINE IN 9/10 L", "LINE IN 9/10 R", "LINE IN 11/12 L", "LINE IN 11/12 R"
+      ],
+      "to": [
+        "MAIN OUT L", "MAIN OUT R", "MONITOR OUT L", "MONITOR OUT R",
+        "PHONES", "STREAM OUT L", "STREAM OUT R", "FX SEND", "USB"
+      ]
+    },
+    {
+      "from": ["STREAM IN L", "STREAM IN R", "USB"],
+      "to": ["MAIN OUT L", "MAIN OUT R", "MONITOR OUT L", "MONITOR OUT R", "PHONES", "STREAM OUT L", "STREAM OUT R"]
+    }
+  ]
+}

@@ -44,8 +44,12 @@ export const portKey = (ref: PortRef) => `${ref.deviceId}/${ref.portId}`;
 const sends = (p: Port) => p.direction !== 'in';
 const receives = (p: Port) => p.direction !== 'out';
 
-/** All ports one step away from `ref` in the given direction. */
-function neighbors(project: Project, ref: PortRef, dir: Direction, occupied: Set<string>) {
+/**
+ * All ports one step away from `ref` in the given direction. A signal takes at
+ * most one internal hop per device (`afterInternal` = it just took one), so
+ * it can't wander through unconnected ports of a device.
+ */
+function neighbors(project: Project, ref: PortRef, dir: Direction, occupied: Set<string>, afterInternal: boolean) {
   const result: { to: PortRef; link: Link }[] = [];
   const port = getPort(project, ref);
   if (!port) return result;
@@ -65,6 +69,7 @@ function neighbors(project: Project, ref: PortRef, dir: Direction, occupied: Set
   }
 
   // Through the device.
+  if (afterInternal) return result;
   const device = project.devices.find((d) => d.id === ref.deviceId);
   const routing = device ? project.templates[device.templateId]?.routing : undefined;
   for (const route of routing ?? []) {
@@ -72,9 +77,7 @@ function neighbors(project: Project, ref: PortRef, dir: Direction, occupied: Set
     if (here !== ref.portId) continue;
     const broken = route.breakWhenPatched?.some((p) => occupied.has(`${ref.deviceId}/${p}`));
     // Skip dead ends inside the device (e.g. an empty patchbay front jack).
-    const leadsOn =
-      occupied.has(`${ref.deviceId}/${there}`) ||
-      routing!.some((r) => (dir === 'downstream' ? r.from : r.to) === there);
+    const leadsOn = occupied.has(`${ref.deviceId}/${there}`);
     if (!broken && leadsOn) result.push({ to: { deviceId: ref.deviceId, portId: there }, link: { kind: 'internal' } });
   }
   return result;
@@ -95,7 +98,7 @@ function walk(project: Project, start: PortRef, dir: Direction, occupied: Set<st
   const visit = (path: SignalPath, seen: Set<string>) => {
     if (paths.length >= MAX_PATHS) return;
     const here = path.ports[path.ports.length - 1];
-    const next = path.ports.length > MAX_DEPTH ? [] : neighbors(project, here, dir, occupied).filter((n) => !seen.has(portKey(n.to)));
+    const next = path.ports.length > MAX_DEPTH ? [] : neighbors(project, here, dir, occupied, path.links.at(-1)?.kind === 'internal').filter((n) => !seen.has(portKey(n.to)));
     if (next.length === 0) {
       if (path.links.length > 0) paths.push(path);
       return;

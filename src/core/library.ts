@@ -29,7 +29,29 @@ export interface LibraryDevice {
   sources: Source[];
   notes?: string;
   groups: PortGroup[];
-  routing?: GenericSpec['routing'];
+  routing?: LibraryRoute[];
+}
+
+/**
+ * Internal path by port label. `from` and `to` may be lists: every port in
+ * `from` connects to every port in `to` (handy for "all inputs -> main mix").
+ */
+export interface LibraryRoute {
+  from: string | string[];
+  to: string | string[];
+  breakWhenPatched?: string[];
+}
+
+const asList = (x: string | string[]) => (Array.isArray(x) ? x : [x]);
+
+function expandRoutes(routes: LibraryRoute[] = []): NonNullable<GenericSpec['routing']> {
+  return routes.flatMap((r) =>
+    asList(r.from).flatMap((from) =>
+      asList(r.to)
+        .filter((to) => to !== from)
+        .map((to) => (r.breakWhenPatched ? { from, to, breakWhenPatched: r.breakWhenPatched } : { from, to })),
+    ),
+  );
 }
 
 /** Checks a parsed library file. Returns a list of problems (empty = valid). */
@@ -67,7 +89,7 @@ export function validateLibraryDevice(data: unknown): string[] {
     }
   });
   for (const r of d.routing ?? []) {
-    for (const label of [r.from, r.to, ...(r.breakWhenPatched ?? [])]) {
+    for (const label of [...asList(r.from), ...asList(r.to), ...(r.breakWhenPatched ?? [])]) {
       if (!labels.has(label)) errors.push(`routing refers to unknown port "${label}"`);
     }
   }
@@ -78,7 +100,7 @@ export function validateLibraryDevice(data: unknown): string[] {
 export function libraryToTemplate(device: LibraryDevice): DeviceTemplate {
   const groups = device.groups.map((g) => ({ ...g, count: g.labels?.length ?? g.count }));
   return {
-    ...buildTemplate({ ...device, groups }, 'library'),
+    ...buildTemplate({ ...device, groups, routing: expandRoutes(device.routing) }, 'library'),
     libraryId: device.id,
     sources: device.sources.map((s) => ({ ...s })),
     verified: device.status === 'verified',

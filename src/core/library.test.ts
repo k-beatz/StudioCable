@@ -35,6 +35,17 @@ describe('library format', () => {
     expect(t.sources?.[0].url).toBe('https://example.com/manual.pdf');
   });
 
+  it('expands list routes to every input/output pair', () => {
+    const t = libraryToTemplate({ ...sample, routing: [{ from: ['Mic In 1', 'Mic In 2'], to: ['Main Out L', 'Main Out R'] }] });
+    const label = (id: string) => t.ports.find((p) => p.id === id)!.label;
+    expect(t.routing!.map((r) => `${label(r.from)}>${label(r.to)}`)).toEqual([
+      'Mic In 1>Main Out L',
+      'Mic In 1>Main Out R',
+      'Mic In 2>Main Out L',
+      'Mic In 2>Main Out R',
+    ]);
+  });
+
   it('reports mistakes', () => {
     const bad = {
       ...sample,
