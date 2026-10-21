@@ -1,0 +1,109 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "yamaha-hs8s",
+  "manufacturer": "Yamaha",
+  "model": "HS8S",
+  "category": "monitor",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "HS Series specifications (Yamaha)",
+      "url": "https://usa.yamaha.com/products/proaudio/speakers/hs_series/specs.html"
+    }
+  ],
+  "notes": "Powered subwoofer. I/O connectors per the specifications: INPUT XLR3-31 (female) x2 and PHONE (6.35 mm balanced) x2; OUTPUT XLR3-32 (male) x2 (L&R) to the satellite monitors, plus XLR3-32 EXT SUB output (listed on the US page). Routing: inputs feed the L/R outputs and the sub output; any high-pass filtering of the L/R outputs is not modelled.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT L (XLR)",
+        "INPUT R (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT L (TRS)",
+        "INPUT R (TRS)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT L",
+        "OUTPUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "EXT SUB"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT L (XLR)",
+        "INPUT L (TRS)"
+      ],
+      "to": [
+        "OUTPUT L",
+        "EXT SUB"
+      ]
+    },
+    {
+      "from": [
+        "INPUT R (XLR)",
+        "INPUT R (TRS)"
+      ],
+      "to": [
+        "OUTPUT R",
+        "EXT SUB"
+      ]
+    }
+  ]
+}

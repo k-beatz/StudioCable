@@ -63,6 +63,8 @@ export const en = {
   'add.library': 'Library',
   'add.searchLibrary': 'Search manufacturer or model…',
   'add.allCategories': 'All categories',
+  'add.allManufacturers': 'All manufacturers',
+  'add.resultCount': '{count} of {total} devices',
   'add.libraryEmpty': 'The device library is still empty.',
   'add.noMatches': 'No devices match your search.',
   'add.inputs': 'in',

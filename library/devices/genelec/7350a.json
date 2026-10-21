@@ -1,0 +1,131 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "genelec-7350a",
+  "manufacturer": "Genelec",
+  "model": "7350A",
+  "category": "monitor",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "7350A product page and specifications (Genelec)",
+      "url": "https://www.genelec.com/7350a"
+    }
+  ],
+  "notes": "SAM subwoofer with bass management. Specifications list 6 x XLR analog input, 5 x XLR analog output, XLR AES/EBU input and output, and 2 x RJ45 control ports for GLM. The channel mapping of inputs to outputs is not stated; routing assumes input n feeds output n. XLR gender not stated (female by convention for inputs).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Analog Input 1",
+        "Analog Input 2",
+        "Analog Input 3",
+        "Analog Input 4",
+        "Analog Input 5",
+        "Analog Input 6"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Analog Output 1",
+        "Analog Output 2",
+        "Analog Output 3",
+        "Analog Output 4",
+        "Analog Output 5"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "AES/EBU Input"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "aes-xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "AES/EBU Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "aes-xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "GLM Control 1",
+        "GLM Control 2"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "rj45",
+          "gender": "none"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": "Analog Input 1",
+      "to": "Analog Output 1"
+    },
+    {
+      "from": "Analog Input 2",
+      "to": "Analog Output 2"
+    },
+    {
+      "from": "Analog Input 3",
+      "to": "Analog Output 3"
+    },
+    {
+      "from": "Analog Input 4",
+      "to": "Analog Output 4"
+    },
+    {
+      "from": "Analog Input 5",
+      "to": "Analog Output 5"
+    },
+    {
+      "from": "AES/EBU Input",
+      "to": "AES/EBU Output"
+    }
+  ]
+}

@@ -65,8 +65,15 @@ function portSummary(groups: PortGroup[]): string {
 function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<DeviceCategory | ''>('');
+  const [manufacturer, setManufacturer] = useState('');
   const categories = DEVICE_CATEGORIES.filter((c) => LIBRARY.some((d) => d.category === c));
-  const results = LIBRARY.filter((d) => (!category || d.category === category) && matchesQuery(d, query));
+  const manufacturers = [...new Set(LIBRARY.map((d) => d.manufacturer))].sort((a, b) => a.localeCompare(b));
+  const results = LIBRARY.filter(
+    (d) =>
+      (!category || d.category === category) &&
+      (!manufacturer || d.manufacturer === manufacturer) &&
+      matchesQuery(d, query),
+  );
 
   return (
     <div className="modal__body">
@@ -87,7 +94,18 @@ function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
             </option>
           ))}
         </select>
+        <select value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}>
+          <option value="">{t('add.allManufacturers')}</option>
+          {manufacturers.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
       </div>
+      {LIBRARY.length > 0 && (
+        <p className="muted result-count">{t('add.resultCount', { count: results.length, total: LIBRARY.length })}</p>
+      )}
       {LIBRARY.length === 0 && <p className="muted">{t('add.libraryEmpty')}</p>}
       {LIBRARY.length > 0 && results.length === 0 && <p className="muted">{t('add.noMatches')}</p>}
       <ul className="preset-list">

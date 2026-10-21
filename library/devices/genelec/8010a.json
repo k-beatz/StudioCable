@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "genelec-8010a",
+  "manufacturer": "Genelec",
+  "model": "8010A",
+  "category": "monitor",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "8010A product page and specifications (Genelec)",
+      "url": "https://www.genelec.com/8010a"
+    }
+  ],
+  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Analog Input"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ]
+}

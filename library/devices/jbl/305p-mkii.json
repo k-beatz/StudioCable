@@ -1,0 +1,54 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "jbl-305p-mkii",
+  "manufacturer": "JBL",
+  "model": "305P MkII",
+  "category": "monitor",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "305P MkII product page (JBL Professional)",
+      "url": "https://jblpro.com/products/305p-mkii"
+    }
+  ],
+  "notes": "Active studio monitor with balanced XLR and 6.35 mm TRS inputs and a +4 dBu / -10 dBV input sensitivity switch (per the product page). Whether both inputs can be used at the same time is not stated. XLR gender not stated (female by convention).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input (TRS)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    }
+  ]
+}

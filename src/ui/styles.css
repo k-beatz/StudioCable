@@ -766,3 +766,8 @@ select {
 .source-list a {
   color: var(--accent);
 }
+
+.result-count {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+}

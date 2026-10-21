@@ -1,0 +1,54 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "yamaha-hs8",
+  "manufacturer": "Yamaha",
+  "model": "HS8",
+  "category": "monitor",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "HS Series specifications (Yamaha)",
+      "url": "https://usa.yamaha.com/products/proaudio/speakers/hs_series/specs.html"
+    }
+  ],
+  "notes": "Active studio monitor. I/O connectors per the specifications: XLR3-31 type (female, balanced) and PHONE (6.35 mm, balanced). Whether both inputs can be used at the same time is not stated.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input (TRS)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    }
+  ]
+}
