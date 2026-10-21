@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-sm58",
+  "manufacturer": "Shure",
+  "model": "SM58",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "SM58 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/SM58/en-US"
+    }
+  ],
+  "notes": "Dynamic microphone. Output: Three-pin professional audio (XLR), male. No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

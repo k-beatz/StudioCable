@@ -1,0 +1,316 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "focusrite-scarlett-18i20-3rd-gen",
+  "manufacturer": "Focusrite",
+  "model": "Scarlett 18i20 (3rd Gen)",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Scarlett 18i20 3rd Gen User Guide V2 (Focusrite)",
+      "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/Scarlett%2018i20%203rd%20Gen%20User%20Guide%20V2.pdf"
+    }
+  ],
+  "notes": "Inputs 1-2 are front combo XLR/jack (mic, line, instrument), inputs 3-8 rear combo (mic or line). Line Outputs 1-2 are MAIN, 3-4 ALT, 5-10 further line outputs (6.35 mm TRS). Two TOSLINK pairs for ADAT (the left port of each pair can carry optical S/PDIF). S/PDIF in/out on RCA, word clock out on BNC, IEC mains (not listed). Two headphone outputs per the guide's monitoring section. Routing via Focusrite Control.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input 1",
+        "Input 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal",
+        "instrument"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input 3",
+        "Input 4",
+        "Input 5",
+        "Input 6",
+        "Input 7",
+        "Input 8"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Line Output 1",
+        "Line Output 2",
+        "Line Output 3",
+        "Line Output 4",
+        "Line Output 5",
+        "Line Output 6",
+        "Line Output 7",
+        "Line Output 8",
+        "Line Output 9",
+        "Line Output 10"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Headphones 1"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Headphones 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Optical In 1",
+        "Optical In 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "none"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 8
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Optical Out 1",
+        "Optical Out 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "none"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 8
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "S/PDIF In"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "S/PDIF Out"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Word Clock Out"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "bnc",
+          "gender": "female"
+        }
+      ],
+      "signal": "clock"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI In"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI Out"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-c",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "Input 1",
+        "Input 2",
+        "Input 3",
+        "Input 4",
+        "Input 5",
+        "Input 6",
+        "Input 7",
+        "Input 8",
+        "Optical In 1",
+        "Optical In 2",
+        "S/PDIF In"
+      ],
+      "to": [
+        "USB",
+        "Line Output 1",
+        "Line Output 2",
+        "Line Output 3",
+        "Line Output 4",
+        "Line Output 5",
+        "Line Output 6",
+        "Line Output 7",
+        "Line Output 8",
+        "Line Output 9",
+        "Line Output 10",
+        "Headphones 1",
+        "Headphones 2",
+        "Optical Out 1",
+        "Optical Out 2",
+        "S/PDIF Out"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "Line Output 1",
+        "Line Output 2",
+        "Line Output 3",
+        "Line Output 4",
+        "Line Output 5",
+        "Line Output 6",
+        "Line Output 7",
+        "Line Output 8",
+        "Line Output 9",
+        "Line Output 10",
+        "Headphones 1",
+        "Headphones 2",
+        "Optical Out 1",
+        "Optical Out 2",
+        "S/PDIF Out"
+      ]
+    },
+    {
+      "from": "MIDI In",
+      "to": "USB"
+    },
+    {
+      "from": "USB",
+      "to": "MIDI Out"
+    }
+  ]
+}

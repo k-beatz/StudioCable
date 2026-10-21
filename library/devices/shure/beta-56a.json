@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-beta-56a",
+  "manufacturer": "Shure",
+  "model": "Beta 56A",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Beta 56A user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/Beta56A/en-US"
+    }
+  ],
+  "notes": "Dynamic microphone. Output: Three-pin professional audio (XLR), male, balanced. No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "focusrite-scarlett-2i2-3rd-gen",
+  "manufacturer": "Focusrite",
+  "model": "Scarlett 2i2 (3rd Gen)",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Scarlett 2i2 3rd Gen User Guide V2 (Focusrite)",
+      "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/Scarlett%202i2%203rd%20Gen%20User%20Guide%20V2.pdf"
+    }
+  ],
+  "notes": "Inputs 1-2 are combo XLR/6.35 mm jack: mic on XLR, line or instrument (INST) on jack. Kensington lock not listed. USB bus-powered. Routing: Direct Monitor sends the inputs straight to the outputs; inputs reach the computer via USB.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Input 1",
+        "Input 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal",
+        "instrument"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Line Output Left",
+        "Line Output Right"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Headphones"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-c",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "Input 1",
+        "Input 2"
+      ],
+      "to": [
+        "USB",
+        "Line Output Left",
+        "Line Output Right",
+        "Headphones"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "Line Output Left",
+        "Line Output Right",
+        "Headphones"
+      ]
+    }
+  ]
+}

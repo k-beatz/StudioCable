@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-sm86",
+  "manufacturer": "Shure",
+  "model": "SM86",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "SM86 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/SM86/en-US"
+    }
+  ],
+  "notes": "Condenser microphone. Output: Three-Pin Professional Audio Connector. Needs phantom power.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

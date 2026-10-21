@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-sm57",
+  "manufacturer": "Shure",
+  "model": "SM57",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "SM57 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/SM57/en-US"
+    }
+  ],
+  "notes": "Dynamic microphone. Output: Three-pin professional audio (XLR), male. No phantom power needed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

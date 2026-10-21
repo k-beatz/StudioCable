@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-sm81",
+  "manufacturer": "Shure",
+  "model": "SM81",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "SM81 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/SM81/en-US"
+    }
+  ],
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male. Needs phantom power.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

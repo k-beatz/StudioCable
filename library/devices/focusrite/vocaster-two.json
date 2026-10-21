@@ -1,0 +1,164 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "focusrite-vocaster-two",
+  "manufacturer": "Focusrite",
+  "model": "Vocaster Two",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Vocaster Two User Guide v2 (Focusrite)",
+      "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/vocaster_two_user_guide_v2_en.pdf"
+    }
+  ],
+  "notes": "Podcast interface. Host and Guest mic inputs are XLR. Speaker outputs L/R are 6.35 mm TRS. Headphone outputs are 6.35 mm on the front. Camera Out is a 3.5 mm TRS jack, Phone is a 3.5 mm TRRS jack (4-pole; listed as 3.5 mm TRS because the app has no TRRS type yet). Bluetooth audio not listed. Routing: all sources are mixed to the outputs, camera, phone and computer.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Host Mic",
+        "Guest Mic"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output L",
+        "Output R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Host Headphones"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Guest Headphones"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Camera Out"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Phone"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-c",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "Host Mic",
+        "Guest Mic",
+        "Phone"
+      ],
+      "to": [
+        "USB",
+        "Output L",
+        "Output R",
+        "Host Headphones",
+        "Guest Headphones",
+        "Camera Out"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "Output L",
+        "Output R",
+        "Host Headphones",
+        "Guest Headphones",
+        "Camera Out",
+        "Phone"
+      ]
+    },
+    {
+      "from": [
+        "Host Mic",
+        "Guest Mic"
+      ],
+      "to": "Phone"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-gi100",
+  "manufacturer": "Behringer",
+  "model": "Ultra-G GI100",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/6dcbe39caaae4ecbab86f46ce8a9ed3d/QSG_BE_P0137_GI100_110x145mm_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0809-AAC"
+    }
+  ],
+  "notes": "Active guitar DI with cabinet simulation, battery or phantom powered. INPUT is a 6.35 mm mono jack; OUTPUT TO MIXER is balanced XLR at mic level. DIRECT LINK TO CABINET passes the input on to an amp; its connector type is not stated in the guide (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "DIRECT LINK TO CABINET"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT TO MIXER"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": "INPUT",
+      "to": [
+        "OUTPUT TO MIXER",
+        "DIRECT LINK TO CABINET"
+      ]
+    }
+  ]
+}

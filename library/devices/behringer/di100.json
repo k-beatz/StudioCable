@@ -1,0 +1,104 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-di100",
+  "manufacturer": "Behringer",
+  "model": "Ultra-DI DI100",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/0f02a7a9f9e74ce2b76a2911e6b92f7c/QSG_BE_0809-AAA_DI100_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0809-AAA"
+    }
+  ],
+  "notes": "Active DI box, battery or phantom powered. INPUT (6.35 mm jack) and the unbalanced XLR input both feed the box. LINK OUT is the unbalanced parallel output for an amp; OUTPUT is the balanced mic-level output to the mixer. Two -20 dB pads allow up to speaker level. XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "XLR INPUT"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINK OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT",
+        "XLR INPUT"
+      ],
+      "to": [
+        "OUTPUT",
+        "LINK OUT"
+      ]
+    }
+  ]
+}

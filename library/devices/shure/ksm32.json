@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-ksm32",
+  "manufacturer": "Shure",
+  "model": "KSM32",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "KSM32 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/KSM32/en-US"
+    }
+  ],
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

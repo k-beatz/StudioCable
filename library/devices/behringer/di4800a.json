@@ -1,0 +1,115 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-di4800a",
+  "manufacturer": "Behringer",
+  "model": "DI4800A",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/a874b83d48b14b378d51323319f3d34e/QSG_BE_0809-AAT_DI4800A_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0809-AAT"
+    }
+  ],
+  "notes": "4-channel active DI, booster and line isolator. Inputs are balanced XLR/6.35 mm combo jacks; each channel has a front and a rear transformer-balanced XLR output (rear with -20 dB pad). Powered by an external DC supply (not listed). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "mic"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT (front) 1",
+        "OUTPUT (front) 2",
+        "OUTPUT (front) 3",
+        "OUTPUT (front) 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT (rear) 1",
+        "OUTPUT (rear) 2",
+        "OUTPUT (rear) 3",
+        "OUTPUT (rear) 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": "INPUT 1",
+      "to": [
+        "OUTPUT (front) 1",
+        "OUTPUT (rear) 1"
+      ]
+    },
+    {
+      "from": "INPUT 2",
+      "to": [
+        "OUTPUT (front) 2",
+        "OUTPUT (rear) 2"
+      ]
+    },
+    {
+      "from": "INPUT 3",
+      "to": [
+        "OUTPUT (front) 3",
+        "OUTPUT (rear) 3"
+      ]
+    },
+    {
+      "from": "INPUT 4",
+      "to": [
+        "OUTPUT (front) 4",
+        "OUTPUT (rear) 4"
+      ]
+    }
+  ]
+}

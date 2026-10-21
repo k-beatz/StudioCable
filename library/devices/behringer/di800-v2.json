@@ -1,0 +1,181 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-di800-v2",
+  "manufacturer": "Behringer",
+  "model": "Ultra-DI Pro DI800 V2",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/acf268c938c24ecba26275172d5bf3ff/QSG_BE_0809-AAM_DI800-V2_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0809-AAM"
+    }
+  ],
+  "notes": "8-channel active DI box (19\" rack, mains or phantom). Per channel: INPUT, LINK (wired in parallel with INPUT, usable as input or unbalanced thru output), UNBAL OUT after the gain stage, and balanced XLR BAL OUT at mic level. The specifications list all jacks as 6.35 mm TS; the controls section calls LINK a TRS connector. XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINK 1",
+        "LINK 2",
+        "LINK 3",
+        "LINK 4",
+        "LINK 5",
+        "LINK 6",
+        "LINK 7",
+        "LINK 8"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "UNBAL OUT 1",
+        "UNBAL OUT 2",
+        "UNBAL OUT 3",
+        "UNBAL OUT 4",
+        "UNBAL OUT 5",
+        "UNBAL OUT 6",
+        "UNBAL OUT 7",
+        "UNBAL OUT 8"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "BAL OUT 1",
+        "BAL OUT 2",
+        "BAL OUT 3",
+        "BAL OUT 4",
+        "BAL OUT 5",
+        "BAL OUT 6",
+        "BAL OUT 7",
+        "BAL OUT 8"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": "INPUT 1",
+      "to": [
+        "BAL OUT 1",
+        "UNBAL OUT 1",
+        "LINK 1"
+      ]
+    },
+    {
+      "from": "INPUT 2",
+      "to": [
+        "BAL OUT 2",
+        "UNBAL OUT 2",
+        "LINK 2"
+      ]
+    },
+    {
+      "from": "INPUT 3",
+      "to": [
+        "BAL OUT 3",
+        "UNBAL OUT 3",
+        "LINK 3"
+      ]
+    },
+    {
+      "from": "INPUT 4",
+      "to": [
+        "BAL OUT 4",
+        "UNBAL OUT 4",
+        "LINK 4"
+      ]
+    },
+    {
+      "from": "INPUT 5",
+      "to": [
+        "BAL OUT 5",
+        "UNBAL OUT 5",
+        "LINK 5"
+      ]
+    },
+    {
+      "from": "INPUT 6",
+      "to": [
+        "BAL OUT 6",
+        "UNBAL OUT 6",
+        "LINK 6"
+      ]
+    },
+    {
+      "from": "INPUT 7",
+      "to": [
+        "BAL OUT 7",
+        "UNBAL OUT 7",
+        "LINK 7"
+      ]
+    },
+    {
+      "from": "INPUT 8",
+      "to": [
+        "BAL OUT 8",
+        "UNBAL OUT 8",
+        "LINK 8"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,417 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-ha6000",
+  "manufacturer": "Behringer",
+  "model": "Powerplay HA6000",
+  "category": "headphones",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/8d80e202abcf40d6accc48be71d47451/QSG_BE_0835-AAH_HA6000-HA8000-V2_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0835-AAH"
+    }
+  ],
+  "notes": "6-channel headphone mixing and distribution amplifier (19\" rack, IEC mains). Main stereo input on XLR or 6.35 mm TRS, passed through to MAIN OUT (XLR and TRS). Per channel: DIRECT IN (replaces the main signal), AUX IN (blended with BALANCE), front PHONES OUT and a rear OUT that mirrors it. XLR genders follow the usual convention (not stated).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN IN L (XLR)",
+        "MAIN IN R (XLR)"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN IN L",
+        "MAIN IN R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "DIRECT IN 1",
+        "DIRECT IN 2",
+        "DIRECT IN 3",
+        "DIRECT IN 4",
+        "DIRECT IN 5",
+        "DIRECT IN 6"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ],
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "AUX IN 1",
+        "AUX IN 2",
+        "AUX IN 3",
+        "AUX IN 4",
+        "AUX IN 5",
+        "AUX IN 6"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ],
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 1"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 3"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 5"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 6"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 1 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 2 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 3 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 4 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 5 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUT 6 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MAIN IN L (XLR)",
+        "MAIN IN R (XLR)",
+        "MAIN IN L",
+        "MAIN IN R"
+      ],
+      "to": [
+        "PHONES OUT 1",
+        "PHONES OUT 2",
+        "PHONES OUT 3",
+        "PHONES OUT 4",
+        "PHONES OUT 5",
+        "PHONES OUT 6",
+        "OUT 1 (rear)",
+        "OUT 2 (rear)",
+        "OUT 3 (rear)",
+        "OUT 4 (rear)",
+        "OUT 5 (rear)",
+        "OUT 6 (rear)",
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)",
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 1",
+        "AUX IN 1"
+      ],
+      "to": [
+        "PHONES OUT 1",
+        "OUT 1 (rear)"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 2",
+        "AUX IN 2"
+      ],
+      "to": [
+        "PHONES OUT 2",
+        "OUT 2 (rear)"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 3",
+        "AUX IN 3"
+      ],
+      "to": [
+        "PHONES OUT 3",
+        "OUT 3 (rear)"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 4",
+        "AUX IN 4"
+      ],
+      "to": [
+        "PHONES OUT 4",
+        "OUT 4 (rear)"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 5",
+        "AUX IN 5"
+      ],
+      "to": [
+        "PHONES OUT 5",
+        "OUT 5 (rear)"
+      ]
+    },
+    {
+      "from": [
+        "DIRECT IN 6",
+        "AUX IN 6"
+      ],
+      "to": [
+        "PHONES OUT 6",
+        "OUT 6 (rear)"
+      ]
+    }
+  ]
+}

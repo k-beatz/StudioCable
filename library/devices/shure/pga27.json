@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-pga27",
+  "manufacturer": "Shure",
+  "model": "PGA27",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "PGA27 user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/PGA27/en-US"
+    }
+  ],
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male. Needs phantom power.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

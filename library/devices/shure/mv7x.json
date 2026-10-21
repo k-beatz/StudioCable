@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-mv7x",
+  "manufacturer": "Shure",
+  "model": "MV7X",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "MV7X user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/MV7X/en-US"
+    }
+  ],
+  "notes": "Dynamic microphone. Output: passive XLR output (gender not stated; male by convention). No phantom power needed. The MV7X is the XLR-only version of the MV7 (no USB).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

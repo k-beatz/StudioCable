@@ -1,0 +1,266 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-ha8000-v2",
+  "manufacturer": "Behringer",
+  "model": "Powerplay HA8000 V2",
+  "category": "headphones",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/446863b439e34e77b31217aaf4aa014d/QSG_BE_0835-AAH_HA6000-HA8000-V2_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0835-AAI"
+    }
+  ],
+  "notes": "8-channel headphone mixing and distribution amplifier (19\" rack, IEC mains). Two stereo MAIN IN pairs (6.35 mm TRS); each channel selects MAIN IN 1 or 2. A cable in a channel's DIRECT IN mutes the main signal for that channel. The guide mentions an extra rear PHONES OUT per channel, the specifications list 8 headphone outputs; the rear jacks are not listed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "DIRECT IN 1",
+        "DIRECT IN 2",
+        "DIRECT IN 3",
+        "DIRECT IN 4",
+        "DIRECT IN 5",
+        "DIRECT IN 6",
+        "DIRECT IN 7",
+        "DIRECT IN 8"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ],
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 1"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 3"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 5"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 6"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 7"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 8"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R",
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": [
+        "PHONES OUT 1",
+        "PHONES OUT 2",
+        "PHONES OUT 3",
+        "PHONES OUT 4",
+        "PHONES OUT 5",
+        "PHONES OUT 6",
+        "PHONES OUT 7",
+        "PHONES OUT 8"
+      ]
+    },
+    {
+      "from": "DIRECT IN 1",
+      "to": "PHONES OUT 1"
+    },
+    {
+      "from": "DIRECT IN 2",
+      "to": "PHONES OUT 2"
+    },
+    {
+      "from": "DIRECT IN 3",
+      "to": "PHONES OUT 3"
+    },
+    {
+      "from": "DIRECT IN 4",
+      "to": "PHONES OUT 4"
+    },
+    {
+      "from": "DIRECT IN 5",
+      "to": "PHONES OUT 5"
+    },
+    {
+      "from": "DIRECT IN 6",
+      "to": "PHONES OUT 6"
+    },
+    {
+      "from": "DIRECT IN 7",
+      "to": "PHONES OUT 7"
+    },
+    {
+      "from": "DIRECT IN 8",
+      "to": "PHONES OUT 8"
+    }
+  ]
+}

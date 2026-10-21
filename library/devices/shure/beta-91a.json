@@ -1,0 +1,33 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "shure-beta-91a",
+  "manufacturer": "Shure",
+  "model": "Beta 91A",
+  "category": "microphone",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Beta 91A user guide (Shure)",
+      "url": "https://pubs.shure.com/guide/Beta91A/en-US"
+    }
+  ],
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power. Half-cardioid boundary microphone (Beta 91A has its own XLR preamplifier).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "Output"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ]
+}

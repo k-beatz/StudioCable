@@ -1,0 +1,232 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-amp800-v2",
+  "manufacturer": "Behringer",
+  "model": "MiniAmp AMP800 V2",
+  "category": "headphones",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/39c336c9d8e24970aa89b3ebc08bfb80/QSG_BE_0835-AAL_AMP800-V2_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0835-AAL"
+    }
+  ],
+  "notes": "4-channel stereo headphone amplifier. Inputs A and B are balanced 6.35 mm TRS pairs; each headphone channel selects A or B. Each channel has a front and a rear 6.35 mm stereo headphone jack. LINK OUT A passes input A (without level/balance) to another AMP800. External 12 V DC supply (not listed).",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT A L",
+        "INPUT A R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT B L",
+        "INPUT B R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 1"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 2"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 3"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 1 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 2 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 3 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES OUT 4 (rear)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINK OUT A L",
+        "LINK OUT A R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT A L",
+        "INPUT A R",
+        "INPUT B L",
+        "INPUT B R"
+      ],
+      "to": [
+        "PHONES 1",
+        "PHONES 2",
+        "PHONES 3",
+        "PHONES 4",
+        "PHONES OUT 1 (rear)",
+        "PHONES OUT 2 (rear)",
+        "PHONES OUT 3 (rear)",
+        "PHONES OUT 4 (rear)"
+      ]
+    },
+    {
+      "from": "INPUT A L",
+      "to": "LINK OUT A L"
+    },
+    {
+      "from": "INPUT A R",
+      "to": "LINK OUT A R"
+    }
+  ]
+}

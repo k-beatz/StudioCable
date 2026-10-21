@@ -1,0 +1,146 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-di4000-v2",
+  "manufacturer": "Behringer",
+  "model": "Ultra-DI Pro DI4000 V2",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/0c55d04b82754947823dbb4475cf9c57/QSG_BE_0809-AAN_DI4000-V2_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0809-AAN"
+    }
+  ],
+  "notes": "4-channel active DI box (19\" rack, IEC mains). Per channel: 6.35 mm TS INPUT and an unbalanced XLR INPUT, LINK (unbalanced parallel output) and transformer-balanced XLR OUTPUT. The LINK connector type is not in the specifications (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "XLR INPUT 1",
+        "XLR INPUT 2",
+        "XLR INPUT 3",
+        "XLR INPUT 4"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "LINK 1",
+        "LINK 2",
+        "LINK 3",
+        "LINK 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1",
+        "OUTPUT 2",
+        "OUTPUT 3",
+        "OUTPUT 4"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT 1",
+        "XLR INPUT 1"
+      ],
+      "to": [
+        "OUTPUT 1",
+        "LINK 1"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 2",
+        "XLR INPUT 2"
+      ],
+      "to": [
+        "OUTPUT 2",
+        "LINK 2"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 3",
+        "XLR INPUT 3"
+      ],
+      "to": [
+        "OUTPUT 3",
+        "LINK 3"
+      ]
+    },
+    {
+      "from": [
+        "INPUT 4",
+        "XLR INPUT 4"
+      ],
+      "to": [
+        "OUTPUT 4",
+        "LINK 4"
+      ]
+    }
+  ]
+}

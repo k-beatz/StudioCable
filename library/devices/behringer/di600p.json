@@ -1,0 +1,81 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-di600p",
+  "manufacturer": "Behringer",
+  "model": "Ultra-DI DI600P",
+  "category": "di-box",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Technical Specifications (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/8f90cd9668934346b3c0ad4a7dd0551f/8849832575006.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0811-AAC"
+    }
+  ],
+  "notes": "Passive transformer DI box. Input is 6.35 mm TS (instrument, or amp speaker output with the 30 dB INST/AMP pad); output is balanced XLR. The THRU/OUT jack sends the unbalanced signal to an on-stage amp; its connector is described only as a jack (listed as 6.35 mm). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument",
+      "alsoAccepts": [
+        "line-unbal",
+        "line-bal",
+        "speaker"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "THRU/OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "ts-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "instrument"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "mic"
+    }
+  ],
+  "routing": [
+    {
+      "from": "INPUT",
+      "to": [
+        "OUTPUT",
+        "THRU/OUT"
+      ]
+    }
+  ]
+}
