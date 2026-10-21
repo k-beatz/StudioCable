@@ -267,6 +267,61 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
     },
   },
   {
+    key: 'pedalboard',
+    spec: { manufacturer: 'Generic', model: 'Pedalboard', category: 'pedalboard', groups: [] },
+  },
+  {
+    key: 'pedalMono',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Effect pedal',
+      category: 'pedal',
+      groups: [
+        { count: 1, label: 'Input', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument', alsoAccepts: ['line-unbal'] },
+        { count: 1, label: 'Output', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+      ],
+      routing: [{ from: 'Input', to: 'Output' }],
+    },
+  },
+  {
+    key: 'pedalStereo',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Stereo effect pedal',
+      category: 'pedal',
+      groups: [
+        { count: 1, label: 'Input', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument', alsoAccepts: ['line-unbal'] },
+        { count: 1, label: 'Output L', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+        { count: 1, label: 'Output R', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+      ],
+      routing: [
+        { from: 'Input', to: 'Output L' },
+        { from: 'Input', to: 'Output R' },
+      ],
+    },
+  },
+  {
+    key: 'guitarAmp',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Guitar amp',
+      category: 'amp',
+      groups: [
+        { count: 1, label: 'Input', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+        { count: 1, label: 'FX Return', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'line-unbal' },
+        { count: 1, label: 'FX Send', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'line-unbal' },
+        { count: 1, label: 'Line Out', direction: 'out', connectors: [{ type: 'xlr', gender: M }], signal: 'line-bal' },
+      ],
+      // Effects loop: Input feeds FX Send; FX Return feeds the outputs. Without a
+      // cable in FX Return the loop is bridged internally.
+      routing: [
+        { from: 'Input', to: 'FX Send' },
+        { from: 'FX Return', to: 'Line Out' },
+        { from: 'Input', to: 'Line Out', breakWhenPatched: ['FX Return'] },
+      ],
+    },
+  },
+  {
     key: 'computer',
     spec: {
       manufacturer: 'Generic',

@@ -5,7 +5,7 @@
  * incompatible way, bump SCHEMA_VERSION and add a migration in project.ts.
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export type Direction = 'in' | 'out' | 'bidi';
 
@@ -64,6 +64,9 @@ export const DEVICE_CATEGORIES = [
   'microphone',
   'instrument',
   'di-box',
+  'amp',
+  'pedal',
+  'pedalboard',
   'computer',
   'other',
 ] as const;
@@ -124,6 +127,8 @@ export interface DeviceInstance {
   name: string;
   location?: string;
   position: { x: number; y: number };
+  /** ID of a pedalboard (or other container device) this device sits on. */
+  containerId?: string;
 }
 
 export interface CableEnd {
@@ -145,6 +150,19 @@ export interface Cable {
   note?: string;
 }
 
+/**
+ * A "system": devices and cables that belong together, e.g. guitar -> pedals
+ * -> amp -> mixer line in. A device that is only partly involved (the mixer)
+ * is not listed; its ports are marked through the group's cables instead.
+ */
+export interface Group {
+  id: string;
+  name: string;
+  color: string;
+  deviceIds: string[];
+  cableIds: string[];
+}
+
 export interface Project {
   schemaVersion: number;
   id: string;
@@ -153,5 +171,6 @@ export interface Project {
   templates: Record<string, DeviceTemplate>;
   devices: DeviceInstance[];
   cables: Cable[];
+  groups: Group[];
   nextCableNumber: number;
 }

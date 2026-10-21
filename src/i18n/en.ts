@@ -156,6 +156,9 @@ export const en = {
   'category.microphone': 'Microphone',
   'category.instrument': 'Instrument',
   'category.di-box': 'DI box',
+  'category.amp': 'Amplifier',
+  'category.pedal': 'Effect pedal',
+  'category.pedalboard': 'Pedalboard',
   'category.computer': 'Computer',
   'category.other': 'Other',
 
@@ -190,6 +193,10 @@ export const en = {
   'preset.guitar': 'Generic electric guitar / bass',
   'preset.synth': 'Generic synthesizer',
   'preset.computer': 'Generic computer',
+  'preset.pedalboard': 'Pedalboard (holds pedals)',
+  'preset.pedalMono': 'Generic effect pedal (mono)',
+  'preset.pedalStereo': 'Generic effect pedal (stereo out)',
+  'preset.guitarAmp': 'Generic guitar amp',
 } as const;
 
 export type MessageKey = keyof typeof en;
