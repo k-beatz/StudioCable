@@ -1,0 +1,116 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-umc202hd",
+  "manufacturer": "Behringer",
+  "model": "U-PHORIA UMC202HD",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "U-PHORIA Series Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/3663810b762c4f599f7952daec956e72/QSG_BE_0805-AAR_U-PHORIA-Series_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0805-AAR"
+    }
+  ],
+  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). USB bus-powered. Routing: inputs reach the outputs only with DIRECT MONITOR switched on.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal",
+        "instrument"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "OUTPUT 1 (L)",
+        "OUTPUT 2 (R)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
+      "to": [
+        "USB",
+        "OUTPUT 1 (L)",
+        "OUTPUT 2 (R)",
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "OUTPUT 1 (L)",
+        "OUTPUT 2 (R)",
+        "PHONES"
+      ]
+    }
+  ]
+}

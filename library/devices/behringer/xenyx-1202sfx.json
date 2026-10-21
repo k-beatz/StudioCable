@@ -8,9 +8,10 @@
   "status": "unverified",
   "sources": [
     {
-      "title": "Behringer product page (Quick Start Guide QSG_BE_0601-AHS_XENYX-1202SFX_WW under Downloads)",
-      "url": "https://www.behringer.com/product.html?modelCode=0601-AHS"
-    }
+      "title": "Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/a454ff143d3b7e2dea86d204b267ec09/QSG_BE_0601-AHS_XENYX-1202SFX_WW.pdf"
+    },
+    { "title": "Product page (Behringer)", "url": "https://www.behringer.com/products/0601-AHS" }
   ],
   "notes": "From the Quick Start Guide (controls 1-31, panel drawing, specifications). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB audio plays on stereo channel 11/12 until a jack is plugged into LINE IN 11/12; channel 11/12 has no mono function on L. The guide contradicts itself on MONITOR OUT: the controls section says unbalanced, the specifications say impedance-balanced TRS. Routing lists where a signal can go; what actually reaches an output depends on LEVEL, FX, STREAM TO MIX/MONITOR and FX TO MONITOR. DC power input not listed.",
   "groups": [

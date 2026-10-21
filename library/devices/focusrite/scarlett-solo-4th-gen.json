@@ -1,0 +1,63 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "focusrite-scarlett-solo-4th-gen",
+  "manufacturer": "Focusrite",
+  "model": "Scarlett Solo (4th Gen)",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Scarlett Solo 4th Gen User Guide v4 (Focusrite)",
+      "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/scarlett_solo_4th_gen_user_guide_v4-pdf-en.pdf"
+    }
+  ],
+  "notes": "Input 1 is a front 6.35 mm jack for line or instrument (Inst button); Input 2 is the rear XLR mic input. The speaker outputs and the headphone output share the same feed. Kensington lock not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring; computer playback reaches the speaker and headphone outputs.",
+  "groups": [
+    {
+      "count": 1,
+      "label": "Input 1 (Line/Inst)",
+      "direction": "in",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal",
+      "alsoAccepts": ["line-unbal", "instrument"]
+    },
+    {
+      "count": 1,
+      "label": "Input 2 (Mic)",
+      "direction": "in",
+      "connectors": [{ "type": "xlr", "gender": "female" }],
+      "signal": "mic"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["Speaker Output L", "Speaker Output R"],
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 1,
+      "label": "Headphones",
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 1,
+      "label": "USB",
+      "direction": "bidi",
+      "connectors": [{ "type": "usb-c", "gender": "female" }],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": ["Input 1 (Line/Inst)", "Input 2 (Mic)"],
+      "to": ["USB", "Speaker Output L", "Speaker Output R", "Headphones"]
+    },
+    { "from": "USB", "to": ["Speaker Output L", "Speaker Output R", "Headphones"] }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-umc404hd",
+  "manufacturer": "Behringer",
+  "model": "U-PHORIA UMC404HD",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "U-PHORIA Series Quick Start Guide (Behringer)",
+      "url": "https://cdn-media.empowertribe.com/3663810b762c4f599f7952daec956e72/QSG_BE_0805-AAR_U-PHORIA-Series_WW.pdf"
+    },
+    {
+      "title": "Product page (Behringer)",
+      "url": "https://www.behringer.com/products/0805-AAM"
+    }
+  ],
+  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). Main outputs exist as XLR and as 6.35 mm TRS; the guide does not state the XLR gender, male is the usual convention for outputs. INSERT jacks are TRS send/return (100 \u03a9 send, 10 k\u03a9 return); the signal path through them is not modelled. MIDI IN/OUT are 5-pin DIN. Powered by the included adapter (DC IN, not listed) or USB. Routing: the MIX knob blends inputs with playback 1-2 on MAIN OUT; MONITOR A/B selects playback 1-2 or 3-4 for the headphones.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        },
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal",
+        "instrument"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "INSERT 1",
+        "INSERT 2",
+        "INSERT 3",
+        "INSERT 4"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MAIN OUT L (TRS)",
+        "MAIN OUT R (TRS)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PLAYBACK A 1/L (TRS)",
+        "PLAYBACK A 2/R (TRS)",
+        "PLAYBACK B 3/L (TRS)",
+        "PLAYBACK B 4/R (TRS)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PLAYBACK A 1/L (RCA)",
+        "PLAYBACK A 2/R (RCA)",
+        "PLAYBACK B 3/L (RCA)",
+        "PLAYBACK B 4/R (RCA)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ],
+      "to": [
+        "USB",
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)",
+        "MAIN OUT L (TRS)",
+        "MAIN OUT R (TRS)",
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)",
+        "MAIN OUT L (TRS)",
+        "MAIN OUT R (TRS)",
+        "PLAYBACK A 1/L (TRS)",
+        "PLAYBACK A 2/R (TRS)",
+        "PLAYBACK B 3/L (TRS)",
+        "PLAYBACK B 4/R (TRS)",
+        "PLAYBACK A 1/L (RCA)",
+        "PLAYBACK A 2/R (RCA)",
+        "PLAYBACK B 3/L (RCA)",
+        "PLAYBACK B 4/R (RCA)",
+        "PHONES"
+      ]
+    }
+  ]
+}
