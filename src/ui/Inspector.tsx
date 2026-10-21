@@ -74,6 +74,25 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           {template?.manufacturer} {template?.model}
         </div>
       </div>
+      {template?.origin === 'library' && (
+        <div className={'library-note' + (template.verified ? '' : ' library-note--unverified')}>
+          {template.verified ? `✓ ${t('library.verified')}` : `⚠️ ${t('library.unverifiedHint')}`}
+        </div>
+      )}
+      {template?.sources && template.sources.length > 0 && (
+        <div className="field">
+          <span>{t('library.sources')}</span>
+          <ul className="source-list">
+            {template.sources.map((src) => (
+              <li key={src.url}>
+                <a href={src.url} target="_blank" rel="noopener noreferrer">
+                  {src.title ?? src.url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <h3>{t('device.ports')}</h3>
       <ul className="port-list">
         {template?.ports.map((p) => (

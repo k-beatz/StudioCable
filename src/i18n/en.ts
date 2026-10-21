@@ -51,10 +51,23 @@ export const en = {
   'checks.none': 'No problems found.',
   'checks.empty': 'Nothing to check yet.',
 
+  'library.unverified': 'Unverified',
+  'library.unverifiedHint': 'These specs come from the sources below but have not been checked yet. Please compare them with your device.',
+  'library.verified': 'Checked against the device',
+  'library.sources': 'Sources',
+
   'inspector.close': 'Close',
   'inspector.empty': 'Select a device or a cable to edit it.',
 
   'add.title': 'Add device',
+  'add.library': 'Library',
+  'add.searchLibrary': 'Search manufacturer or model…',
+  'add.allCategories': 'All categories',
+  'add.libraryEmpty': 'The device library is still empty.',
+  'add.noMatches': 'No devices match your search.',
+  'add.inputs': 'in',
+  'add.outputs': 'out',
+  'add.bidi': 'bidirectional',
   'add.presets': 'Quick devices',
   'add.custom': 'Build your own',
   'add.manufacturer': 'Manufacturer',

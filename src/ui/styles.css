@@ -715,3 +715,54 @@ select {
 .data-table tr.traced td {
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
+
+/* ---------- Library ---------- */
+
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.search-row .filter-input {
+  flex: 2 1 220px;
+}
+.search-row select {
+  flex: 1 1 160px;
+  width: auto;
+}
+.preset-list__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.badge--warning {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+.library-note {
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  font-size: 0.85rem;
+}
+.library-note--unverified {
+  border-left: 4px solid var(--warning);
+}
+.source-list {
+  margin: 0;
+  padding-left: 18px;
+  overflow-wrap: anywhere;
+}
+.source-list a {
+  color: var(--accent);
+}

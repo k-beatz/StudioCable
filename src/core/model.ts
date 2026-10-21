@@ -94,6 +94,11 @@ export interface InternalRoute {
   breakWhenPatched?: string[];
 }
 
+export interface Source {
+  title?: string;
+  url: string;
+}
+
 export type TemplateOrigin = 'library' | 'generic' | 'custom';
 
 export interface DeviceTemplate {
@@ -104,8 +109,11 @@ export interface DeviceTemplate {
   ports: Port[];
   routing?: InternalRoute[];
   origin: TemplateOrigin;
-  /** Library devices: where the specs come from (e.g. manual URL). */
-  source?: string;
+  /** Library devices: ID of the library entry this template was created from. */
+  libraryId?: string;
+  /** Where the specs come from (e.g. the manufacturer's manual). */
+  sources?: Source[];
+  /** Library devices: checked by a person against the real device or manual. */
   verified?: boolean;
 }
 

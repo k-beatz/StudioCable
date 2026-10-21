@@ -1,0 +1,101 @@
+import { buildTemplate, portLabels, type GenericSpec, type PortGroup } from './generic';
+import {
+  CONNECTOR_TYPES,
+  DEVICE_CATEGORIES,
+  SIGNAL_TYPES,
+  type DeviceCategory,
+  type DeviceTemplate,
+  type Source,
+} from './model';
+
+/**
+ * Library device files (library/devices/**.json). They describe a real
+ * device in compact port groups and always name their sources. See
+ * library/README.md for the format.
+ */
+
+export const LIBRARY_FORMAT = 'studiocable-device';
+export const LIBRARY_SCHEMA_VERSION = 1;
+
+export interface LibraryDevice {
+  format: typeof LIBRARY_FORMAT;
+  schemaVersion: number;
+  /** Stable ID, e.g. "behringer-xenyx-1202sfx". */
+  id: string;
+  manufacturer: string;
+  model: string;
+  category: DeviceCategory;
+  status: 'verified' | 'unverified';
+  sources: Source[];
+  notes?: string;
+  groups: PortGroup[];
+  routing?: GenericSpec['routing'];
+}
+
+/** Checks a parsed library file. Returns a list of problems (empty = valid). */
+export function validateLibraryDevice(data: unknown): string[] {
+  const errors: string[] = [];
+  const d = data as Partial<LibraryDevice>;
+  if (!d || typeof d !== 'object') return ['not an object'];
+  if (d.format !== LIBRARY_FORMAT) errors.push(`format must be "${LIBRARY_FORMAT}"`);
+  if (d.schemaVersion !== LIBRARY_SCHEMA_VERSION) errors.push(`schemaVersion must be ${LIBRARY_SCHEMA_VERSION}`);
+  if (!d.id || !/^[a-z0-9-]+$/.test(d.id)) errors.push('id must be lowercase letters, digits and dashes');
+  if (!d.manufacturer) errors.push('manufacturer missing');
+  if (!d.model) errors.push('model missing');
+  if (!DEVICE_CATEGORIES.includes(d.category as DeviceCategory)) errors.push(`unknown category "${d.category}"`);
+  if (d.status !== 'verified' && d.status !== 'unverified') errors.push('status must be verified or unverified');
+  if (!Array.isArray(d.sources) || d.sources.length === 0 || d.sources.some((s) => !/^https:\/\//.test(s?.url ?? ''))) {
+    errors.push('at least one source with an https URL is required');
+  }
+  if (!Array.isArray(d.groups) || d.groups.length === 0) return [...errors, 'groups missing'];
+
+  const labels = new Set<string>();
+  d.groups.forEach((g, i) => {
+    const where = `groups[${i}]`;
+    if (!['in', 'out', 'bidi'].includes(g.direction)) errors.push(`${where}: bad direction`);
+    if (!SIGNAL_TYPES.includes(g.signal)) errors.push(`${where}: unknown signal "${g.signal}"`);
+    for (const s of g.alsoAccepts ?? []) if (!SIGNAL_TYPES.includes(s)) errors.push(`${where}: unknown signal "${s}"`);
+    if (!Array.isArray(g.connectors) || g.connectors.length === 0) errors.push(`${where}: connectors missing`);
+    for (const c of g.connectors ?? []) {
+      if (!CONNECTOR_TYPES.includes(c.type)) errors.push(`${where}: unknown connector "${c.type}"`);
+      if (!['male', 'female', 'none'].includes(c.gender)) errors.push(`${where}: bad gender "${c.gender}"`);
+    }
+    if (!g.labels && !(g.count > 0 && g.label)) errors.push(`${where}: needs labels, or count and label`);
+    for (const label of portLabels(g)) {
+      if (labels.has(label)) errors.push(`duplicate port label "${label}"`);
+      labels.add(label);
+    }
+  });
+  for (const r of d.routing ?? []) {
+    for (const label of [r.from, r.to, ...(r.breakWhenPatched ?? [])]) {
+      if (!labels.has(label)) errors.push(`routing refers to unknown port "${label}"`);
+    }
+  }
+  return errors;
+}
+
+/** Creates a project template (with fresh IDs) from a library entry. */
+export function libraryToTemplate(device: LibraryDevice): DeviceTemplate {
+  const groups = device.groups.map((g) => ({ ...g, count: g.labels?.length ?? g.count }));
+  return {
+    ...buildTemplate({ ...device, groups }, 'library'),
+    libraryId: device.id,
+    sources: device.sources.map((s) => ({ ...s })),
+    verified: device.status === 'verified',
+  };
+}
+
+/** Lower-case text a search query is matched against. */
+export function searchText(device: LibraryDevice): string {
+  return `${device.manufacturer} ${device.model} ${device.category} ${device.id}`.toLowerCase();
+}
+
+/** Every word of the query must appear somewhere (order doesn't matter). */
+export function matchesQuery(device: LibraryDevice, query: string): boolean {
+  const text = searchText(device);
+  return query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((word) => text.includes(word));
+}

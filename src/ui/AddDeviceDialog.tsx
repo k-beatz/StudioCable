@@ -5,74 +5,144 @@ import {
   DEVICE_CATEGORIES,
   SIGNAL_TYPES,
   type ConnectorType,
+  type DeviceCategory,
   type DeviceTemplate,
   type Direction,
 } from '../core/model';
-import { t } from '../i18n';
+import { libraryToTemplate, matchesQuery } from '../core/library';
+import { t, type MessageKey } from '../i18n';
+import { LIBRARY } from '../library';
 
 interface Props {
   onAdd: (template: DeviceTemplate) => void;
   onClose: () => void;
 }
 
-/** Modal to add a quick (preset) device or build a custom one from port groups. */
-export function AddDeviceDialog({ onAdd, onClose }: Props) {
-  const [tab, setTab] = useState<'presets' | 'custom'>('presets');
-  const [query, setQuery] = useState('');
+type Tab = 'library' | 'presets' | 'custom';
 
-  const q = query.trim().toLowerCase();
-  const presets = GENERIC_PRESETS.filter(
-    (p) =>
-      !q ||
-      t(`preset.${p.key}` as Parameters<typeof t>[0]).toLowerCase().includes(q) ||
-      t(`category.${p.spec.category}`).toLowerCase().includes(q),
-  );
+/** Modal to add a device: from the library, a quick generic device, or a custom one. */
+export function AddDeviceDialog({ onAdd, onClose }: Props) {
+  const [tab, setTab] = useState<Tab>(LIBRARY.length > 0 ? 'library' : 'presets');
+  const tabs: { key: Tab; label: MessageKey }[] = [
+    { key: 'library', label: 'add.library' },
+    { key: 'presets', label: 'add.presets' },
+    { key: 'custom', label: 'add.custom' },
+  ];
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={t('add.title')}>
         <div className="modal__header">
           <div className="segmented">
-            <button className={tab === 'presets' ? 'active' : ''} onClick={() => setTab('presets')}>
-              {t('add.presets')}
-            </button>
-            <button className={tab === 'custom' ? 'active' : ''} onClick={() => setTab('custom')}>
-              {t('add.custom')}
-            </button>
+            {tabs.map((x) => (
+              <button key={x.key} className={tab === x.key ? 'active' : ''} onClick={() => setTab(x.key)}>
+                {t(x.label)}
+              </button>
+            ))}
           </div>
           <button className="icon-button" onClick={onClose} aria-label={t('add.cancel')}>
             ✕
           </button>
         </div>
-
-        {tab === 'presets' ? (
-          <div className="modal__body">
-            <input
-              type="search"
-              className="filter-input"
-              placeholder={t('add.search')}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              autoFocus
-            />
-            <ul className="preset-list">
-              {presets.map((p) => (
-                <li key={p.key}>
-                  <button onClick={() => onAdd(buildTemplate(p.spec))}>
-                    <strong>{t(`preset.${p.key}` as Parameters<typeof t>[0])}</strong>
-                    <small>
-                      {t(`category.${p.spec.category}`)} ·{' '}
-                      {p.spec.groups.map((g) => `${g.count}× ${g.label}`).join(', ')}
-                    </small>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <CustomBuilder onAdd={onAdd} />
-        )}
+        {tab === 'library' && <LibraryList onAdd={onAdd} />}
+        {tab === 'presets' && <PresetList onAdd={onAdd} />}
+        {tab === 'custom' && <CustomBuilder onAdd={onAdd} />}
       </div>
+    </div>
+  );
+}
+
+/** "12 in · 9 out" style summary of a device's ports. */
+function portSummary(groups: PortGroup[]): string {
+  const count = (dir: Direction) =>
+    groups.filter((g) => g.direction === dir).reduce((n, g) => n + (g.labels?.length ?? g.count), 0);
+  const parts = [`${count('in')} ${t('add.inputs')}`, `${count('out')} ${t('add.outputs')}`];
+  const bidi = count('bidi');
+  if (bidi) parts.push(`${bidi} ${t('add.bidi')}`);
+  return parts.join(' · ');
+}
+
+function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<DeviceCategory | ''>('');
+  const categories = DEVICE_CATEGORIES.filter((c) => LIBRARY.some((d) => d.category === c));
+  const results = LIBRARY.filter((d) => (!category || d.category === category) && matchesQuery(d, query));
+
+  return (
+    <div className="modal__body">
+      <div className="search-row">
+        <input
+          type="search"
+          className="filter-input"
+          placeholder={t('add.searchLibrary')}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          autoFocus
+        />
+        <select value={category} onChange={(e) => setCategory(e.target.value as DeviceCategory | '')}>
+          <option value="">{t('add.allCategories')}</option>
+          {categories.map((c) => (
+            <option key={c} value={c}>
+              {t(`category.${c}`)}
+            </option>
+          ))}
+        </select>
+      </div>
+      {LIBRARY.length === 0 && <p className="muted">{t('add.libraryEmpty')}</p>}
+      {LIBRARY.length > 0 && results.length === 0 && <p className="muted">{t('add.noMatches')}</p>}
+      <ul className="preset-list">
+        {results.map((d) => (
+          <li key={d.id}>
+            <button onClick={() => onAdd(libraryToTemplate(d))}>
+              <span className="preset-list__title">
+                <strong>
+                  {d.manufacturer} {d.model}
+                </strong>
+                {d.status === 'unverified' && <span className="badge badge--warning">{t('library.unverified')}</span>}
+              </span>
+              <small>
+                {t(`category.${d.category}`)} · {portSummary(d.groups)}
+              </small>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PresetList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
+  const presets = GENERIC_PRESETS.filter(
+    (p) =>
+      !q ||
+      t(`preset.${p.key}` as MessageKey).toLowerCase().includes(q) ||
+      t(`category.${p.spec.category}`).toLowerCase().includes(q),
+  );
+
+  return (
+    <div className="modal__body">
+      <input
+        type="search"
+        className="filter-input"
+        placeholder={t('add.search')}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        autoFocus
+      />
+      <ul className="preset-list">
+        {presets.map((p) => (
+          <li key={p.key}>
+            <button onClick={() => onAdd(buildTemplate(p.spec))}>
+              <strong>{t(`preset.${p.key}` as MessageKey)}</strong>
+              <small>
+                {t(`category.${p.spec.category}`)} · {portSummary(p.spec.groups)}
+              </small>
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

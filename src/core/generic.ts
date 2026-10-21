@@ -1,5 +1,14 @@
 import { newId } from './ids';
-import type { Connector, DeviceCategory, DeviceTemplate, Direction, InternalRoute, Port, SignalType } from './model';
+import type {
+  Connector,
+  DeviceCategory,
+  DeviceTemplate,
+  Direction,
+  InternalRoute,
+  Port,
+  SignalType,
+  TemplateOrigin,
+} from './model';
 
 /**
  * Generic devices are built from "port groups": e.g. 8 x "Input" XLR mic.
@@ -9,6 +18,8 @@ export interface PortGroup {
   count: number;
   /** Label prefix; numbered automatically when count > 1 ("Input 1", "Input 2"). */
   label: string;
+  /** Explicit labels as printed on the device; overrides count and label. */
+  labels?: string[];
   direction: Direction;
   connectors: Connector[];
   signal: SignalType;
@@ -25,11 +36,16 @@ export interface GenericSpec {
   routing?: { from: string; to: string; breakWhenPatched?: string[] }[];
 }
 
-export function buildTemplate(spec: GenericSpec, origin: 'generic' | 'custom' = 'generic'): DeviceTemplate {
+export function portLabels(g: PortGroup): string[] {
+  if (g.labels) return g.labels;
+  return Array.from({ length: Math.max(0, g.count) }, (_, i) => (g.count > 1 ? `${g.label} ${i + 1}` : g.label));
+}
+
+export function buildTemplate(spec: GenericSpec, origin: TemplateOrigin = 'generic'): DeviceTemplate {
   const ports: Port[] = spec.groups.flatMap((g) =>
-    Array.from({ length: Math.max(0, g.count) }, (_, i) => ({
+    portLabels(g).map((label) => ({
       id: newId('port-'),
-      label: g.count > 1 ? `${g.label} ${i + 1}` : g.label,
+      label,
       direction: g.direction,
       connectors: g.connectors.map((c) => ({ ...c })),
       signal: g.signal,
