@@ -18,6 +18,8 @@ export const en = {
   'view.cablesOrthogonal': 'Right angles',
   'view.cablesCurved': 'Curves',
   'view.dimUnused': 'Dim unused ports',
+  'view.tidy': 'Tidy up',
+  'view.tidyHint': 'Arrange the devices by signal flow, from sources on the left to outputs on the right. Undo brings the old layout back.',
 
   'board.open': 'Open',
   'board.openFull': 'Open board',

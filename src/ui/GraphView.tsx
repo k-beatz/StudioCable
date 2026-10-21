@@ -14,6 +14,7 @@ import {
 } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
+import { tidyLayout, visibleDevices, type Size } from '../core/layout';
 import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
 import { t } from '../i18n';
@@ -37,14 +38,6 @@ import { isTouchDevice } from './device';
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 
 const isBoard = (project: Project, d: DeviceInstance) => project.templates[d.templateId]?.category === 'pedalboard';
-
-/** Devices shown at the current level: the main level, or the inside of one board. */
-function visibleDevices(project: Project, boardId: string | null): DeviceInstance[] {
-  const ids = new Set(project.devices.map((d) => d.id));
-  return project.devices.filter((d) =>
-    boardId ? d.containerId === boardId : !d.containerId || !ids.has(d.containerId),
-  );
-}
 
 /** Where a cable end is drawn at the current level, or null if it is not visible here. */
 function endpoint(project: Project, end: CableEnd, visible: Set<string>): { node: string; handle: string } | null {
@@ -199,6 +192,17 @@ export function GraphView() {
     return result;
   }, [project, boardId, byCable, selection, highlight, groups, cableStyle]);
 
+  /** "Tidy up": sort the devices of this level by signal flow, then frame them. */
+  const tidyUp = () => {
+    const sizes = new Map<string, Size>();
+    for (const n of flow.getNodes()) {
+      if (n.measured?.width && n.measured.height) sizes.set(n.id, { width: n.measured.width, height: n.measured.height });
+    }
+    apply((p) => tidyLayout(p, boardId, sizes));
+    setOptionsOpen(false);
+    setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 60);
+  };
+
   const onConnect = useCallback((c: Connection) => {
     if (!c.sourceHandle || !c.targetHandle) return;
     if (c.source.startsWith('ext-') || c.target.startsWith('ext-')) return;
@@ -258,13 +262,18 @@ export function GraphView() {
       </Panel>
       <Panel position="top-right">
         <div className="view-options-wrap">
-          <button
-            className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
-            aria-expanded={optionsOpen}
-            onClick={() => setOptionsOpen(!optionsOpen)}
-          >
-            {t('view.options')}
-          </button>
+          <div className="view-options-bar">
+            <button className="tidy-button" onClick={tidyUp} disabled={nodes.length < 2} title={t('view.tidyHint')}>
+              <TidyIcon /> {t('view.tidy')}
+            </button>
+            <button
+              className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
+              aria-expanded={optionsOpen}
+              onClick={() => setOptionsOpen(!optionsOpen)}
+            >
+              {t('view.options')}
+            </button>
+          </div>
           <div className={'view-options' + (optionsOpen ? ' open' : '')}>
             <div className="segmented segmented--small" role="group" aria-label={t('view.cableStyle')}>
               <button className={cableStyle === 'orthogonal' ? 'active' : ''} onClick={() => setCableStyle('orthogonal')}>
@@ -300,5 +309,17 @@ export function GraphView() {
         </Panel>
       )}
     </ReactFlow>
+  );
+}
+
+/** Three bars lining up: the "tidy up" symbol. */
+function TidyIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+      <rect x="1" y="2" width="4" height="4" rx="1" />
+      <rect x="1" y="10" width="4" height="4" rx="1" />
+      <rect x="11" y="6" width="4" height="4" rx="1" />
+      <path d="M5 4h3v8H5M8 8h3" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
   );
 }

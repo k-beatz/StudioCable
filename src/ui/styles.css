@@ -906,6 +906,27 @@ select {
   padding-right: 10px;
   font-weight: 700;
 }
+.view-options-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.view-options-bar {
+  display: flex;
+  gap: 8px;
+}
+.tidy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  border-radius: 10px;
+  font-weight: 700;
+  background: var(--panel);
+}
+.tidy-button:disabled {
+  opacity: 0.5;
+}
 .view-options {
   display: flex;
   flex-wrap: wrap;
@@ -1189,7 +1210,6 @@ select {
   /* View options collapse into one button. */
   .view-options-toggle {
     display: block;
-    margin-left: auto;
   }
   .view-options-wrap {
     display: flex;
