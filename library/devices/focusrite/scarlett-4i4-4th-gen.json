@@ -1,0 +1,84 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "focusrite-scarlett-4i4-4th-gen",
+  "manufacturer": "Focusrite",
+  "model": "Scarlett 4i4 (4th Gen)",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Scarlett 4i4 4th Gen User Guide v5 (Focusrite)",
+      "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/scarlett_4i4_4th_gen_user_guide_v5_en.pdf"
+    }
+  ],
+  "notes": "Inputs 1 and 2 are front combo XLR/6.35 mm jacks (mic on XLR, line or instrument on jack via the Inst button). Inputs 3 and 4 are rear 6.35 mm jacks for line level. Line Outputs 1-2 are the main speaker outputs, 3-4 are extra outputs with the same electrical characteristics. MIDI In/Out are 5-pin DIN. The optional 5V DC USB-C power input and the Kensington lock are not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring / Focusrite Control 2 routing; computer playback reaches all outputs.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["Input 1", "Input 2"],
+      "direction": "in",
+      "connectors": [
+        { "type": "xlr", "gender": "female" },
+        { "type": "trs-6.3", "gender": "female" }
+      ],
+      "signal": "mic",
+      "alsoAccepts": ["line-bal", "line-unbal", "instrument"]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["Input 3", "Input 4"],
+      "direction": "in",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal",
+      "alsoAccepts": ["line-unbal"]
+    },
+    {
+      "count": 4,
+      "label": "Line Output",
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 1,
+      "label": "Headphones",
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 1,
+      "label": "MIDI In",
+      "direction": "in",
+      "connectors": [{ "type": "midi-din", "gender": "female" }],
+      "signal": "midi"
+    },
+    {
+      "count": 1,
+      "label": "MIDI Out",
+      "direction": "out",
+      "connectors": [{ "type": "midi-din", "gender": "female" }],
+      "signal": "midi"
+    },
+    {
+      "count": 1,
+      "label": "USB",
+      "direction": "bidi",
+      "connectors": [{ "type": "usb-c", "gender": "female" }],
+      "signal": "data"
+    }
+  ],
+  "routing": [
+    {
+      "from": ["Input 1", "Input 2", "Input 3", "Input 4"],
+      "to": ["USB", "Line Output 1", "Line Output 2", "Line Output 3", "Line Output 4", "Headphones"]
+    },
+    { "from": "USB", "to": ["Line Output 1", "Line Output 2", "Line Output 3", "Line Output 4", "Headphones"] },
+    { "from": "MIDI In", "to": "USB" },
+    { "from": "USB", "to": "MIDI Out" }
+  ]
+}
