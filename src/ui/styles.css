@@ -14,8 +14,9 @@
   font-size: 15px;
 }
 
+/* Dark is the default; light follows the system unless a theme is forced. */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme='dark']) {
     --bg: #f3f4f7;
     --panel: #ffffff;
     --panel-2: #eef0f4;
@@ -24,6 +25,15 @@
     --muted: #5d6475;
     color-scheme: light;
   }
+}
+:root[data-theme='light'] {
+  --bg: #f3f4f7;
+  --panel: #ffffff;
+  --panel-2: #eef0f4;
+  --border: #d5d9e2;
+  --text: #1b1e25;
+  --muted: #5d6475;
+  color-scheme: light;
 }
 
 * {
@@ -571,4 +581,24 @@ select {
   .group-row {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+.modal--small {
+  width: min(420px, 100%);
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 4px 4px 4px 16px;
+  background: var(--panel);
+  border: 1px solid var(--danger);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.3);
+  z-index: 200;
 }

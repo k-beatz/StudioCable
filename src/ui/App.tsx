@@ -25,6 +25,8 @@ export function App() {
 function Shell() {
   const [view, setView] = useState<View>('graph');
   const [adding, setAdding] = useState(false);
+  const [confirmingNew, setConfirmingNew] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
   const project = useProjectStore((s) => s.project);
   const canUndo = useProjectStore((s) => s.past.length > 0);
   const canRedo = useProjectStore((s) => s.future.length > 0);
@@ -59,7 +61,7 @@ function Shell() {
       setTimeout(() => flow.fitView(), 50);
     } catch (e) {
       const key = e instanceof ProjectParseError ? e.message : 'notJson';
-      alert(t(`file.error.${key}` as MessageKey));
+      setMessage(t(`file.error.${key}` as MessageKey));
     }
   };
 
@@ -83,13 +85,7 @@ function Shell() {
           </button>
         </div>
         <div className="toolbar__group">
-          <button
-            onClick={() => {
-              if (confirm(t('toolbar.confirmNew'))) replaceProject(createProject());
-            }}
-          >
-            {t('toolbar.new')}
-          </button>
+          <button onClick={() => setConfirmingNew(true)}>{t('toolbar.new')}</button>
           <button onClick={openFile}>{t('toolbar.open')}</button>
           <button onClick={() => saveTextFile(fileName, serializeProject(project))}>{t('toolbar.save')}</button>
         </div>
@@ -125,7 +121,44 @@ function Shell() {
         <Inspector />
       </main>
 
+      {message && (
+        <div className="toast" role="alert">
+          <span>{message}</span>
+          <button className="icon-button" onClick={() => setMessage(null)} aria-label={t('inspector.close')}>
+            ✕
+          </button>
+        </div>
+      )}
+      {confirmingNew && (
+        <ConfirmDialog
+          text={t('toolbar.confirmNew')}
+          confirmLabel={t('toolbar.new')}
+          onConfirm={() => {
+            replaceProject(createProject());
+            setConfirmingNew(false);
+          }}
+          onCancel={() => setConfirmingNew(false)}
+        />
+      )}
       {adding && <AddDeviceDialog onAdd={addTemplate} onClose={() => setAdding(false)} />}
+    </div>
+  );
+}
+
+function ConfirmDialog(props: { text: string; confirmLabel: string; onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <div className="modal-backdrop" onClick={props.onCancel}>
+      <div className="modal modal--small" role="alertdialog" onClick={(e) => e.stopPropagation()}>
+        <div className="modal__body">
+          <p>{props.text}</p>
+          <div className="button-row">
+            <button onClick={props.onCancel}>{t('add.cancel')}</button>
+            <button className="primary" onClick={props.onConfirm}>
+              {props.confirmLabel}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
