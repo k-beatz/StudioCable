@@ -33,7 +33,7 @@ jobs:
 
       # The GitHub runner already has the Android SDK (ANDROID_HOME); add the NDK version we build with.
       - name: Install NDK
-        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
+        run: "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
 
       - uses: dtolnay/rust-toolchain@stable
         with:
