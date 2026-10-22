@@ -132,6 +132,9 @@ export const en = {
 
   'file.error.notJson': 'This file could not be read.',
   'file.error.notProject': 'This is not a StudioCable project file.',
+  'file.error.read': 'The file could not be opened.',
+  'file.error.write': 'The file could not be saved.',
+  'file.saved': 'Project saved.',
   'file.error.tooNew': 'This project was made with a newer version of StudioCable.',
 
   'direction.in': 'Input',

@@ -57,7 +57,13 @@ function Shell() {
   };
 
   const openFile = async () => {
-    const text = await openTextFile(`${FILE_EXTENSION},.json,application/json`);
+    let text: string | null;
+    try {
+      text = await openTextFile(`${FILE_EXTENSION},.json,application/json`);
+    } catch {
+      setMessage(t('file.error.read'));
+      return;
+    }
     if (text === null) return;
     try {
       replaceProject(parseProject(text));
@@ -69,7 +75,13 @@ function Shell() {
   };
 
   const fileName = (project.name || 'project').replace(/[^\w\- ]+/g, '_') + FILE_EXTENSION;
-  const saveFile = () => saveTextFile(fileName, serializeProject(project));
+  const saveFile = async () => {
+    try {
+      if (await saveTextFile(fileName, serializeProject(project))) setMessage(t('file.saved'));
+    } catch {
+      setMessage(t('file.error.write'));
+    }
+  };
   /** Closes the "more" menu, then runs the menu entry's action. */
   const fromMenu = (action: () => void) => () => {
     setMoreOpen(false);
