@@ -10,6 +10,10 @@ import { CategoryIcon } from './CategoryIcon';
 import { ConnectorIcon } from './ConnectorIcon';
 import { connectorsText, SIGNAL_COLORS } from './labels';
 import { connectPorts } from './connect';
+import { deleteSelection, setCollapsed } from './actions';
+
+/** Devices with more ports than this get the "show only used ports" button. */
+const COLLAPSIBLE_FROM = 5;
 
 export type DeviceNodeType = Node<{ deviceId: string }, 'device'>;
 export type BoardNodeType = Node<{ deviceId: string }, 'board'>;
@@ -39,6 +43,8 @@ export const DeviceNode = memo(function DeviceNode({ data, selected }: NodeProps
   const rows = template.ports.map((p) => ({ deviceId: device.id, port: p, handleId: p.id, label: p.label }));
   return (
     <NodeFrame
+      deviceId={device.id}
+      collapsed={rows.length >= COLLAPSIBLE_FROM ? !!device.collapsed : undefined}
       category={template.category}
       name={device.name}
       model={`${template.manufacturer} ${template.model}`}
@@ -48,7 +54,7 @@ export const DeviceNode = memo(function DeviceNode({ data, selected }: NodeProps
       outlined={highlight?.outlinedIds.has(device.id) ?? false}
       groups={groups.byDevice.get(device.id) ?? []}
     >
-      <PortColumns rows={rows} ports={ports} />
+      <PortColumns rows={rows} ports={ports} collapsed={!!device.collapsed} onExpand={() => setCollapsed(device.id, false)} />
     </NodeFrame>
   );
 });
@@ -77,6 +83,8 @@ export const BoardNode = memo(function BoardNode({ data, selected }: NodeProps<B
 
   return (
     <NodeFrame
+      deviceId={device.id}
+      collapsed={rows.length >= COLLAPSIBLE_FROM ? !!device.collapsed : undefined}
       category="pedalboard"
       name={device.name}
       model={t('board.pedalCount', { count: children.length })}
@@ -98,7 +106,11 @@ export const BoardNode = memo(function BoardNode({ data, selected }: NodeProps<B
         </button>
       }
     >
-      {rows.length > 0 ? <PortColumns rows={rows} ports={ports} /> : <div className="board-empty">{t('board.empty')}</div>}
+      {rows.length > 0 ? (
+        <PortColumns rows={rows} ports={ports} collapsed={!!device.collapsed} onExpand={() => setCollapsed(device.id, false)} />
+      ) : (
+        <div className="board-empty">{t('board.empty')}</div>
+      )}
     </NodeFrame>
   );
 });
@@ -123,6 +135,9 @@ export const ExternalNode = memo(function ExternalNode({ data }: NodeProps<Exter
 // ---------- Shared parts ----------
 
 function NodeFrame(props: {
+  deviceId: string;
+  /** undefined: device is too small to collapse. */
+  collapsed: boolean | undefined;
   category: Parameters<typeof CategoryIcon>[0]['category'];
   name: string;
   model: string;
@@ -165,6 +180,33 @@ function NodeFrame(props: {
           </div>
         )}
         {props.action}
+        {props.collapsed !== undefined && (
+          <button
+            className="node-icon-button nodrag"
+            title={t(props.collapsed ? 'device.expand' : 'device.collapse')}
+            aria-label={t(props.collapsed ? 'device.expand' : 'device.collapse')}
+            aria-pressed={props.collapsed}
+            onClick={(e) => {
+              e.stopPropagation();
+              setCollapsed(props.deviceId, !props.collapsed);
+            }}
+          >
+            <ChevronIcon up={!props.collapsed} />
+          </button>
+        )}
+        {props.selected && (
+          <button
+            className="node-icon-button node-icon-button--danger nodrag"
+            title={t('device.delete')}
+            aria-label={t('device.delete')}
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteSelection();
+            }}
+          >
+            <TrashIcon />
+          </button>
+        )}
       </div>
       {props.children}
     </div>
@@ -189,10 +231,46 @@ function usePortState() {
   return { occupancy, highlight, groups, selection, dimUnused, select, pending };
 }
 
-function PortColumns({ rows, ports }: { rows: Row[]; ports: ReturnType<typeof usePortState> }) {
+function PortColumns({
+  rows,
+  ports,
+  collapsed = false,
+  onExpand,
+}: {
+  rows: Row[];
+  ports: ReturnType<typeof usePortState>;
+  collapsed?: boolean;
+  onExpand?: () => void;
+}) {
+  const isConnected = (r: Row) => (ports.occupancy.get(`${r.deviceId}/${r.port.id}`) ?? 0) > 0;
+  const isActive = (r: Row) =>
+    (ports.selection?.kind === 'port' && ports.selection.id === r.deviceId && ports.selection.portId === r.port.id) ||
+    (ports.pending?.deviceId === r.deviceId && ports.pending.portId === r.port.id);
+  // Collapsed: only ports with a cable (and the one being worked on) stay visible.
+  const shown = (r: Row) => !collapsed || isConnected(r) || isActive(r);
+  const column = (side: 'left' | 'right') => {
+    const all = rows.filter((r) => isLeft(r.port) === (side === 'left'));
+    const hidden = all.filter((r) => !shown(r)).length;
+    return (
+      <>
+        {all.filter(shown).map((r) => render(r, side))}
+        {hidden > 0 && (
+          <button
+            className={`port-more port-more--${side} nodrag`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onExpand?.();
+            }}
+          >
+            {t('device.morePorts', { count: hidden })}
+          </button>
+        )}
+      </>
+    );
+  };
   const render = (r: Row, side: 'left' | 'right') => {
     const key = `${r.deviceId}/${r.port.id}`;
-    const connected = (ports.occupancy.get(key) ?? 0) > 0;
+    const connected = isConnected(r);
     return (
       <PortRow
         key={r.handleId}
@@ -217,10 +295,8 @@ function PortColumns({ rows, ports }: { rows: Row[]; ports: ReturnType<typeof us
   };
   return (
     <div className="device-node__ports">
-      <div className="device-node__col">{rows.filter((r) => isLeft(r.port)).map((r) => render(r, 'left'))}</div>
-      <div className="device-node__col device-node__col--right">
-        {rows.filter((r) => !isLeft(r.port)).map((r) => render(r, 'right'))}
-      </div>
+      <div className="device-node__col">{column('left')}</div>
+      <div className="device-node__col device-node__col--right">{column('right')}</div>
     </div>
   );
 }
@@ -276,5 +352,21 @@ function PortRow({ row, side, connected, unused, traced, selected, groups, pendi
         <span key={g.id} className="port-group-mark" style={{ background: g.color }} title={g.name} />
       ))}
     </div>
+  );
+}
+
+function ChevronIcon({ up }: { up: boolean }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+      <path d={up ? 'M3 9l4-4 4 4' : 'M3 5l4 4 4-4'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5M6 6v4M8 6v4" />
+    </svg>
   );
 }

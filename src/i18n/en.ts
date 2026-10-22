@@ -49,6 +49,10 @@ export const en = {
   'device.ports': 'Ports',
   'device.delete': 'Delete device',
   'device.duplicate': 'Duplicate',
+  'device.collapse': 'Show only used ports',
+  'device.expand': 'Show all ports',
+  'device.morePorts': '+{count} more',
+  'toolbar.delete': 'Delete selected',
 
   'cable.id': 'ID',
   'cable.from': 'From',

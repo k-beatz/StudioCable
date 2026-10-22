@@ -8,13 +8,14 @@ import {
   Panel,
   ReactFlow,
   useReactFlow,
+  useStore,
   type Connection,
-  type Edge,
   type NodeChange,
 } from '@xyflow/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
 import { tidyLayout, visibleDevices, type Size } from '../core/layout';
+import { findCrossings, routeCables, type CableEnds, type Point, type Rect } from '../core/routing';
 import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
 import { t } from '../i18n';
@@ -33,9 +34,21 @@ import {
 import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 import { SystemsPanel } from './SystemsPanel';
 import { connectPorts } from './connect';
+import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
 import { isTouchDevice } from './device';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
+const edgeTypes = { routed: RoutedEdge };
+
+/** A short text that changes whenever a node moves, resizes or gains/loses handles. */
+function layoutKeyOf(s: { nodeLookup: Map<string, { id: string; measured: { width?: number; height?: number }; internals: { positionAbsolute: { x: number; y: number }; handleBounds?: { source?: unknown[] | null } } }> }) {
+  let key = '';
+  for (const n of s.nodeLookup.values()) {
+    const p = n.internals.positionAbsolute;
+    key += `${n.id}:${Math.round(p.x)},${Math.round(p.y)},${n.measured.width},${n.measured.height},${n.internals.handleBounds?.source?.length ?? 0};`;
+  }
+  return key;
+}
 
 const isBoard = (project: Project, d: DeviceInstance) => project.templates[d.templateId]?.category === 'pedalboard';
 
@@ -139,9 +152,9 @@ export function GraphView() {
     [],
   );
 
-  const edges = useMemo<Edge[]>(() => {
+  const baseEdges = useMemo<RoutedEdgeType[]>(() => {
     const visible = new Set(visibleDevices(project, boardId).map((d) => d.id));
-    const result: Edge[] = [];
+    const result: RoutedEdgeType[] = [];
     for (const cable of project.cables) {
       const [from, to] = cable.ends;
       let source = endpoint(project, from, visible);
@@ -167,8 +180,8 @@ export function GraphView() {
         sourceHandle: source.handle,
         target: target.node,
         targetHandle: target.handle,
-        type: cableStyle === 'orthogonal' ? 'smoothstep' : 'default',
-        pathOptions: cableStyle === 'orthogonal' ? { borderRadius: 14, offset: 22 } : undefined,
+        type: 'routed',
+        data: { curved: cableStyle === 'curved' },
         selected,
         label: (showIcon ? SEVERITY_ICONS[severity] + ' ' : '') + cable.label,
         labelBgPadding: [7, 3] as [number, number],
@@ -187,7 +200,7 @@ export function GraphView() {
           filter: group && !dimmed ? `drop-shadow(0 0 4px ${group.color})` : undefined,
         },
         interactionWidth: 28,
-      } as Edge);
+      });
     }
     return result;
   }, [project, boardId, byCable, selection, highlight, groups, cableStyle]);
@@ -203,6 +216,66 @@ export function GraphView() {
     setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 60);
   };
 
+  // Cable routing runs for the whole diagram at once (so cables can avoid devices
+  // and each other). It is paused while a device is being dragged and redone on drop.
+  const [dragging, setDragging] = useState(false);
+  const layoutKey = useStore(layoutKeyOf);
+  const lastRouting = useRef<{ routes: Map<string, Point[]>; bridges: Map<string, Point[]> }>({
+    routes: new Map(),
+    bridges: new Map(),
+  });
+  const routing = useMemo(() => {
+    if (dragging) return lastRouting.current;
+    const rects: Rect[] = [];
+    const handles = new Map<string, Map<string, { point: Point; side: 'left' | 'right' }>>();
+    for (const n of nodes) {
+      const internal = flow.getInternalNode(n.id);
+      const w = internal?.measured.width;
+      const h = internal?.measured.height;
+      if (!internal || !w || !h) continue;
+      const pos = internal.internals.positionAbsolute;
+      rects.push({ id: n.id, x: pos.x, y: pos.y, width: w, height: h });
+      const byId = new Map<string, { point: Point; side: 'left' | 'right' }>();
+      for (const hb of internal.internals.handleBounds?.source ?? []) {
+        const left = hb.position === 'left';
+        byId.set(hb.id ?? '', {
+          point: { x: pos.x + hb.x + (left ? 0 : hb.width), y: pos.y + hb.y + hb.height / 2 },
+          side: left ? 'left' : 'right',
+        });
+      }
+      handles.set(n.id, byId);
+    }
+    const cables: CableEnds[] = [];
+    for (const e of baseEdges) {
+      const s = handles.get(e.source)?.get(e.sourceHandle ?? '');
+      const t = handles.get(e.target)?.get(e.targetHandle ?? '');
+      if (!s || !t) continue;
+      cables.push({
+        id: e.id,
+        source: s.point,
+        target: t.point,
+        sourceSide: s.side,
+        targetSide: t.side,
+        sourceNode: e.source,
+        targetNode: e.target,
+      });
+    }
+    const routes = routeCables(rects, cables);
+    const result = { routes, bridges: findCrossings(routes) };
+    lastRouting.current = result;
+    return result;
+    // layoutKey stands for the node positions and sizes read through `flow`.
+  }, [layoutKey, baseEdges, dragging, flow]);
+
+  const edges = useMemo(
+    () =>
+      baseEdges.map((e) => ({
+        ...e,
+        data: { curved: e.data?.curved ?? false, points: routing.routes.get(e.id), bridges: routing.bridges.get(e.id) },
+      })),
+    [baseEdges, routing],
+  );
+
   const onConnect = useCallback((c: Connection) => {
     if (!c.sourceHandle || !c.targetHandle) return;
     if (c.source.startsWith('ext-') || c.target.startsWith('ext-')) return;
@@ -210,18 +283,21 @@ export function GraphView() {
   }, []);
 
   return (
-    <ReactFlow<DiagramNode, Edge>
+    <ReactFlow<DiagramNode, RoutedEdgeType>
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       onNodesChange={onNodesChange}
-      onNodeDragStop={(_, __, dragged) =>
+      onNodeDragStart={() => setDragging(true)}
+      onNodeDragStop={(_, __, dragged) => {
+        setDragging(false);
         apply((p) =>
           dragged
             .filter((n) => n.type !== 'external')
             .reduce((acc, n) => updateDevice(acc, n.id, { position: n.position }), p),
-        )
-      }
+        );
+      }}
       onConnect={onConnect}
       onNodeClick={(_, n) => n.type !== 'external' && select({ kind: 'device', id: n.id })}
       onNodeDoubleClick={(_, n) => n.type === 'board' && openBoard(n.id)}

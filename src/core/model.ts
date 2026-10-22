@@ -129,6 +129,8 @@ export interface DeviceInstance {
   position: { x: number; y: number };
   /** ID of a pedalboard (or other container device) this device sits on. */
   containerId?: string;
+  /** Diagram shows only the ports that have a cable (keeps big devices small). */
+  collapsed?: boolean;
 }
 
 export interface CableEnd {

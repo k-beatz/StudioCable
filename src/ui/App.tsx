@@ -11,6 +11,7 @@ import { CableTable } from './CableTable';
 import { ChecksList } from './ChecksList';
 import { GraphView } from './GraphView';
 import { Inspector } from './Inspector';
+import { deleteSelection } from './actions';
 
 type View = 'graph' | 'cables' | 'checks';
 
@@ -31,6 +32,7 @@ function Shell() {
   const project = useProjectStore((s) => s.project);
   const canUndo = useProjectStore((s) => s.past.length > 0);
   const canRedo = useProjectStore((s) => s.future.length > 0);
+  const canDelete = useProjectStore((s) => s.selection?.kind === 'device' || s.selection?.kind === 'cable');
   const { apply, undo, redo, select, replaceProject } = useProjectStore.getState();
   const { issues } = useAnalysis();
   const flow = useReactFlow();
@@ -103,6 +105,17 @@ function Shell() {
           </button>
           <button className="icon-button" onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
             ↷
+          </button>
+          <button
+            className="icon-button"
+            onClick={deleteSelection}
+            disabled={!canDelete}
+            aria-label={t('toolbar.delete')}
+            title={t('toolbar.delete')}
+          >
+            <svg width="18" height="18" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+              <path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5M6 6v4M8 6v4" />
+            </svg>
           </button>
         </div>
         <div className="toolbar__group wide-only">
