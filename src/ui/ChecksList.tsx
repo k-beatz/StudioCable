@@ -4,11 +4,24 @@ import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
 import { issueText, SEVERITY_ICONS } from './labels';
+import { Troubleshoot } from './Troubleshoot';
 
 const ORDER: Severity[] = ['error', 'warning', 'info'];
 
 /** Project-wide overview of all connection issues, worst first. */
 export function ChecksList() {
+  const project = useProjectStore((s) => s.project);
+
+  return (
+    <div className="checks-view">
+      {project.devices.length > 1 && <Troubleshoot />}
+      <h3>{t('checks.title')}</h3>
+      <IssueList />
+    </div>
+  );
+}
+
+function IssueList() {
   const project = useProjectStore((s) => s.project);
   const select = useProjectStore((s) => s.select);
   const { issues } = useAnalysis();

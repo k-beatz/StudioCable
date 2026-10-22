@@ -1,0 +1,158 @@
+import { connectDevices } from './autowire';
+import { isPowerSignal, type CableEnd, type Port, type Project } from './model';
+import { getPort } from './project';
+import { checkCable, type Issue } from './validation';
+
+/**
+ * Troubleshooting: "why does the signal from A not arrive at B?"
+ * Follows the signal from every output of the source, step by step. Inside a
+ * device it uses the device's internal routing if it has one (pedals, amp
+ * effect loops, patchbays); otherwise any input is assumed to reach any
+ * output, as on a mixer or interface. Power ports are ignored.
+ */
+
+export interface DiagnosisStep {
+  cableId: string;
+  from: CableEnd;
+  to: CableEnd;
+  /** Warnings and errors of this cable (level, connectors, …). */
+  issues: Issue[];
+}
+
+export interface Diagnosis {
+  arrives: boolean;
+  /** The way the signal takes: to the target, or as far as it gets. */
+  steps: DiagnosisStep[];
+  /** Why it stops (only when it does not arrive). */
+  problem?: 'sourceUnplugged' | 'targetUnplugged' | 'stops';
+  /** The device where the signal ends (only when it does not arrive). */
+  stuckAt?: string;
+  /** A suggested cable (or stereo pair) that closes the gap, as a ready-made project. */
+  fix?: { project: Project; added: string[]; fromDevice: string; toDevice: string };
+}
+
+const key = (e: CableEnd) => `${e.deviceId}/${e.portId}`;
+const isAudio = (p: Port | undefined): p is Port => !!p && !isPowerSignal(p.signal);
+const sends = (p: Port) => p.direction !== 'in';
+const receives = (p: Port) => p.direction !== 'out';
+
+function portsOfDevice(project: Project, deviceId: string): Port[] {
+  const d = project.devices.find((x) => x.id === deviceId);
+  return (d && project.templates[d.templateId]?.ports) || [];
+}
+
+/** Ports the signal can leave a device by, after entering at `port`. */
+function throughDevice(project: Project, at: CableEnd, occupied: Set<string>): CableEnd[] {
+  const d = project.devices.find((x) => x.id === at.deviceId);
+  const template = d && project.templates[d.templateId];
+  if (!template) return [];
+  if (template.routing?.length) {
+    return template.routing
+      .filter((r) => r.from === at.portId)
+      .filter((r) => !r.breakWhenPatched?.some((p) => occupied.has(`${at.deviceId}/${p}`)))
+      .map((r) => ({ deviceId: at.deviceId, portId: r.to }));
+  }
+  return template.ports.filter((p) => isAudio(p) && sends(p) && p.id !== at.portId).map((p) => ({ deviceId: at.deviceId, portId: p.id }));
+}
+
+export function diagnose(project: Project, sourceId: string, targetId: string): Diagnosis {
+  const occupied = new Set(project.cables.flatMap((c) => c.ends.map(key)));
+  const cablesFrom = new Map<string, { cableId: string; to: CableEnd }[]>();
+  for (const c of project.cables) {
+    const [a, b] = c.ends;
+    const pa = getPort(project, a);
+    const pb = getPort(project, b);
+    if (!isAudio(pa) || !isAudio(pb)) continue;
+    if (sends(pa) && receives(pb)) cablesFrom.set(key(a), [...(cablesFrom.get(key(a)) ?? []), { cableId: c.id, to: b }]);
+    if (sends(pb) && receives(pa)) cablesFrom.set(key(b), [...(cablesFrom.get(key(b)) ?? []), { cableId: c.id, to: a }]);
+  }
+
+  // Breadth-first search over sending ports; remembers the cable that led to each device.
+  const start = portsOfDevice(project, sourceId)
+    .filter((p) => isAudio(p) && sends(p))
+    .map((p) => ({ deviceId: sourceId, portId: p.id }));
+  const via = new Map<string, DiagnosisStep | null>([[sourceId, null]]);
+  const order: string[] = [sourceId];
+  const seenPorts = new Set(start.map(key));
+  const queue = [...start];
+  while (queue.length) {
+    const out = queue.shift()!;
+    for (const { cableId, to } of cablesFrom.get(key(out)) ?? []) {
+      if (!via.has(to.deviceId)) {
+        const cable = project.cables.find((c) => c.id === cableId)!;
+        const issues = checkCable(project, cable).filter((i) => i.severity !== 'info');
+        via.set(to.deviceId, { cableId, from: out, to, issues });
+        order.push(to.deviceId);
+      }
+      if (to.deviceId === targetId) continue;
+      for (const next of throughDevice(project, to, occupied)) {
+        if (seenPorts.has(key(next))) continue;
+        seenPorts.add(key(next));
+        queue.push(next);
+      }
+    }
+  }
+
+  const pathTo = (deviceId: string): DiagnosisStep[] => {
+    const steps: DiagnosisStep[] = [];
+    for (let step = via.get(deviceId); step; step = via.get(step.from.deviceId)) steps.unshift(step);
+    return steps;
+  };
+
+  if (via.has(targetId) && targetId !== sourceId) return { arrives: true, steps: pathTo(targetId) };
+
+  // It does not arrive: find where it stops and what would close the gap.
+  const sourceUnplugged = !start.some((s) => occupied.has(key(s)));
+  const targetUnplugged = !portsOfDevice(project, targetId).some(
+    (p) => isAudio(p) && receives(p) && occupied.has(`${targetId}/${p.id}`),
+  );
+  const canReachTarget = devicesLeadingTo(targetId, cablesFrom);
+  // Try the furthest device first: the gap is usually right where the signal ends.
+  for (const reached of [...order].reverse()) {
+    for (const next of [targetId, ...canReachTarget]) {
+      if (next === reached || via.has(next)) continue;
+      const r = connectDevices(project, reached, next);
+      if (r) {
+        return {
+          arrives: false,
+          steps: pathTo(reached),
+          problem: sourceUnplugged ? 'sourceUnplugged' : targetUnplugged ? 'targetUnplugged' : 'stops',
+          stuckAt: reached,
+          fix: { ...r, fromDevice: reached, toDevice: next },
+        };
+      }
+    }
+  }
+  const last = order[order.length - 1];
+  return {
+    arrives: false,
+    steps: pathTo(last),
+    problem: sourceUnplugged ? 'sourceUnplugged' : targetUnplugged ? 'targetUnplugged' : 'stops',
+    stuckAt: last,
+  };
+}
+
+/** Devices from which a signal already reaches the target (via cables), nearest first. */
+function devicesLeadingTo(
+  targetId: string,
+  cablesFrom: Map<string, { cableId: string; to: CableEnd }[]>,
+): string[] {
+  const into = new Map<string, Set<string>>();
+  for (const [fromKey, list] of cablesFrom) {
+    const fromDevice = fromKey.slice(0, fromKey.indexOf('/'));
+    for (const { to } of list) into.set(to.deviceId, (into.get(to.deviceId) ?? new Set()).add(fromDevice));
+  }
+  const result: string[] = [];
+  const seen = new Set([targetId]);
+  const queue = [targetId];
+  while (queue.length) {
+    const d = queue.shift()!;
+    for (const prev of into.get(d) ?? []) {
+      if (seen.has(prev)) continue;
+      seen.add(prev);
+      result.push(prev);
+      queue.push(prev);
+    }
+  }
+  return result;
+}

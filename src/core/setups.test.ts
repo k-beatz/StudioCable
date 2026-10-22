@@ -56,3 +56,13 @@ describe('setup presets', () => {
     expect(Math.min(...project.devices.slice(1).map((d) => d.position.y))).toBeGreaterThanOrEqual(origin.y);
   });
 });
+
+describe('synth studio', () => {
+  it('sends both synths into the mixer, and the mixer into the interface', () => {
+    const setup = SETUP_PRESETS.find((s) => s.key === 'synthStudio')!;
+    const { project } = addSetup(createProject(), setup, 'Synths', { x: 0, y: 0 });
+    const w = wiring(project);
+    expect(w.filter((x) => x.startsWith('Synth')).every((x) => x.includes('-> Mixer /'))).toBe(true);
+    expect(w).toEqual(expect.arrayContaining(['Mixer / Main Out 1 -> Interface / Input 1']));
+  });
+});

@@ -144,6 +144,10 @@ export interface DeviceInstance {
   containerId?: string;
   /** Diagram shows only the ports that have a cable (keeps big devices small). */
   collapsed?: boolean;
+  /** Top height unit in the rack (1 = top); absent if the device is not in the rack. */
+  rackSlot?: number;
+  /** Height in rack units (U). */
+  rackHeight?: number;
 }
 
 export interface CableEnd {
@@ -188,4 +192,6 @@ export interface Project {
   cables: Cable[];
   groups: Group[];
   nextCableNumber: number;
+  /** Height of the project's 19" rack in units (default 12). */
+  rackUnits?: number;
 }

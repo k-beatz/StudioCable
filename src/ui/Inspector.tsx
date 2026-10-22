@@ -19,6 +19,7 @@ import {
   updateGroup,
 } from '../core/project';
 import { POWER_INPUT_KINDS, powerInputKind, powerInputOf, setPowerInput, type PowerInputKind } from '../core/power';
+import { addToRack, heightOf, removeFromRack, setRackHeight } from '../core/rack';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
@@ -132,6 +133,7 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
       )}
       <BoardField device={device} project={project} />
       {template && template.category !== 'power' && <PowerField templateId={template.id} project={project} />}
+      <RackField device={device} project={project} />
       <SystemsField kind="device" id={device.id} project={project} />
       <h3>{t('device.ports')}</h3>
       <ul className="port-list">
@@ -419,6 +421,35 @@ function SaveTraceAsSystem({ trace, project }: { trace: Trace; project: Project 
   return (
     <div className="button-row">
       <button onClick={save}>{t('systems.saveTrace')}</button>
+    </div>
+  );
+}
+
+/** Rack position and height of the device. */
+function RackField({ device, project }: { device: DeviceInstance; project: Project }) {
+  const apply = useProjectStore((s) => s.apply);
+  return (
+    <div className="field">
+      <span>{t('rack.title')}</span>
+      {device.rackSlot === undefined ? (
+        <button onClick={() => apply((p) => addToRack(p, device.id))}>{t('rack.add')}</button>
+      ) : (
+        <div className="rack-field">
+          <span>{t('rack.at', { slot: device.rackSlot })}</span>
+          <select
+            value={heightOf(project, device)}
+            aria-label={t('rack.height')}
+            onChange={(e) => apply((p) => setRackHeight(p, device.id, Number(e.target.value)))}
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((u) => (
+              <option key={u} value={u}>
+                {u} U
+              </option>
+            ))}
+          </select>
+          <button onClick={() => apply((p) => removeFromRack(p, device.id))}>{t('rack.remove')}</button>
+        </div>
+      )}
     </div>
   );
 }

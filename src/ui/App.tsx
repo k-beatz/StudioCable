@@ -12,9 +12,10 @@ import { CableTable } from './CableTable';
 import { ChecksList } from './ChecksList';
 import { GraphView } from './GraphView';
 import { Inspector } from './Inspector';
+import { RackView } from './RackView';
 import { deleteSelection } from './actions';
 
-type View = 'graph' | 'cables' | 'checks';
+type View = 'graph' | 'rack' | 'cables' | 'checks';
 
 export function App() {
   return (
@@ -171,7 +172,7 @@ function Shell() {
       </header>
 
       <nav className="segmented view-switch" aria-label={t('view.graph')}>
-        {(['graph', 'cables', 'checks'] as const).map((v) => (
+        {(['graph', 'rack', 'cables', 'checks'] as const).map((v) => (
           <button key={v} className={view === v ? 'active' : ''} aria-current={view === v ? 'page' : undefined} onClick={() => setView(v)}>
             {t(`view.${v}`, { count: issues.length })}
           </button>
@@ -194,6 +195,7 @@ function Shell() {
               )}
             </>
           )}
+          {view === 'rack' && <RackView />}
           {view === 'cables' && <CableTable />}
           {view === 'checks' && <ChecksList />}
         </div>

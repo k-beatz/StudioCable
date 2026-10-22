@@ -159,7 +159,7 @@ interface TargetRule {
 }
 
 const RULES: Partial<Record<DeviceCategory, TargetRule[]>> = {
-  instrument: [{ categories: ['pedal', 'pedalboard', 'amp', 'di-box', 'preamp', 'interface', 'mixer'] }],
+  instrument: [{ categories: ['pedal', 'pedalboard', 'amp', 'di-box', 'preamp', 'mixer', 'interface'] }],
   microphone: [{ categories: ['preamp', 'mixer', 'interface'] }],
   pedal: [{ categories: ['pedal', 'amp', 'di-box', 'interface', 'mixer'] }],
   pedalboard: [{ categories: ['amp', 'di-box', 'interface', 'mixer'] }],
