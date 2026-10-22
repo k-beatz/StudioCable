@@ -51,9 +51,9 @@ jobs:
         run: npm test
 
       - name: Build APK
-        env:
-          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
-        run: npx tauri android build --apk --target aarch64
+        run: |
+          export NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+          npx tauri android build --apk --target aarch64
 
       # Android only installs an update if it is signed with the same key as the
       # installed app. For test builds the key is created once on GitHub and kept
