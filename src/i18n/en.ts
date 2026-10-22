@@ -17,6 +17,7 @@ export const en = {
   'view.cableStyle': 'Cable style',
   'view.cablesOrthogonal': 'Right angles',
   'view.cablesCurved': 'Curves',
+  'view.cablesHanging': 'Hanging',
   'view.dimUnused': 'Dim unused ports',
   'view.power': 'Power',
   'power.input': 'Power input',

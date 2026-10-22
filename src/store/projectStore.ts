@@ -55,7 +55,7 @@ interface ProjectState {
   setNotice: (text: string | null) => void;
 }
 
-export type CableStyle = 'orthogonal' | 'curved';
+export type CableStyle = 'orthogonal' | 'curved' | 'hanging';
 
 const PREFS_KEY = 'studiocable.prefs';
 
@@ -75,7 +75,7 @@ function loadPrefs(): Prefs {
   try {
     const raw = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}');
     return {
-      cableStyle: raw.cableStyle === 'curved' ? 'curved' : 'orthogonal',
+      cableStyle: (['curved', 'hanging'] as const).find((c) => c === raw.cableStyle) ?? 'orthogonal',
       dimUnusedPorts: raw.dimUnusedPorts === true,
       showPower: raw.showPower === true,
     };

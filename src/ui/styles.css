@@ -994,6 +994,22 @@ select {
   font-weight: 800;
   text-anchor: middle;
 }
+.hanging-cable__shadow {
+  stroke: rgb(0 0 0 / 0.35);
+  transform: translate(0, 3px);
+}
+.hanging-cable__shine {
+  stroke: rgb(255 255 255 / 0.28);
+}
+.hanging-cable__plug {
+  stroke: rgb(0 0 0 / 0.45);
+  stroke-width: 2;
+}
+.hanging-cable__label text {
+  fill: #0e1524;
+  font-size: 10px;
+  font-weight: 800;
+}
 .react-flow__edge.cable-edge--suggested .react-flow__edge-path {
   animation: suggest-pulse 1.4s ease-in-out infinite;
 }

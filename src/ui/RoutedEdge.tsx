@@ -9,7 +9,7 @@ export type RoutedEdgeData = {
   bridges?: Point[];
   curved: boolean;
 };
-export type RoutedEdgeType = Edge<RoutedEdgeData, 'routed'>;
+export type RoutedEdgeType = Edge<RoutedEdgeData, 'routed' | 'hanging'>;
 
 const near = (p: Point, x: number, y: number) => Math.abs(p.x - x) < 2 && Math.abs(p.y - y) < 2;
 

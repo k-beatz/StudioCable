@@ -37,11 +37,12 @@ import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 import { SystemsPanel } from './SystemsPanel';
 import { connectPorts } from './connect';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
+import { HangingEdge } from './HangingEdge';
 import { ChainOverlay } from './ChainOverlay';
 import { isTouchDevice } from './device';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
-const edgeTypes = { routed: RoutedEdge };
+const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
 
 /** A short text that changes whenever a node moves, resizes or gains/loses handles. */
 function layoutKeyOf(s: { nodeLookup: Map<string, { id: string; measured: { width?: number; height?: number }; internals: { positionAbsolute: { x: number; y: number }; handleBounds?: { source?: unknown[] | null } } }> }) {
@@ -202,7 +203,7 @@ export function GraphView() {
         sourceHandle: source.handle,
         target: target.node,
         targetHandle: target.handle,
-        type: 'routed',
+        type: cableStyle === 'hanging' ? 'hanging' : 'routed',
         data: { curved: cableStyle === 'curved' },
         selected,
         label: (showIcon ? SEVERITY_ICONS[severity] + ' ' : '') + cable.label,
@@ -297,6 +298,8 @@ export function GraphView() {
     bridges: new Map(),
   });
   const routing = useMemo(() => {
+    // Hanging cables are drawn freely on top; no routing needed.
+    if (cableStyle === 'hanging') return { routes: new Map<string, Point[]>(), bridges: new Map<string, Point[]>() };
     if (dragging) return lastRouting.current;
     const rects: Rect[] = [];
     const handles = new Map<string, Map<string, { point: Point; side: 'left' | 'right' }>>();
@@ -337,7 +340,7 @@ export function GraphView() {
     lastRouting.current = result;
     return result;
     // layoutKey stands for the node positions and sizes read through `flow`.
-  }, [layoutKey, baseEdges, dragging, flow]);
+  }, [layoutKey, baseEdges, dragging, flow, cableStyle]);
 
   const edges = useMemo(
     () =>
@@ -345,9 +348,10 @@ export function GraphView() {
         ...e,
         data: { curved: e.data?.curved ?? false, points: routing.routes.get(e.id), bridges: routing.bridges.get(e.id) },
         // Cables that jump over others are drawn on top, so the bridge (and its gap) is visible.
-        zIndex: (e.zIndex ?? 0) * 2 + (routing.bridges.has(e.id) ? 1 : 0),
+        // Hanging cables lie on top of the devices; others underneath (bridging ones above their neighbours).
+        zIndex: cableStyle === 'hanging' ? 1000 + (e.zIndex ?? 0) : (e.zIndex ?? 0) * 2 + (routing.bridges.has(e.id) ? 1 : 0),
       })),
-    [baseEdges, routing],
+    [baseEdges, routing, cableStyle],
   );
 
   const onConnect = useCallback((c: Connection) => {
@@ -463,6 +467,9 @@ export function GraphView() {
               </button>
               <button className={cableStyle === 'curved' ? 'active' : ''} onClick={() => setCableStyle('curved')}>
                 {t('view.cablesCurved')}
+              </button>
+              <button className={cableStyle === 'hanging' ? 'active' : ''} onClick={() => setCableStyle('hanging')}>
+                {t('view.cablesHanging')}
               </button>
             </div>
             <button
