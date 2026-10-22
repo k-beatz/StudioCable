@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
 import { tidyLayout, visibleDevices, type Size } from '../core/layout';
+import { connectChain, suggestWiring } from '../core/autowire';
 import { isPowerCable, isPowerDevice } from '../core/power';
 import { findCrossings, routeCables, type CableEnds, type Point, type Rect } from '../core/routing';
 import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
@@ -36,6 +37,7 @@ import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 import { SystemsPanel } from './SystemsPanel';
 import { connectPorts } from './connect';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
+import { ChainOverlay } from './ChainOverlay';
 import { isTouchDevice } from './device';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
@@ -140,6 +142,9 @@ export function GraphView() {
   const pending = useProjectStore((s) => s.pendingConnection);
   const startConnection = useProjectStore((s) => s.startConnection);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const [chainMode, setChainMode] = useState(false);
+  /** Cables just added by "suggest wiring" or the chain tool, highlighted until kept or removed. */
+  const [suggested, setSuggested] = useState<string[] | null>(null);
   const { byCable } = useAnalysis();
   const highlight = useHighlight();
   const groups = useGroupIndex();
@@ -208,7 +213,11 @@ export function GraphView() {
         // Animated dashes show the signal direction along the traced path.
         animated: lit && highlight?.kind === 'trace',
         zIndex: lit ? 1 : 0,
-        className: 'cable-edge' + (severity === 'error' ? ' cable-edge--error' : '') + (dimmed ? ' dimmed' : ''),
+        className:
+          'cable-edge' +
+          (severity === 'error' ? ' cable-edge--error' : '') +
+          (dimmed ? ' dimmed' : '') +
+          (suggested?.includes(cable.id) ? ' cable-edge--suggested' : ''),
         style: {
           stroke: color,
           strokeWidth: selected || lit ? 4.5 : 3,
@@ -220,9 +229,55 @@ export function GraphView() {
       });
     }
     return result;
-  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower]);
+  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested]);
 
   /** "Tidy up": sort the devices of this level by signal flow, then frame them. */
+  // "Draw chain" tool and "Suggest wiring".
+  const setNotice = useProjectStore((s) => s.setNotice);
+  const nameOf = (id: string) => project.devices.find((d) => d.id === id)?.name ?? '?';
+
+  const finishChain = (deviceIds: string[]) => {
+    setChainMode(false);
+    if (deviceIds.length < 2) {
+      setNotice(t('tool.chainTooShort'));
+      return;
+    }
+    const result = connectChain(project, deviceIds);
+    if (result.added.length) apply(() => result.project);
+    const first = result.failed[0];
+    setNotice(
+      [
+        result.added.length ? t('tool.chainDone', { count: result.added.length }) : '',
+        first ? t('tool.chainFailed', { a: nameOf(first[0]), b: nameOf(first[1]) }) : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+    );
+  };
+
+  const suggest = () => {
+    setOptionsOpen(false);
+    const ids = shownDevices(project, boardId, showPower).map((d) => d.id);
+    const result = suggestWiring(project, ids);
+    if (!result.added.length) {
+      setNotice(t('tool.suggestedNone'));
+      return;
+    }
+    apply(() => result.project);
+    setSuggested(result.added);
+  };
+
+  // Forget the highlight once those cables are gone (e.g. after undo).
+  useEffect(() => {
+    if (suggested && !suggested.some((id) => project.cables.some((c) => c.id === id))) setSuggested(null);
+  }, [project, suggested]);
+
+  const removeSuggested = () => {
+    const ids = suggested ?? [];
+    apply((p) => ids.reduce((acc, id) => removeCable(acc, id), p));
+    setSuggested(null);
+  };
+
   const tidyUp = () => {
     const sizes = new Map<string, Size>();
     for (const n of flow.getNodes()) {
@@ -359,14 +414,39 @@ export function GraphView() {
         <div className="view-options-wrap">
           <div className="view-options-bar">
             <button
-              className="tidy-button"
+              className="tool-button"
               onClick={tidyUp}
               disabled={nodes.length < 2}
               title={t('view.tidyHint')}
               aria-label={t('view.tidy')}
             >
               <TidyIcon />
-              <span className="tidy-label">{t('view.tidy')}</span>
+              <span className="tool-label">{t('view.tidy')}</span>
+            </button>
+            <button
+              className={'tool-button' + (chainMode ? ' active' : '')}
+              onClick={() => {
+                setOptionsOpen(false);
+                select(null);
+                setChainMode(!chainMode);
+              }}
+              disabled={nodes.length < 2}
+              aria-pressed={chainMode}
+              title={t('tool.chainHint')}
+              aria-label={t('tool.chain')}
+            >
+              <ChainIcon />
+              <span className="tool-label">{t('tool.chain')}</span>
+            </button>
+            <button
+              className="tool-button"
+              onClick={suggest}
+              disabled={nodes.length < 2}
+              title={t('tool.suggestHint')}
+              aria-label={t('tool.suggest')}
+            >
+              <SuggestIcon />
+              <span className="tool-label">{t('tool.suggest')}</span>
             </button>
             <button
               className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
@@ -409,6 +489,24 @@ export function GraphView() {
           </div>
         </div>
       </Panel>
+      {chainMode && <ChainOverlay onFinish={finishChain} />}
+      {chainMode && (
+        <Panel position="bottom-center">
+          <div className="connect-banner" role="status">
+            <span>{t('tool.chainHint')}</span>
+            <button onClick={() => setChainMode(false)}>{t('tool.cancel')}</button>
+          </div>
+        </Panel>
+      )}
+      {suggested && !chainMode && (
+        <Panel position="bottom-center">
+          <div className="connect-banner connect-banner--suggest" role="status">
+            <span>{t('tool.suggested', { count: suggested.length })}</span>
+            <button onClick={() => setSuggested(null)}>{t('tool.keep')}</button>
+            <button onClick={removeSuggested}>{t('tool.remove')}</button>
+          </div>
+        </Panel>
+      )}
       {pending && (
         <Panel position="bottom-center">
           <div className="connect-banner" role="status">
@@ -429,6 +527,28 @@ function TidyIcon() {
       <rect x="1" y="10" width="4" height="4" rx="1" />
       <rect x="11" y="6" width="4" height="4" rx="1" />
       <path d="M5 4h3v8H5M8 8h3" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+/** A line through three dots: the "draw chain" tool. */
+function ChainIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <path d="M2.5 12.5C5 4 8 13 10 7s2.5-3 3.5-4" />
+      <circle cx="2.5" cy="12.5" r="1.6" fill="currentColor" />
+      <circle cx="8" cy="9.5" r="1.6" fill="currentColor" />
+      <circle cx="13.5" cy="3" r="1.6" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** A magic wand: "suggest wiring". */
+function SuggestIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <path d="M2.5 13.5l8-8M9 4l3 3" />
+      <path d="M12.5 1.5v2M11.5 2.5h2M14 9v2M13 10h2M5.5 1.5v2M4.5 2.5h2" />
     </svg>
   );
 }

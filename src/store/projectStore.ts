@@ -36,6 +36,8 @@ interface ProjectState {
   focusGroupId: string | null;
   /** Tap-to-connect: the port a new cable starts from, waiting for the second tap. */
   pendingConnection: { deviceId: string; portId: string } | null;
+  /** Short message shown at the bottom of the screen (e.g. after an automatic action). */
+  notice: string | null;
 
   /** Apply an edit and record it for undo. */
   apply: (fn: (p: Project) => Project) => void;
@@ -50,6 +52,7 @@ interface ProjectState {
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
   startConnection: (from: { deviceId: string; portId: string } | null) => void;
+  setNotice: (text: string | null) => void;
 }
 
 export type CableStyle = 'orthogonal' | 'curved';
@@ -109,6 +112,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   openBoardId: null,
   focusGroupId: null,
   pendingConnection: null,
+  notice: null,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -151,6 +155,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ openBoardId, selection: null, pendingConnection: null });
   },
   startConnection: (pendingConnection) => set({ pendingConnection }),
+  setNotice: (notice) => set({ notice }),
   setFocusGroup: (focusGroupId) => set({ focusGroupId }),
 }));
 

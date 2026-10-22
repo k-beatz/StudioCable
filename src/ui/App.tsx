@@ -27,7 +27,15 @@ function Shell() {
   const [view, setView] = useState<View>('graph');
   const [adding, setAdding] = useState(false);
   const [confirmingNew, setConfirmingNew] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [ownMessage, setMessage] = useState<string | null>(null);
+  const notice = useProjectStore((s) => s.notice);
+  const message = ownMessage ?? notice;
+  // Short notices from automatic actions disappear by themselves.
+  useEffect(() => {
+    if (!notice) return;
+    const id = setTimeout(() => useProjectStore.getState().setNotice(null), 4000);
+    return () => clearTimeout(id);
+  }, [notice]);
   const [moreOpen, setMoreOpen] = useState(false);
   const project = useProjectStore((s) => s.project);
   const canUndo = useProjectStore((s) => s.past.length > 0);
@@ -181,7 +189,14 @@ function Shell() {
       {message && (
         <div className="toast" role="alert">
           <span>{message}</span>
-          <button className="icon-button" onClick={() => setMessage(null)} aria-label={t('inspector.close')}>
+          <button
+            className="icon-button"
+            onClick={() => {
+              setMessage(null);
+              useProjectStore.getState().setNotice(null);
+            }}
+            aria-label={t('inspector.close')}
+          >
             ✕
           </button>
         </div>

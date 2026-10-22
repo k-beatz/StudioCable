@@ -948,7 +948,7 @@ select {
   display: flex;
   gap: 8px;
 }
-.tidy-button {
+.tool-button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -957,7 +957,55 @@ select {
   font-weight: 700;
   background: var(--panel);
 }
-.tidy-button:disabled {
+.tool-button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.chain-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  cursor: crosshair;
+  touch-action: none;
+}
+.chain-overlay__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.chain-overlay__svg polyline {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+.chain-overlay__svg circle {
+  fill: var(--accent);
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+.chain-overlay__svg text {
+  fill: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+.react-flow__edge.cable-edge--suggested .react-flow__edge-path {
+  animation: suggest-pulse 1.4s ease-in-out infinite;
+}
+@keyframes suggest-pulse {
+  50% {
+    stroke-opacity: 0.35;
+  }
+}
+.connect-banner--suggest {
+  gap: 8px;
+}
+.tool-button:disabled {
   opacity: 0.5;
 }
 .view-options {
@@ -1301,10 +1349,12 @@ select {
   }
 
   /* Systems: one swipeable row. */
+  /* Phones: tool buttons on the first row, systems on their own row below. */
   .top-left-stack {
-    max-width: calc(100vw - 180px);
+    margin-top: 52px;
+    max-width: calc(100vw - 32px);
   }
-  .tidy-button .tidy-label {
+  .tool-button .tool-label {
     display: none;
   }
   .systems-panel {
