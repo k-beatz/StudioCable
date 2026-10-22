@@ -62,7 +62,8 @@ function score(project: Project, a: Candidate, b: Candidate): number | null {
   if (a.port.signal === b.port.signal || b.port.alsoAccepts?.includes(a.port.signal)) s += 25;
   if (BAD_OUTPUT.test(a.port.label)) s -= 20;
   else if (GOOD_OUTPUT.test(a.port.label)) s += 5;
-  if (BAD_INPUT.test(b.port.label)) s -= 20;
+  // Returns and inserts belong to effect loops; those are wired on purpose, never automatically.
+  if (BAD_INPUT.test(b.port.label)) return null;
   return s - (a.index + b.index) * 0.01;
 }
 

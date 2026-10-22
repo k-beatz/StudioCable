@@ -10,23 +10,26 @@ import {
   type Direction,
 } from '../core/model';
 import { libraryToTemplate, matchesQuery } from '../core/library';
+import { SETUP_PRESETS, type SetupPreset } from '../core/setups';
 import { t, type MessageKey } from '../i18n';
 import { isTouchDevice } from './device';
 import { LIBRARY } from '../library';
 
 interface Props {
   onAdd: (template: DeviceTemplate) => void;
+  onAddSetup: (setup: SetupPreset) => void;
   onClose: () => void;
 }
 
-type Tab = 'library' | 'presets' | 'custom';
+type Tab = 'library' | 'presets' | 'setups' | 'custom';
 
 /** Modal to add a device: from the library, a quick generic device, or a custom one. */
-export function AddDeviceDialog({ onAdd, onClose }: Props) {
+export function AddDeviceDialog({ onAdd, onAddSetup, onClose }: Props) {
   const [tab, setTab] = useState<Tab>(LIBRARY.length > 0 ? 'library' : 'presets');
   const tabs: { key: Tab; label: MessageKey }[] = [
     { key: 'library', label: 'add.library' },
     { key: 'presets', label: 'add.presets' },
+    { key: 'setups', label: 'add.setups' },
     { key: 'custom', label: 'add.custom' },
   ];
 
@@ -47,6 +50,7 @@ export function AddDeviceDialog({ onAdd, onClose }: Props) {
         </div>
         {tab === 'library' && <LibraryList onAdd={onAdd} />}
         {tab === 'presets' && <PresetList onAdd={onAdd} />}
+        {tab === 'setups' && <SetupList onAdd={onAddSetup} />}
         {tab === 'custom' && <CustomBuilder onAdd={onAdd} />}
       </div>
     </div>
@@ -158,6 +162,25 @@ function PresetList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
               <small>
                 {t(`category.${p.spec.category}`)} · {portSummary(p.spec.groups)}
               </small>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Complete example rigs, added wired and marked as a system. */
+function SetupList({ onAdd }: { onAdd: (setup: SetupPreset) => void }) {
+  return (
+    <div className="modal__body">
+      <p className="muted">{t('add.setupsHint')}</p>
+      <ul className="preset-list">
+        {SETUP_PRESETS.map((s) => (
+          <li key={s.key}>
+            <button onClick={() => onAdd(s)}>
+              <strong>{t(`setup.${s.key}` as MessageKey)}</strong>
+              <small>{t(`setup.${s.key}.desc` as MessageKey)}</small>
             </button>
           </li>
         ))}

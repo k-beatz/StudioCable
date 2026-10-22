@@ -1,6 +1,7 @@
 import { ReactFlowProvider, useReactFlow, type Node, type XYPosition } from '@xyflow/react';
 import { useEffect, useState } from 'react';
 import type { DeviceTemplate } from '../core/model';
+import { addSetup, freeAreaBelow, type SetupPreset } from '../core/setups';
 import { addDevice, createProject, setContainer, FILE_EXTENSION, parseProject, ProjectParseError, serializeProject } from '../core/project';
 import { t, type MessageKey } from '../i18n';
 import { openTextFile, saveTextFile } from '../platform/files';
@@ -67,6 +68,18 @@ function Shell() {
     // Adding a power device only makes sense with the power layer visible.
     if (template.category === 'power') useProjectStore.getState().setShowPower(true);
     select({ kind: 'device', id: createdId });
+  };
+
+  /** Adds a ready-made rig below the existing devices (always on the main level). */
+  const addSetupPreset = (setup: SetupPreset) => {
+    const name = t(`setup.${setup.key}` as MessageKey);
+    apply((p) => addSetup(p, setup, name, freeAreaBelow(p)).project);
+    const { openBoard, setFocusGroup } = useProjectStore.getState();
+    openBoard(null);
+    setFocusGroup(null);
+    setAdding(false);
+    setView('graph');
+    setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 120);
   };
 
   const openFile = async () => {
@@ -213,7 +226,7 @@ function Shell() {
           onCancel={() => setConfirmingNew(false)}
         />
       )}
-      {adding && <AddDeviceDialog onAdd={addTemplate} onClose={() => setAdding(false)} />}
+      {adding && <AddDeviceDialog onAdd={addTemplate} onAddSetup={addSetupPreset} onClose={() => setAdding(false)} />}
     </div>
   );
 }

@@ -1579,3 +1579,11 @@ select {
     justify-content: flex-end;
   }
 }
+
+@media (max-width: 760px) {
+  /* Four tabs in the add dialog: keep them on one line. */
+  .modal__header .segmented button {
+    padding: 0 6px;
+    font-size: 12.5px;
+  }
+}
