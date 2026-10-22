@@ -3,8 +3,6 @@ import {
   Background,
   BackgroundVariant,
   ConnectionMode,
-  Controls,
-  MiniMap,
   Panel,
   ReactFlow,
   useReactFlow,
@@ -39,7 +37,7 @@ import { connectPorts } from './connect';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
 import { HangingEdge } from './HangingEdge';
 import { ChainOverlay } from './ChainOverlay';
-import { isTouchDevice } from './device';
+import { CanvasControls, Overview } from './CanvasControls';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
@@ -159,6 +157,7 @@ export function GraphView() {
   const showPower = useProjectStore((s) => s.showPower);
   const setShowPower = useProjectStore((s) => s.setShowPower);
   const look = useProjectStore((s) => s.look);
+  const showOverview = useProjectStore((s) => s.showOverview);
   const setLook = useProjectStore((s) => s.setLook);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
@@ -399,10 +398,16 @@ export function GraphView() {
       snapToGrid
       snapGrid={[10, 10]}
       fitView
+      proOptions={{ hideAttribution: true }}
     >
-      <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />
-      <Controls showInteractive={false} showZoom={!isTouchDevice()} />
-      {!board && <MiniMap pannable zoomable className="minimap" />}
+      {look === 'modular' ? (
+        // Faint seams between metal panels instead of the usual dot grid.
+        <Background variant={BackgroundVariant.Lines} gap={192} lineWidth={1} color="var(--canvas-seam)" />
+      ) : (
+        <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />
+      )}
+      <CanvasControls showOverviewButton={!board} />
+      {!board && showOverview && <Overview />}
       <Panel position="top-left">
         <div className="top-left-stack">
           {board && (
