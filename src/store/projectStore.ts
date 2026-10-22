@@ -38,6 +38,10 @@ interface ProjectState {
   pendingConnection: { deviceId: string; portId: string } | null;
   /** Short message shown at the bottom of the screen (e.g. after an automatic action). */
   notice: string | null;
+  /** Active diagram tool: draw a chain, or cut cables. */
+  tool: Tool | null;
+  /** Cables just added by "suggest wiring", highlighted until kept or removed. */
+  suggestedCables: string[] | null;
 
   /** Apply an edit and record it for undo. */
   apply: (fn: (p: Project) => Project) => void;
@@ -53,9 +57,12 @@ interface ProjectState {
   setFocusGroup: (id: string | null) => void;
   startConnection: (from: { deviceId: string; portId: string } | null) => void;
   setNotice: (text: string | null) => void;
+  setTool: (tool: Tool | null) => void;
+  setSuggestedCables: (ids: string[] | null) => void;
 }
 
 export type CableStyle = 'orthogonal' | 'curved' | 'hanging';
+export type Tool = 'chain' | 'cut';
 export type Look = 'modular' | 'clean';
 
 const PREFS_KEY = 'studiocable.prefs';
@@ -116,6 +123,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   focusGroupId: null,
   pendingConnection: null,
   notice: null,
+  tool: null,
+  suggestedCables: null,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -162,6 +171,11 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   },
   startConnection: (pendingConnection) => set({ pendingConnection }),
   setNotice: (notice) => set({ notice }),
+  setTool: (tool) => {
+    blurActiveField();
+    set({ tool, selection: tool ? null : get().selection, pendingConnection: null });
+  },
+  setSuggestedCables: (suggestedCables) => set({ suggestedCables }),
   setFocusGroup: (focusGroupId) => set({ focusGroupId }),
 }));
 

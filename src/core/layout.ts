@@ -1,5 +1,5 @@
 import type { DeviceInstance, Project } from './model';
-import { isPowerCable } from './power';
+import { isPowerCable, isPowerDevice } from './power';
 import { getPort } from './project';
 
 export interface Size {
@@ -18,6 +18,12 @@ export function visibleDevices(project: Project, boardId: string | null): Device
   return project.devices.filter((d) =>
     boardId ? d.containerId === boardId : !d.containerId || !ids.has(d.containerId),
   );
+}
+
+/** Devices drawn at one level; power-only devices only when the power layer is shown. */
+export function shownDevices(project: Project, boardId: string | null, showPower: boolean): DeviceInstance[] {
+  const devices = visibleDevices(project, boardId);
+  return showPower ? devices : devices.filter((d) => !isPowerDevice(project, d));
 }
 
 /**

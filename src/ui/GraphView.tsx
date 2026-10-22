@@ -10,11 +10,11 @@ import {
   type Connection,
   type NodeChange,
 } from '@xyflow/react';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
-import { tidyLayout, visibleDevices, type Size } from '../core/layout';
-import { connectChain, suggestWiring } from '../core/autowire';
-import { isPowerCable, isPowerDevice } from '../core/power';
+import { shownDevices } from '../core/layout';
+import { connectChain } from '../core/autowire';
+import { isPowerCable } from '../core/power';
 import { findCrossings, routeCables, type CableEnds, type Point, type Rect } from '../core/routing';
 import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
@@ -66,12 +66,6 @@ function endpoint(project: Project, end: CableEnd, visible: Set<string>): { node
 }
 
 /** Builds React Flow nodes, keeping React Flow's own data (e.g. measured size). */
-/** Devices drawn at this level; power-only devices only when the power layer is on. */
-function shownDevices(project: Project, boardId: string | null, showPower: boolean) {
-  const devices = visibleDevices(project, boardId);
-  return showPower ? devices : devices.filter((d) => !isPowerDevice(project, d));
-}
-
 function toNodes(
   project: Project,
   boardId: string | null,
@@ -126,29 +120,23 @@ function toNodes(
   return nodes;
 }
 
-export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
+export function GraphView() {
   const project = useProjectStore((s) => s.project);
   const selection = useProjectStore((s) => s.selection);
   const apply = useProjectStore((s) => s.apply);
   const select = useProjectStore((s) => s.select);
   const cableStyle = useProjectStore((s) => s.cableStyle);
-  const setCableStyle = useProjectStore((s) => s.setCableStyle);
-  const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
-  const setDimUnused = useProjectStore((s) => s.setDimUnusedPorts);
   const openBoardId = useProjectStore((s) => s.openBoardId);
   const openBoard = useProjectStore((s) => s.openBoard);
   const pending = useProjectStore((s) => s.pendingConnection);
   const startConnection = useProjectStore((s) => s.startConnection);
-  /** Which of the menus at the top right is open. */
-  const [openMenu, setOpenMenu] = useState<'tools' | 'helper' | 'view' | null>(null);
-  /** Active tool: draw a chain, or cut cables. */
-  const [tool, setTool] = useState<'chain' | 'cut' | null>(null);
+  const tool = useProjectStore((s) => s.tool);
+  const setTool = useProjectStore((s) => s.setTool);
+  const suggested = useProjectStore((s) => s.suggestedCables);
+  const setSuggested = useProjectStore((s) => s.setSuggestedCables);
   /** Cables under the cable cutter's line, highlighted before they are cut. */
   const [cutting, setCutting] = useState<string[]>([]);
-  /** Cables just added by "suggest wiring" or the chain tool, highlighted until kept or removed. */
-  const [suggested, setSuggested] = useState<string[] | null>(null);
-  const { byCable, issues } = useAnalysis();
-  const issueCount = issues.length;
+  const { byCable } = useAnalysis();
   const highlight = useHighlight();
   const groups = useGroupIndex();
   const flow = useReactFlow();
@@ -160,7 +148,6 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
   const look = useProjectStore((s) => s.look);
-  const setLook = useProjectStore((s) => s.setLook);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
     setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
@@ -236,8 +223,15 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
     return result;
   }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting]);
 
-  /** "Tidy up": sort the devices of this level by signal flow, then frame them. */
-  // "Draw chain" tool and "Suggest wiring".
+  // Escape ends the active tool.
+  useEffect(() => {
+    if (!tool) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setTool(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [tool, setTool]);
+
+  // "Draw chain" tool, cable cutter and the highlight of suggested cables.
   const setNotice = useProjectStore((s) => s.setNotice);
   const nameOf = (id: string) => project.devices.find((d) => d.id === id)?.name ?? '?';
 
@@ -260,18 +254,6 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
     );
   };
 
-  const suggest = () => {
-    setOpenMenu(null);
-    const ids = shownDevices(project, boardId, showPower).map((d) => d.id);
-    const result = suggestWiring(project, ids);
-    if (!result.added.length) {
-      setNotice(t('tool.suggestedNone'));
-      return;
-    }
-    apply(() => result.project);
-    setSuggested(result.added);
-  };
-
   // Forget the highlight once those cables are gone (e.g. after undo).
   useEffect(() => {
     if (suggested && !suggested.some((id) => project.cables.some((c) => c.id === id))) setSuggested(null);
@@ -287,16 +269,6 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
     const ids = suggested ?? [];
     apply((p) => ids.reduce((acc, id) => removeCable(acc, id), p));
     setSuggested(null);
-  };
-
-  const tidyUp = () => {
-    const sizes = new Map<string, Size>();
-    for (const n of flow.getNodes()) {
-      if (n.measured?.width && n.measured.height) sizes.set(n.id, { width: n.measured.width, height: n.measured.height });
-    }
-    apply((p) => tidyLayout(p, boardId, sizes));
-    setOpenMenu(null);
-    setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 60);
   };
 
   // Cable routing runs for the whole diagram at once (so cables can avoid devices
@@ -429,72 +401,6 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
           <SystemsPanel />
         </div>
       </Panel>
-      <Panel position="top-right">
-        <div className="diagram-menus">
-          <DiagramMenu id="tools" label={t('menu.tools')} open={openMenu} setOpen={setOpenMenu}>
-            <MenuItem
-              icon={<ChainIcon />}
-              label={t('tool.chain')}
-              hint={t('tool.chainShort')}
-              disabled={nodes.length < 2}
-              onClick={() => {
-                select(null);
-                setTool('chain');
-              }}
-            />
-            <MenuItem
-              icon={<CutterIcon />}
-              label={t('tool.cutter')}
-              hint={t('tool.cutterShort')}
-              disabled={edges.length === 0}
-              onClick={() => {
-                select(null);
-                setTool('cut');
-              }}
-            />
-          </DiagramMenu>
-          <DiagramMenu id="helper" label={t('menu.helper')} open={openMenu} setOpen={setOpenMenu}>
-            <MenuItem icon={<TidyIcon />} label={t('view.tidy')} hint={t('view.tidyShort')} disabled={nodes.length < 2} onClick={tidyUp} />
-            <MenuItem
-              icon={<SuggestIcon />}
-              label={t('tool.suggest')}
-              hint={t('tool.suggestShort')}
-              disabled={nodes.length < 2}
-              onClick={suggest}
-            />
-            <MenuItem icon={<ChecksIcon />} label={t('view.checks', { count: issueCount })} hint={t('menu.checksShort')} onClick={onOpenChecks} />
-          </DiagramMenu>
-          <DiagramMenu id="view" label={t('view.options')} open={openMenu} setOpen={setOpenMenu}>
-            <div className="segmented segmented--small" role="group" aria-label={t('view.look')}>
-              <button className={look === 'modular' ? 'active' : ''} onClick={() => setLook('modular')}>
-                {t('view.lookModular')}
-              </button>
-              <button className={look === 'clean' ? 'active' : ''} onClick={() => setLook('clean')}>
-                {t('view.lookClean')}
-              </button>
-            </div>
-            <div className="segmented segmented--small" role="group" aria-label={t('view.cableStyle')}>
-              <button className={cableStyle === 'orthogonal' ? 'active' : ''} onClick={() => setCableStyle('orthogonal')}>
-                {t('view.cablesOrthogonal')}
-              </button>
-              <button className={cableStyle === 'curved' ? 'active' : ''} onClick={() => setCableStyle('curved')}>
-                {t('view.cablesCurved')}
-              </button>
-              <button className={cableStyle === 'hanging' ? 'active' : ''} onClick={() => setCableStyle('hanging')}>
-                {t('view.cablesHanging')}
-              </button>
-            </div>
-            <button
-              className={'toggle' + (dimUnused ? ' active' : '')}
-              aria-pressed={dimUnused}
-              onClick={() => setDimUnused(!dimUnused)}
-            >
-              {t('view.dimUnused')}
-            </button>
-          </DiagramMenu>
-        </div>
-      </Panel>
-      {openMenu && <div className="diagram-menu-backdrop" onClick={() => setOpenMenu(null)} />}
       {tool === 'chain' && <ChainOverlay onFinish={finishChain} />}
       {tool === 'cut' && <CutterOverlay onMark={setCutting} onCut={cut} />}
       {tool && (
@@ -523,100 +429,5 @@ export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
         </Panel>
       )}
     </ReactFlow>
-  );
-}
-
-/** Three bars lining up: the "tidy up" symbol. */
-function TidyIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
-      <rect x="1" y="2" width="4" height="4" rx="1" />
-      <rect x="1" y="10" width="4" height="4" rx="1" />
-      <rect x="11" y="6" width="4" height="4" rx="1" />
-      <path d="M5 4h3v8H5M8 8h3" fill="none" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
-/** A line through three dots: the "draw chain" tool. */
-function ChainIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M2.5 12.5C5 4 8 13 10 7s2.5-3 3.5-4" />
-      <circle cx="2.5" cy="12.5" r="1.6" fill="currentColor" />
-      <circle cx="8" cy="9.5" r="1.6" fill="currentColor" />
-      <circle cx="13.5" cy="3" r="1.6" fill="currentColor" />
-    </svg>
-  );
-}
-
-/** A magic wand: "suggest wiring". */
-function SuggestIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M2.5 13.5l8-8M9 4l3 3" />
-      <path d="M12.5 1.5v2M11.5 2.5h2M14 9v2M13 10h2M5.5 1.5v2M4.5 2.5h2" />
-    </svg>
-  );
-}
-
-/** A button at the top right that opens a small menu below it. */
-function DiagramMenu<K extends string>(props: {
-  id: K;
-  label: string;
-  open: K | null;
-  setOpen: (id: K | null) => void;
-  children: ReactNode;
-}) {
-  const isOpen = props.open === props.id;
-  return (
-    <div className="diagram-menu">
-      <button
-        className={'diagram-menu__button' + (isOpen ? ' active' : '')}
-        aria-expanded={isOpen}
-        onClick={() => props.setOpen(isOpen ? null : props.id)}
-      >
-        {props.label} <span aria-hidden="true">▾</span>
-      </button>
-      {isOpen && (
-        // Choosing an entry closes the menu.
-        <div className="diagram-menu__popover" role="menu" onClick={(e) => (e.target as HTMLElement).closest('.menu-item') && props.setOpen(null)}>
-          {props.children}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function MenuItem(props: { icon: ReactNode; label: string; hint: string; disabled?: boolean; onClick: () => void }) {
-  return (
-    <button className="menu-item" role="menuitem" disabled={props.disabled} onClick={props.onClick}>
-      <span className="menu-item__icon">{props.icon}</span>
-      <span className="menu-item__text">
-        <strong>{props.label}</strong>
-        <small>{props.hint}</small>
-      </span>
-    </button>
-  );
-}
-
-/** Wire cutters: the "cut cables" tool. */
-function CutterIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6.5 9.5L13 3M9.5 9.5L3 3" />
-      <circle cx="5" cy="12" r="2.2" />
-      <circle cx="11" cy="12" r="2.2" />
-    </svg>
-  );
-}
-
-/** A tick in a box: the connection checks. */
-function ChecksIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="12" height="12" rx="2" />
-      <path d="M5 8.2l2 2 4-4.4" />
-    </svg>
   );
 }

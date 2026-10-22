@@ -5,7 +5,6 @@ import { addSetup, freeAreaBelow, type SetupPreset } from '../core/setups';
 import { addDevice, createProject, setContainer, FILE_EXTENSION, parseProject, ProjectParseError, serializeProject } from '../core/project';
 import { t, type MessageKey } from '../i18n';
 import { openTextFile, saveTextFile } from '../platform/files';
-import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
 import { AddDeviceDialog } from './AddDeviceDialog';
 import { CableTable } from './CableTable';
@@ -13,9 +12,8 @@ import { ChecksList } from './ChecksList';
 import { GraphView } from './GraphView';
 import { Inspector } from './Inspector';
 import { RackView } from './RackView';
-import { deleteSelection } from './actions';
+import { TopBar, type View } from './TopBar';
 
-type View = 'graph' | 'rack' | 'cables' | 'checks';
 
 export function App() {
   return (
@@ -39,13 +37,8 @@ function Shell() {
     const id = setTimeout(() => useProjectStore.getState().setNotice(null), 4000);
     return () => clearTimeout(id);
   }, [notice]);
-  const [moreOpen, setMoreOpen] = useState(false);
   const project = useProjectStore((s) => s.project);
-  const canUndo = useProjectStore((s) => s.past.length > 0);
-  const canRedo = useProjectStore((s) => s.future.length > 0);
-  const canDelete = useProjectStore((s) => s.selection?.kind === 'device' || s.selection?.kind === 'cable');
-  const { apply, undo, redo, select, replaceProject } = useProjectStore.getState();
-  const { issues } = useAnalysis();
+  const { apply, select, replaceProject } = useProjectStore.getState();
   const flow = useReactFlow();
 
   useUndoShortcuts();
@@ -109,72 +102,23 @@ function Shell() {
       setMessage(t('file.error.write'));
     }
   };
-  /** Closes the "more" menu, then runs the menu entry's action. */
-  const fromMenu = (action: () => void) => () => {
-    setMoreOpen(false);
-    action();
-  };
 
   return (
     <div className="app" data-look={look}>
-      <header className="toolbar">
-        <div className="toolbar__title">
-          {t('app.title')} <span className="tag">{t('app.prototype')}</span>
-        </div>
-        <div className="toolbar__group">
-          <button className="primary" onClick={() => setAdding(true)} aria-label={t('toolbar.addDevice')}>
-            +<span className="wide-only"> {t('toolbar.addDevice')}</span>
-          </button>
-          <button className="icon-button" onClick={undo} disabled={!canUndo} aria-label={t('toolbar.undo')} title={t('toolbar.undo')}>
-            ↶
-          </button>
-          <button className="icon-button" onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
-            ↷
-          </button>
-          <button
-            className="icon-button"
-            onClick={deleteSelection}
-            disabled={!canDelete}
-            aria-label={t('toolbar.delete')}
-            title={t('toolbar.delete')}
-          >
-            <svg width="18" height="18" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-              <path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5M6 6v4M8 6v4" />
-            </svg>
-          </button>
-        </div>
-        <div className="toolbar__group wide-only">
-          <button onClick={() => setConfirmingNew(true)}>{t('toolbar.new')}</button>
-          <button onClick={openFile}>{t('toolbar.open')}</button>
-          <button onClick={saveFile}>{t('toolbar.save')}</button>
-        </div>
-        <div className="toolbar__more narrow-only">
-          <button className="icon-button" aria-label={t('toolbar.more')} aria-expanded={moreOpen} onClick={() => setMoreOpen(!moreOpen)}>
-            ⋯
-          </button>
-          {moreOpen && (
-            <>
-              <div className="menu-backdrop" onClick={() => setMoreOpen(false)} />
-              <div className="menu" role="menu">
-                <button role="menuitem" onClick={fromMenu(() => setConfirmingNew(true))}>
-                  {t('toolbar.new')}
-                </button>
-                <button role="menuitem" onClick={fromMenu(openFile)}>
-                  {t('toolbar.open')}
-                </button>
-                <button role="menuitem" onClick={fromMenu(saveFile)}>
-                  {t('toolbar.save')}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </header>
+      <TopBar
+        view={view}
+        setView={setView}
+        onAdd={() => setAdding(true)}
+        onNew={() => setConfirmingNew(true)}
+        onOpen={openFile}
+        onSave={saveFile}
+      />
 
-      <nav className="segmented view-switch" aria-label={t('view.graph')}>
+      {/* Phones: the views as a tab bar at the bottom. */}
+      <nav className="segmented view-switch narrow-only" aria-label={t('view.graph')}>
         {(['graph', 'rack', 'cables'] as const).map((v) => (
           <button key={v} className={view === v ? 'active' : ''} aria-current={view === v ? 'page' : undefined} onClick={() => setView(v)}>
-            {t(`view.${v}`, { count: issues.length })}
+            {t(`view.${v}`)}
           </button>
         ))}
       </nav>
@@ -183,7 +127,7 @@ function Shell() {
         <div className="workspace__main">
           {view === 'graph' && (
             <>
-              <GraphView onOpenChecks={() => setView('checks')} />
+              <GraphView />
               {project.devices.length === 0 && (
                 <div className="empty-state">
                   <h2>{t('empty.title')}</h2>
