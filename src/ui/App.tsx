@@ -172,7 +172,7 @@ function Shell() {
       </header>
 
       <nav className="segmented view-switch" aria-label={t('view.graph')}>
-        {(['graph', 'rack', 'cables', 'checks'] as const).map((v) => (
+        {(['graph', 'rack', 'cables'] as const).map((v) => (
           <button key={v} className={view === v ? 'active' : ''} aria-current={view === v ? 'page' : undefined} onClick={() => setView(v)}>
             {t(`view.${v}`, { count: issues.length })}
           </button>
@@ -183,7 +183,7 @@ function Shell() {
         <div className="workspace__main">
           {view === 'graph' && (
             <>
-              <GraphView />
+              <GraphView onOpenChecks={() => setView('checks')} />
               {project.devices.length === 0 && (
                 <div className="empty-state">
                   <h2>{t('empty.title')}</h2>

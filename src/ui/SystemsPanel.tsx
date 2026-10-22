@@ -9,6 +9,8 @@ export function SystemsPanel() {
   const setFocusGroup = useProjectStore((s) => s.setFocusGroup);
   const select = useProjectStore((s) => s.select);
   const apply = useProjectStore((s) => s.apply);
+  const showPower = useProjectStore((s) => s.showPower);
+  const setShowPower = useProjectStore((s) => s.setShowPower);
 
   const create = () => {
     let id = '';
@@ -44,6 +46,14 @@ export function SystemsPanel() {
       })}
       <button className="system-chip system-chip--add" onClick={create} aria-label={t('systems.add')} title={t('systems.emptyHint')}>
         +
+      </button>
+      <button
+        className={'system-chip system-chip--power' + (showPower ? ' active' : '')}
+        aria-pressed={showPower}
+        title={t('view.powerHint')}
+        onClick={() => setShowPower(!showPower)}
+      >
+        ⚡ {t('view.power')}
       </button>
     </div>
   );

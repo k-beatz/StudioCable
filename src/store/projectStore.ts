@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Project } from '../core/model';
 import { createProject, parseProject, serializeProject } from '../core/project';
-import { blurActiveField, isTouchDevice } from '../ui/device';
+import { blurActiveField } from '../ui/device';
 
 /**
  * App state with undo/redo. Because every core operation returns a new
@@ -23,8 +23,6 @@ interface ProjectState {
   past: Project[];
   future: Project[];
   selection: Selection;
-  /** Highlight the signal flow of the current selection. */
-  showSignalFlow: boolean;
   /** View preferences (remembered on this device, not stored in the project). */
   cableStyle: CableStyle;
   dimUnusedPorts: boolean;
@@ -32,8 +30,6 @@ interface ProjectState {
   showPower: boolean;
   /** Overall look of the diagram: "modular" (coloured hardware panels) or "clean". */
   look: Look;
-  /** Show the small overview map of the diagram. */
-  showOverview: boolean;
   /** Pedalboard currently opened in the diagram (null = main level). */
   openBoardId: string | null;
   /** System (group) currently highlighted. */
@@ -49,12 +45,10 @@ interface ProjectState {
   redo: () => void;
   replaceProject: (p: Project) => void;
   select: (s: Selection) => void;
-  setShowSignalFlow: (on: boolean) => void;
   setCableStyle: (style: CableStyle) => void;
   setDimUnusedPorts: (on: boolean) => void;
   setShowPower: (on: boolean) => void;
   setLook: (look: Look) => void;
-  setShowOverview: (on: boolean) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
   startConnection: (from: { deviceId: string; portId: string } | null) => void;
@@ -71,7 +65,6 @@ const currentPrefs = (s: Prefs): Prefs => ({
   dimUnusedPorts: s.dimUnusedPorts,
   showPower: s.showPower,
   look: s.look,
-  showOverview: s.showOverview,
 });
 
 interface Prefs {
@@ -79,7 +72,6 @@ interface Prefs {
   dimUnusedPorts: boolean;
   showPower: boolean;
   look: Look;
-  showOverview: boolean;
 }
 
 function loadPrefs(): Prefs {
@@ -90,11 +82,9 @@ function loadPrefs(): Prefs {
       dimUnusedPorts: raw.dimUnusedPorts === true,
       showPower: raw.showPower === true,
       look: raw.look === 'clean' ? 'clean' : 'modular',
-      // On phones the overview takes too much room, so it starts hidden there.
-      showOverview: typeof raw.showOverview === 'boolean' ? raw.showOverview : !isTouchDevice(),
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, look: 'modular', showOverview: true };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, look: 'modular' };
   }
 }
 
@@ -121,7 +111,6 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   past: [],
   future: [],
   selection: null,
-  showSignalFlow: true,
   ...loadPrefs(),
   openBoardId: null,
   focusGroupId: null,
@@ -151,7 +140,6 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     blurActiveField();
     set({ selection, pendingConnection: null });
   },
-  setShowSignalFlow: (showSignalFlow) => set({ showSignalFlow }),
   setCableStyle: (cableStyle) => {
     set({ cableStyle });
     savePrefs({ ...currentPrefs(get()), cableStyle });
@@ -167,10 +155,6 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   setLook: (look) => {
     set({ look });
     savePrefs({ ...currentPrefs(get()), look });
-  },
-  setShowOverview: (showOverview) => {
-    set({ showOverview });
-    savePrefs({ ...currentPrefs(get()), showOverview });
   },
   openBoard: (openBoardId) => {
     blurActiveField();

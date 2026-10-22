@@ -532,12 +532,6 @@ select {
   width: 36px;
   height: 36px;
 }
-@media (max-width: 760px) {
-  .react-flow__minimap.overview {
-    width: 150px;
-    height: 100px;
-  }
-}
 
 /* ---------- Tables ---------- */
 
@@ -940,28 +934,6 @@ select {
   padding-right: 10px;
   font-weight: 700;
 }
-.view-options-wrap {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-.view-options-bar {
-  display: flex;
-  gap: 8px;
-}
-.tool-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  border-radius: 10px;
-  font-weight: 700;
-  background: var(--panel);
-}
-.tool-button.active {
-  border-color: var(--accent);
-  color: var(--accent);
-}
 .chain-overlay {
   position: absolute;
   inset: 0;
@@ -1021,16 +993,6 @@ select {
 }
 .connect-banner--suggest {
   gap: 8px;
-}
-.tool-button:disabled {
-  opacity: 0.5;
-}
-.view-options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-  max-width: 520px;
 }
 .segmented--small {
   padding: 3px;
@@ -1238,17 +1200,6 @@ select {
 .menu button:hover {
   background: var(--panel-2);
 }
-.view-options-toggle {
-  display: none;
-  min-height: 40px;
-  border-radius: 10px;
-  font-weight: 700;
-  background: var(--panel);
-}
-.view-options-toggle.active {
-  border-color: var(--accent);
-  color: var(--accent);
-}
 .connect-banner {
   display: flex;
   align-items: center;
@@ -1341,38 +1292,11 @@ select {
     top: 14px;
   }
 
-  /* View options collapse into one button. */
-  .view-options-toggle {
-    display: block;
-  }
-  .view-options-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-  }
-  .view-options {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 8px;
-    border-radius: 14px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    box-shadow: 0 12px 32px rgb(0 0 0 / 0.3);
-  }
-  .view-options.open {
-    display: flex;
-  }
-
   /* Systems: one swipeable row. */
   /* Phones: tool buttons on the first row, systems on their own row below. */
   .top-left-stack {
     margin-top: 52px;
     max-width: calc(100vw - 32px);
-  }
-  .tool-button .tool-label {
-    display: none;
   }
   .systems-panel {
     flex-wrap: nowrap;
@@ -1492,7 +1416,6 @@ select {
 .app[data-look='modular'] input:not([type='checkbox']),
 .app[data-look='modular'] .segmented,
 .app[data-look='modular'] .systems-panel,
-.app[data-look='modular'] .view-options,
 .app[data-look='modular'] .menu,
 .app[data-look='modular'] .toast,
 .app[data-look='modular'] .connect-banner,
@@ -1542,7 +1465,6 @@ select {
 .app[data-look='modular'] .inspector,
 .app[data-look='modular'] .modal,
 .app[data-look='modular'] .menu,
-.app[data-look='modular'] .view-options.open,
 .app[data-look='modular'] .toast,
 .app[data-look='modular'] .connect-banner {
   box-shadow: var(--shadow-floating);
@@ -1574,10 +1496,6 @@ select {
 @media (min-width: 761px) {
   .react-flow__panel.top.right {
     max-width: calc(100% - 200px);
-  }
-  .view-options-wrap {
-    flex-wrap: wrap;
-    justify-content: flex-end;
   }
 }
 
@@ -1905,22 +1823,6 @@ select {
   background: var(--panel);
   color: var(--text);
 }
-.canvas-controls button.active {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-.react-flow__minimap.overview {
-  width: 200px;
-  height: 130px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--panel);
-}
-.react-flow__minimap.overview svg {
-  width: 100%;
-  height: 100%;
-}
 
 /* Modular look: a dark brushed-metal desk, hardware-style buttons and a small display. */
 .app[data-look='modular'] .react-flow {
@@ -1952,34 +1854,100 @@ select {
     inset 0 1px 0 rgb(255 255 255 / 0.18),
     0 2px 0 #15171b;
 }
-.app[data-look='modular'] .canvas-controls button.active {
-  color: #7fd1ff;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.18),
-    0 2px 0 #15171b,
-    0 0 8px rgb(127 209 255 / 0.5);
+
+/* ---------- Menus at the top right of the diagram: Tools, Helper, View ---------- */
+.diagram-menus {
+  /* Menus open aligned to the right edge of the whole row, so they stay on screen. */
+  position: relative;
+  display: flex;
+  gap: 8px;
 }
-.app[data-look='modular'] .react-flow__minimap.overview {
-  /* Looks like a small display set into a metal frame. */
-  border-radius: 6px;
-  border: 6px solid #2f333a;
-  background: #0d1117;
-  box-shadow:
-    inset 0 0 12px rgb(0 0 0 / 0.8),
-    0 0 0 1px #15171b,
-    0 6px 14px rgb(0 0 0 / 0.5);
-  --xy-minimap-mask-background-color: rgb(13 17 23 / 0.55);
-  --xy-minimap-mask-stroke-color: #7fd1ff;
-  --xy-minimap-mask-stroke-width: 2;
+.diagram-menu__button {
+  min-height: 40px;
+  font-weight: 700;
+  background: var(--panel);
 }
-.app[data-look='modular'] .react-flow__minimap.overview::after {
-  content: 'OVERVIEW';
+.diagram-menu__button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.diagram-menu__popover {
   position: absolute;
-  left: 6px;
-  top: 4px;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: rgb(127 209 255 / 0.7);
-  pointer-events: none;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  width: max-content;
+  min-width: 240px;
+  max-width: min(320px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.35);
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 6px 10px;
+  text-align: left;
+  background: transparent;
+  border-color: transparent;
+}
+.menu-item:not(:disabled):hover {
+  background: var(--panel-2);
+}
+.menu-item__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--panel-3);
+}
+.menu-item__text {
+  display: flex;
+  flex-direction: column;
+}
+.menu-item__text small {
+  color: var(--muted);
+  font-size: 11px;
+}
+/* Closes an open menu when tapping anywhere else (sits below the menu panels). */
+.diagram-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+.system-chip--power.active {
+  border-color: #ffd34d;
+  color: #ffd34d;
+}
+.cutter-overlay {
+  cursor: crosshair;
+}
+.cutter-overlay .chain-overlay__svg polyline {
+  stroke: var(--danger);
+  stroke-dasharray: 6 5;
+}
+.react-flow__edge.cable-edge--cutting .react-flow__edge-path,
+.react-flow__edge.cable-edge--cutting .hanging-cable {
+  stroke: var(--danger) !important;
+  opacity: 0.6;
+}
+.app[data-look='modular'] .diagram-menu__popover {
+  border-radius: 6px;
+  box-shadow: var(--shadow-floating);
+}
+.app[data-look='modular'] .menu-item,
+.app[data-look='modular'] .menu-item__icon {
+  border-radius: 4px;
+}
+.app[data-look='modular'] .menu-item {
+  box-shadow: none;
 }

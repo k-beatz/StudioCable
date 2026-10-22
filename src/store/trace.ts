@@ -23,10 +23,9 @@ export function traceForSelection(project: Project, selection: Selection): Trace
   return trace;
 }
 
-/** The signal flow of the current selection, if highlighting is on. */
+/** The signal flow of the current selection (shown whenever something is selected). */
 export function useTrace(): Trace | undefined {
   const project = useProjectStore((s) => s.project);
   const selection = useProjectStore((s) => s.selection);
-  const on = useProjectStore((s) => s.showSignalFlow);
-  return on ? traceForSelection(project, selection) : undefined;
+  return traceForSelection(project, selection);
 }

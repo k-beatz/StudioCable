@@ -10,7 +10,7 @@ import {
   type Connection,
   type NodeChange,
 } from '@xyflow/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
 import { tidyLayout, visibleDevices, type Size } from '../core/layout';
 import { connectChain, suggestWiring } from '../core/autowire';
@@ -37,7 +37,8 @@ import { connectPorts } from './connect';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
 import { HangingEdge } from './HangingEdge';
 import { ChainOverlay } from './ChainOverlay';
-import { CanvasControls, Overview } from './CanvasControls';
+import { CanvasControls } from './CanvasControls';
+import { CutterOverlay } from './CutterOverlay';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
@@ -125,13 +126,11 @@ function toNodes(
   return nodes;
 }
 
-export function GraphView() {
+export function GraphView({ onOpenChecks }: { onOpenChecks: () => void }) {
   const project = useProjectStore((s) => s.project);
   const selection = useProjectStore((s) => s.selection);
   const apply = useProjectStore((s) => s.apply);
   const select = useProjectStore((s) => s.select);
-  const showSignalFlow = useProjectStore((s) => s.showSignalFlow);
-  const setShowSignalFlow = useProjectStore((s) => s.setShowSignalFlow);
   const cableStyle = useProjectStore((s) => s.cableStyle);
   const setCableStyle = useProjectStore((s) => s.setCableStyle);
   const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
@@ -140,11 +139,16 @@ export function GraphView() {
   const openBoard = useProjectStore((s) => s.openBoard);
   const pending = useProjectStore((s) => s.pendingConnection);
   const startConnection = useProjectStore((s) => s.startConnection);
-  const [optionsOpen, setOptionsOpen] = useState(false);
-  const [chainMode, setChainMode] = useState(false);
+  /** Which of the menus at the top right is open. */
+  const [openMenu, setOpenMenu] = useState<'tools' | 'helper' | 'view' | null>(null);
+  /** Active tool: draw a chain, or cut cables. */
+  const [tool, setTool] = useState<'chain' | 'cut' | null>(null);
+  /** Cables under the cable cutter's line, highlighted before they are cut. */
+  const [cutting, setCutting] = useState<string[]>([]);
   /** Cables just added by "suggest wiring" or the chain tool, highlighted until kept or removed. */
   const [suggested, setSuggested] = useState<string[] | null>(null);
-  const { byCable } = useAnalysis();
+  const { byCable, issues } = useAnalysis();
+  const issueCount = issues.length;
   const highlight = useHighlight();
   const groups = useGroupIndex();
   const flow = useReactFlow();
@@ -155,9 +159,7 @@ export function GraphView() {
   // React Flow keeps measurement data on its nodes, so we hold them in local
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
-  const setShowPower = useProjectStore((s) => s.setShowPower);
   const look = useProjectStore((s) => s.look);
-  const showOverview = useProjectStore((s) => s.showOverview);
   const setLook = useProjectStore((s) => s.setLook);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
@@ -219,7 +221,8 @@ export function GraphView() {
           'cable-edge' +
           (severity === 'error' ? ' cable-edge--error' : '') +
           (dimmed ? ' dimmed' : '') +
-          (suggested?.includes(cable.id) ? ' cable-edge--suggested' : ''),
+          (suggested?.includes(cable.id) ? ' cable-edge--suggested' : '') +
+          (cutting.includes(cable.id) ? ' cable-edge--cutting' : ''),
         style: {
           stroke: color,
           strokeWidth: selected || lit ? 4.5 : 3,
@@ -231,7 +234,7 @@ export function GraphView() {
       });
     }
     return result;
-  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested]);
+  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting]);
 
   /** "Tidy up": sort the devices of this level by signal flow, then frame them. */
   // "Draw chain" tool and "Suggest wiring".
@@ -239,7 +242,7 @@ export function GraphView() {
   const nameOf = (id: string) => project.devices.find((d) => d.id === id)?.name ?? '?';
 
   const finishChain = (deviceIds: string[]) => {
-    setChainMode(false);
+    setTool(null);
     if (deviceIds.length < 2) {
       setNotice(t('tool.chainTooShort'));
       return;
@@ -258,7 +261,7 @@ export function GraphView() {
   };
 
   const suggest = () => {
-    setOptionsOpen(false);
+    setOpenMenu(null);
     const ids = shownDevices(project, boardId, showPower).map((d) => d.id);
     const result = suggestWiring(project, ids);
     if (!result.added.length) {
@@ -274,6 +277,12 @@ export function GraphView() {
     if (suggested && !suggested.some((id) => project.cables.some((c) => c.id === id))) setSuggested(null);
   }, [project, suggested]);
 
+  /** Cable cutter: removes the cables it was swiped across (one undo step). */
+  const cut = (ids: string[]) => {
+    apply((p) => ids.reduce((acc, id) => removeCable(acc, id), p));
+    setNotice(t('tool.cut', { count: ids.length }));
+  };
+
   const removeSuggested = () => {
     const ids = suggested ?? [];
     apply((p) => ids.reduce((acc, id) => removeCable(acc, id), p));
@@ -286,7 +295,7 @@ export function GraphView() {
       if (n.measured?.width && n.measured.height) sizes.set(n.id, { width: n.measured.width, height: n.measured.height });
     }
     apply((p) => tidyLayout(p, boardId, sizes));
-    setOptionsOpen(false);
+    setOpenMenu(null);
     setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 60);
   };
 
@@ -406,8 +415,7 @@ export function GraphView() {
       ) : (
         <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />
       )}
-      <CanvasControls showOverviewButton={!board} />
-      {!board && showOverview && <Overview />}
+      <CanvasControls />
       <Panel position="top-left">
         <div className="top-left-stack">
           {board && (
@@ -422,52 +430,41 @@ export function GraphView() {
         </div>
       </Panel>
       <Panel position="top-right">
-        <div className="view-options-wrap">
-          <div className="view-options-bar">
-            <button
-              className="tool-button"
-              onClick={tidyUp}
+        <div className="diagram-menus">
+          <DiagramMenu id="tools" label={t('menu.tools')} open={openMenu} setOpen={setOpenMenu}>
+            <MenuItem
+              icon={<ChainIcon />}
+              label={t('tool.chain')}
+              hint={t('tool.chainShort')}
               disabled={nodes.length < 2}
-              title={t('view.tidyHint')}
-              aria-label={t('view.tidy')}
-            >
-              <TidyIcon />
-              <span className="tool-label">{t('view.tidy')}</span>
-            </button>
-            <button
-              className={'tool-button' + (chainMode ? ' active' : '')}
               onClick={() => {
-                setOptionsOpen(false);
                 select(null);
-                setChainMode(!chainMode);
+                setTool('chain');
               }}
+            />
+            <MenuItem
+              icon={<CutterIcon />}
+              label={t('tool.cutter')}
+              hint={t('tool.cutterShort')}
+              disabled={edges.length === 0}
+              onClick={() => {
+                select(null);
+                setTool('cut');
+              }}
+            />
+          </DiagramMenu>
+          <DiagramMenu id="helper" label={t('menu.helper')} open={openMenu} setOpen={setOpenMenu}>
+            <MenuItem icon={<TidyIcon />} label={t('view.tidy')} hint={t('view.tidyShort')} disabled={nodes.length < 2} onClick={tidyUp} />
+            <MenuItem
+              icon={<SuggestIcon />}
+              label={t('tool.suggest')}
+              hint={t('tool.suggestShort')}
               disabled={nodes.length < 2}
-              aria-pressed={chainMode}
-              title={t('tool.chainHint')}
-              aria-label={t('tool.chain')}
-            >
-              <ChainIcon />
-              <span className="tool-label">{t('tool.chain')}</span>
-            </button>
-            <button
-              className="tool-button"
               onClick={suggest}
-              disabled={nodes.length < 2}
-              title={t('tool.suggestHint')}
-              aria-label={t('tool.suggest')}
-            >
-              <SuggestIcon />
-              <span className="tool-label">{t('tool.suggest')}</span>
-            </button>
-            <button
-              className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
-              aria-expanded={optionsOpen}
-              onClick={() => setOptionsOpen(!optionsOpen)}
-            >
-              {t('view.options')}
-            </button>
-          </div>
-          <div className={'view-options' + (optionsOpen ? ' open' : '')}>
+            />
+            <MenuItem icon={<ChecksIcon />} label={t('view.checks', { count: issueCount })} hint={t('menu.checksShort')} onClick={onOpenChecks} />
+          </DiagramMenu>
+          <DiagramMenu id="view" label={t('view.options')} open={openMenu} setOpen={setOpenMenu}>
             <div className="segmented segmented--small" role="group" aria-label={t('view.look')}>
               <button className={look === 'modular' ? 'active' : ''} onClick={() => setLook('modular')}>
                 {t('view.lookModular')}
@@ -494,33 +491,21 @@ export function GraphView() {
             >
               {t('view.dimUnused')}
             </button>
-            <button
-              className={'toggle' + (showPower ? ' active' : '')}
-              aria-pressed={showPower}
-              onClick={() => setShowPower(!showPower)}
-            >
-              ⚡ {t('view.power')}
-            </button>
-            <button
-              className={'toggle' + (showSignalFlow ? ' active' : '')}
-              aria-pressed={showSignalFlow}
-              onClick={() => setShowSignalFlow(!showSignalFlow)}
-            >
-              〰 {t('flow.toggle')}
-            </button>
-          </div>
+          </DiagramMenu>
         </div>
       </Panel>
-      {chainMode && <ChainOverlay onFinish={finishChain} />}
-      {chainMode && (
+      {openMenu && <div className="diagram-menu-backdrop" onClick={() => setOpenMenu(null)} />}
+      {tool === 'chain' && <ChainOverlay onFinish={finishChain} />}
+      {tool === 'cut' && <CutterOverlay onMark={setCutting} onCut={cut} />}
+      {tool && (
         <Panel position="bottom-center">
           <div className="connect-banner" role="status">
-            <span>{t('tool.chainHint')}</span>
-            <button onClick={() => setChainMode(false)}>{t('tool.cancel')}</button>
+            <span>{t(tool === 'chain' ? 'tool.chainHint' : 'tool.cutterHint')}</span>
+            <button onClick={() => setTool(null)}>{t(tool === 'chain' ? 'tool.cancel' : 'tool.done')}</button>
           </div>
         </Panel>
       )}
-      {suggested && !chainMode && (
+      {suggested && !tool && (
         <Panel position="bottom-center">
           <div className="connect-banner connect-banner--suggest" role="status">
             <span>{t('tool.suggested', { count: suggested.length })}</span>
@@ -571,6 +556,67 @@ function SuggestIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <path d="M2.5 13.5l8-8M9 4l3 3" />
       <path d="M12.5 1.5v2M11.5 2.5h2M14 9v2M13 10h2M5.5 1.5v2M4.5 2.5h2" />
+    </svg>
+  );
+}
+
+/** A button at the top right that opens a small menu below it. */
+function DiagramMenu<K extends string>(props: {
+  id: K;
+  label: string;
+  open: K | null;
+  setOpen: (id: K | null) => void;
+  children: ReactNode;
+}) {
+  const isOpen = props.open === props.id;
+  return (
+    <div className="diagram-menu">
+      <button
+        className={'diagram-menu__button' + (isOpen ? ' active' : '')}
+        aria-expanded={isOpen}
+        onClick={() => props.setOpen(isOpen ? null : props.id)}
+      >
+        {props.label} <span aria-hidden="true">▾</span>
+      </button>
+      {isOpen && (
+        // Choosing an entry closes the menu.
+        <div className="diagram-menu__popover" role="menu" onClick={(e) => (e.target as HTMLElement).closest('.menu-item') && props.setOpen(null)}>
+          {props.children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuItem(props: { icon: ReactNode; label: string; hint: string; disabled?: boolean; onClick: () => void }) {
+  return (
+    <button className="menu-item" role="menuitem" disabled={props.disabled} onClick={props.onClick}>
+      <span className="menu-item__icon">{props.icon}</span>
+      <span className="menu-item__text">
+        <strong>{props.label}</strong>
+        <small>{props.hint}</small>
+      </span>
+    </button>
+  );
+}
+
+/** Wire cutters: the "cut cables" tool. */
+function CutterIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6.5 9.5L13 3M9.5 9.5L3 3" />
+      <circle cx="5" cy="12" r="2.2" />
+      <circle cx="11" cy="12" r="2.2" />
+    </svg>
+  );
+}
+
+/** A tick in a box: the connection checks. */
+function ChecksIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="12" height="12" rx="2" />
+      <path d="M5 8.2l2 2 4-4.4" />
     </svg>
   );
 }
