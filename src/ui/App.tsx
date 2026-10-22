@@ -55,6 +55,8 @@ function Shell() {
     });
     setAdding(false);
     setView('graph');
+    // Adding a power device only makes sense with the power layer visible.
+    if (template.category === 'power') useProjectStore.getState().setShowPower(true);
     select({ kind: 'device', id: createdId });
   };
 

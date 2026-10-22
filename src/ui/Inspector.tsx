@@ -12,11 +12,13 @@ import {
   removeDevice,
   removeGroup,
   setContainer,
+  setDeviceInGroup,
   toggleInGroup,
   updateCable,
   updateDevice,
   updateGroup,
 } from '../core/project';
+import { POWER_INPUT_KINDS, powerInputKind, powerInputOf, setPowerInput, type PowerInputKind } from '../core/power';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
@@ -129,6 +131,7 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
         </div>
       )}
       <BoardField device={device} project={project} />
+      {template && template.category !== 'power' && <PowerField templateId={template.id} project={project} />}
       <SystemsField kind="device" id={device.id} project={project} />
       <h3>{t('device.ports')}</h3>
       <ul className="port-list">
@@ -420,15 +423,42 @@ function SaveTraceAsSystem({ trace, project }: { trace: Trace; project: Project 
   );
 }
 
+/** Power input of the device model (only shown when the power layer is on). */
+function PowerField({ templateId, project }: { templateId: string; project: Project }) {
+  const showPower = useProjectStore((s) => s.showPower);
+  const apply = useProjectStore((s) => s.apply);
+  const template = project.templates[templateId];
+  if (!showPower || !template) return null;
+  const current = powerInputKind(powerInputOf(template));
+  return (
+    <label className="field">
+      <span>⚡ {t('power.input')}</span>
+      <select
+        value={current ?? ''}
+        onChange={(e) => apply((p) => setPowerInput(p, templateId, (e.target.value || null) as PowerInputKind | null))}
+      >
+        <option value="">{t('power.none')}</option>
+        {POWER_INPUT_KINDS.map((k) => (
+          <option key={k} value={k}>
+            {t(`power.kind.${k}`)}
+          </option>
+        ))}
+      </select>
+      <small className="muted">{t('power.appliesToAll', { model: template.model })}</small>
+    </label>
+  );
+}
+
 function GroupInspector({ group, project }: { group: Group; project: Project }) {
   const apply = useProjectStore((s) => s.apply);
   const select = useProjectStore((s) => s.select);
   const setFocusGroup = useProjectStore((s) => s.setFocusGroup);
-  const devices = project.devices.filter((d) => group.deviceIds.includes(d.id));
   const cables = project.cables.filter((c) => group.cableIds.includes(c.id));
+  const allDevices = [...project.devices].sort((a, b) => a.name.localeCompare(b.name));
   return (
     <>
       <h2>{group.name}</h2>
+      <p className="muted">{t('systems.explain')}</p>
       <label className="field">
         <span>{t('device.name')}</span>
         <CommitInput value={group.name} onCommit={(name) => apply((p) => updateGroup(p, group.id, { name: name || group.name }))} />
@@ -450,7 +480,23 @@ function GroupInspector({ group, project }: { group: Group; project: Project }) 
       </div>
       <div className="field">
         <span>{t('systems.devices')}</span>
-        <div>{devices.length ? devices.map((d) => d.name).join(', ') : '—'}</div>
+        <small className="muted">{t('systems.pickDevices')}</small>
+        <div className="check-list">
+          {allDevices.map((d) => {
+            const member = group.deviceIds.includes(d.id);
+            return (
+              <label key={d.id} className={'check-item' + (member ? ' checked' : '')}>
+                <input
+                  type="checkbox"
+                  checked={member}
+                  onChange={(e) => apply((p) => setDeviceInGroup(p, group.id, d.id, e.target.checked))}
+                />
+                <span className="check-item__dot" style={{ background: member ? group.color : 'transparent', borderColor: group.color }} />
+                {d.name}
+              </label>
+            );
+          })}
+        </div>
       </div>
       <div className="field">
         <span>{t('systems.cables')}</span>

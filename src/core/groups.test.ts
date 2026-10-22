@@ -13,6 +13,7 @@ import {
   removeDevice,
   serializeProject,
   setContainer,
+  setDeviceInGroup,
   toggleInGroup,
 } from './project';
 import { traceFromPort } from './signalFlow';
@@ -72,7 +73,8 @@ describe('pedalboards', () => {
     const r = rig();
     expect(childrenOf(r.p, r.board.id).map((d) => d.name)).toEqual(['Drive', 'Delay']);
     const exposed = exposedPorts(r.p, r.board.id).map((e) => `${r.p.devices.find((d) => d.id === e.deviceId)!.name}/${e.port.label}`);
-    expect(exposed).toEqual(['Drive/Input', 'Delay/Output']);
+    // Power inputs face outwards too (the power supply may sit off the board).
+    expect(exposed).toEqual(['Drive/Input', 'Drive/DC In', 'Delay/Output', 'Delay/DC In']);
   });
 
   it('traces the signal through the pedals into the amp', () => {
@@ -123,5 +125,20 @@ describe('file format v2', () => {
     expect(p.groups).toEqual([]);
     const r = rig();
     expect(parseProject(serializeProject(r.p))).toEqual(r.p);
+  });
+});
+
+describe('setDeviceInGroup', () => {
+  it('adds the cables between member devices and removes them again', () => {
+    const r = rig();
+    const added = addGroup(r.p, 'Guitar rig');
+    let p = added.project;
+    const id = added.group.id;
+    p = setDeviceInGroup(p, id, r.guitar.id, true);
+    expect(p.groups[0].cableIds).toEqual([]);
+    p = setDeviceInGroup(p, id, r.a.id, true);
+    expect(p.groups[0].cableIds).toEqual([r.cables[0]]);
+    p = setDeviceInGroup(p, id, r.a.id, false);
+    expect(p.groups[0]).toMatchObject({ deviceIds: [r.guitar.id], cableIds: [] });
   });
 });

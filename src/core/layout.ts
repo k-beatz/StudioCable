@@ -1,4 +1,5 @@
 import type { DeviceInstance, Project } from './model';
+import { isPowerCable } from './power';
 import { getPort } from './project';
 
 export interface Size {
@@ -33,6 +34,8 @@ export function levelEdges(project: Project, boardId: string | null): [string, s
   };
   const edges: [string, string][] = [];
   for (const cable of project.cables) {
+    // Power cables would pull everything towards the power strip; they do not shape the layout.
+    if (isPowerCable(project, cable)) continue;
     const [a, b] = cable.ends;
     const from = represent(a.deviceId);
     const to = represent(b.deviceId);

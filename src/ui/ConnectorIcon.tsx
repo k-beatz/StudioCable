@@ -146,6 +146,53 @@ export function ConnectorIcon({ connectors, color, size = 20 }: { connectors: Co
         ))}
       </>
     );
+  } else if (type === 'schuko') {
+    // Round socket/plug with two pins and the earth clips at top and bottom.
+    shape = (
+      <>
+        <circle cx={10} cy={10} r={8.5} fill={body} stroke={color} strokeWidth={2} />
+        {hole(6.4, 10, 1.5)}
+        {hole(13.6, 10, 1.5)}
+        <rect x={8.5} y={2.6} width={3} height={1.6} fill={pin} />
+        <rect x={8.5} y={15.8} width={3} height={1.6} fill={pin} />
+      </>
+    );
+  } else if (type === 'iec') {
+    // Kettle connector: three pins in a shape with bevelled lower corners.
+    shape = (
+      <>
+        <path d="M2.5 4 H17.5 V11.5 L14 16 H6 L2.5 11.5 Z" fill={body} stroke={color} strokeWidth={2} strokeLinejoin="round" />
+        {hole(6.6, 8.6, 1.2)}
+        {hole(13.4, 8.6, 1.2)}
+        {hole(10, 12.4, 1.2)}
+      </>
+    );
+  } else if (type === 'iec-c7') {
+    // Figure-8 connector with two pins.
+    shape = (
+      <>
+        <path d="M6.5 4.5 H13.5 A5.5 5.5 0 0 1 13.5 15.5 H6.5 A5.5 5.5 0 0 1 6.5 4.5 Z" fill={body} stroke={color} strokeWidth={2} />
+        {hole(6.6, 10, 1.4)}
+        {hole(13.4, 10, 1.4)}
+      </>
+    );
+  } else if (type === 'powercon') {
+    shape = (
+      <>
+        <circle cx={10} cy={10} r={8.5} fill={body} stroke={color} strokeWidth={2} />
+        <circle cx={10} cy={10} r={4.2} fill="none" stroke={pin} strokeWidth={1.2} />
+        <rect x={9} y={2.2} width={2} height={3.4} fill={pin} />
+      </>
+    );
+  } else if (type === 'dc-barrel') {
+    // Barrel socket/plug: ring with the centre pin.
+    shape = (
+      <>
+        <circle cx={10} cy={10} r={6.5} fill={body} stroke={color} strokeWidth={2} />
+        <circle cx={10} cy={10} r={2.6} fill="none" stroke={pin} strokeWidth={1.2} />
+        <circle cx={10} cy={10} r={1} fill={pin} />
+      </>
+    );
   } else {
     // Banana / binding post and anything unknown: plain terminal.
     shape = (

@@ -92,6 +92,10 @@ export function CategoryIcon({ category }: { category: DeviceCategory }) {
         </>
       );
       break;
+    case 'power':
+      // Lightning bolt.
+      path = <path d="M10 1.5 4.5 10h4l-1 6.5L13.5 8h-4z" {...common} />;
+      break;
     case 'computer':
       path = <path d="M3 4h12v8H3zM1.5 14.5h15" {...common} />;
       break;

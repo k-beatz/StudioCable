@@ -1,6 +1,6 @@
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { memo, type CSSProperties, type ReactNode } from 'react';
-import type { Group, Port } from '../core/model';
+import { isPowerSignal, type Group, type Port } from '../core/model';
 import { childrenOf, exposedPorts } from '../core/project';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
@@ -40,7 +40,9 @@ export const DeviceNode = memo(function DeviceNode({ data, selected }: NodeProps
   const groups = useGroupIndex();
   if (!device || !template) return null;
 
-  const rows = template.ports.map((p) => ({ deviceId: device.id, port: p, handleId: p.id, label: p.label }));
+  const rows = template.ports
+    .filter((p) => ports.showPower || !isPowerSignal(p.signal))
+    .map((p) => ({ deviceId: device.id, port: p, handleId: p.id, label: p.label }));
   return (
     <NodeFrame
       deviceId={device.id}
@@ -70,7 +72,9 @@ export const BoardNode = memo(function BoardNode({ data, selected }: NodeProps<B
   if (!device) return null;
   const children = childrenOf(project, device.id);
   const names = new Map(children.map((c) => [c.id, c.name]));
-  const rows = exposedPorts(project, device.id).map((e) => ({
+  const rows = exposedPorts(project, device.id)
+    .filter((e) => ports.showPower || !isPowerSignal(e.port.signal))
+    .map((e) => ({
     deviceId: e.deviceId,
     port: e.port,
     handleId: proxyHandleId(e.deviceId, e.port.id),
@@ -228,7 +232,8 @@ function usePortState() {
   const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
   const select = useProjectStore((s) => s.select);
   const pending = useProjectStore((s) => s.pendingConnection);
-  return { occupancy, highlight, groups, selection, dimUnused, select, pending };
+  const showPower = useProjectStore((s) => s.showPower);
+  return { occupancy, highlight, groups, selection, dimUnused, select, pending, showPower };
 }
 
 function PortColumns({

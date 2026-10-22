@@ -373,7 +373,22 @@ export function findCrossings(routes: Map<string, Point[]>, clearance = 8): Map<
  * "curved" look) and a small arc wherever the cable jumps over another one.
  */
 export function pathWithBridges(points: Point[], bridges: Point[] = [], radius = 10, bridgeSize = 6): string {
-  if (points.length < 2) return '';
+  return drawCable(points, bridges, radius, bridgeSize).path;
+}
+
+/**
+ * Like pathWithBridges, but also returns a separate path of just the bridge
+ * arcs. Drawn underneath in the background colour and a bit wider, it cuts a
+ * small gap into the crossed cable so the bridge stays visible when zoomed out.
+ */
+export function drawCable(
+  points: Point[],
+  bridges: Point[] = [],
+  radius = 10,
+  bridgeSize = 6,
+): { path: string; halo: string } {
+  const arcs: string[] = [];
+  if (points.length < 2) return { path: '', halo: '' };
   const corner = (k: number) => {
     // Corner radius limited by half the neighbouring segment lengths.
     const a = points[k - 1];
@@ -389,16 +404,16 @@ export function pathWithBridges(points: Point[], bridges: Point[] = [], radius =
     const isLast = k === points.length - 1;
     const c = isLast ? null : corner(k);
     const lineEnd = c ? c.inPt : b;
-    d += segmentWithBridges(from, lineEnd, bridges, bridgeSize);
+    d += segmentWithBridges(from, lineEnd, bridges, bridgeSize, arcs);
     if (c) {
       d += ` Q ${b.x} ${b.y} ${c.outPt.x} ${c.outPt.y}`;
       from = c.outPt;
     }
   }
-  return d;
+  return { path: d, halo: arcs.join(' ') };
 }
 
-function segmentWithBridges(a: Point, b: Point, bridges: Point[], size: number): string {
+function segmentWithBridges(a: Point, b: Point, bridges: Point[], size: number, arcs: string[]): string {
   const horizontal = Math.abs(a.y - b.y) < 0.5 && Math.abs(a.x - b.x) > 0.5;
   if (!horizontal) return ` L ${b.x} ${b.y}`;
   const dir = Math.sign(b.x - a.x);
@@ -413,7 +428,9 @@ function segmentWithBridges(a: Point, b: Point, bridges: Point[], size: number):
   for (const x of hops) {
     // Skip bridges that would overlap the previous one.
     if ((x - lastX) * dir < size * 2) continue;
-    d += ` L ${x - size * dir} ${a.y} A ${size} ${size} 0 0 ${dir > 0 ? 1 : 0} ${x + size * dir} ${a.y}`;
+    const arc = `A ${size} ${size} 0 0 ${dir > 0 ? 1 : 0} ${x + size * dir} ${a.y}`;
+    d += ` L ${x - size * dir} ${a.y} ${arc}`;
+    arcs.push(`M ${x - size * dir} ${a.y} ${arc}`);
     lastX = x;
   }
   return d + ` L ${b.x} ${b.y}`;

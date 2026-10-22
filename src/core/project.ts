@@ -137,6 +137,30 @@ export function toggleInGroup(project: Project, groupId: string, kind: 'device' 
   };
 }
 
+/**
+ * Adds a device to a system (or removes it), together with the cables that
+ * connect it to the system's other devices.
+ */
+export function setDeviceInGroup(project: Project, groupId: string, deviceId: string, member: boolean): Project {
+  return {
+    ...project,
+    groups: project.groups.map((g) => {
+      if (g.id !== groupId) return g;
+      const devices = new Set(g.deviceIds);
+      if (member) devices.add(deviceId);
+      else devices.delete(deviceId);
+      const touching = project.cables.filter((c) => c.ends.some((e) => e.deviceId === deviceId));
+      const cables = new Set(g.cableIds);
+      for (const c of touching) {
+        const other = c.ends.find((e) => e.deviceId !== deviceId)?.deviceId;
+        if (member && other && devices.has(other)) cables.add(c.id);
+        if (!member) cables.delete(c.id);
+      }
+      return { ...g, deviceIds: [...devices], cableIds: [...cables] };
+    }),
+  };
+}
+
 // ---------- Pedalboards (containers) ----------
 
 /** Puts a device on a board (or back on the main level with `null`). */

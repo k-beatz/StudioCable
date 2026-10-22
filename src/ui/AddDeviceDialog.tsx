@@ -197,8 +197,28 @@ function CustomBuilder({ onAdd }: { onAdd: (template: DeviceTemplate) => void })
 
   const canCreate = spec.model.trim() !== '' && spec.groups.some((g) => g.count > 0);
 
+  const startFrom = (key: string) => {
+    const preset = GENERIC_PRESETS.find((p) => p.key === key);
+    if (!preset) return;
+    // Copy so that editing does not change the preset itself.
+    const copy: GenericSpec = JSON.parse(JSON.stringify(preset.spec));
+    setSpec({ ...copy, manufacturer: '', model: copy.model.replace(/^Generic /, '') });
+  };
+
   return (
     <div className="modal__body">
+      <label className="field">
+        <span>{t('add.startFrom')}</span>
+        <select value="" onChange={(e) => startFrom(e.target.value)}>
+          <option value="">{t('add.startBlank')} …</option>
+          {GENERIC_PRESETS.filter((p) => p.spec.groups.length > 0).map((p) => (
+            <option key={p.key} value={p.key}>
+              {t(`preset.${p.key}` as MessageKey)}
+            </option>
+          ))}
+        </select>
+        <small className="muted">{t('add.startHint')}</small>
+      </label>
       <div className="form-grid">
         <label className="field">
           <span>{t('add.manufacturer')}</span>

@@ -84,6 +84,10 @@ const combo: Connector[] = [
 
 const comboAccepts: SignalType[] = ['line-bal', 'line-unbal', 'instrument'];
 
+// Typical power inputs, used by the generic presets below.
+const mainsInlet: PortGroup = { count: 1, label: 'Power', direction: 'in', connectors: [{ type: 'iec', gender: M }], signal: 'power-ac' };
+const dcInput: PortGroup = { count: 1, label: 'DC In', direction: 'in', connectors: [{ type: 'dc-barrel', gender: F }], signal: 'power-dc' };
+
 /** Routes "In n" -> "Out n" for n = 1..count. */
 function channelRoutes(count: number, inLabel: string, outLabel: string) {
   return Array.from({ length: count }, (_, i) => ({
@@ -105,6 +109,47 @@ function halfNormalled(count: number) {
       { from: `Bottom Front ${n}`, to: `Bottom Rear ${n}` },
     ];
   }).flat();
+}
+
+/** Labels for stereo line channels, e.g. first=5, pairs=2 -> "Stereo In 5/6 L", "Stereo In 5/6 R", "Stereo In 7/8 L", … */
+function stereoLabels(first: number, pairs: number): string[] {
+  return Array.from({ length: pairs }, (_, i) => {
+    const a = first + i * 2;
+    return [`Stereo In ${a}/${a + 1} L`, `Stereo In ${a}/${a + 1} R`];
+  }).flat();
+}
+
+/** A rough generic mixer: mono mic/line channels, stereo line channels and the usual outputs. */
+function genericMixer(model: string, mono: number, stereoPairs: number, auxSends: number, controlRoom: boolean): GenericSpec {
+  return {
+    manufacturer: 'Generic',
+    model,
+    category: 'mixer',
+    groups: [
+      { count: mono, label: 'Mic In', direction: 'in', connectors: [{ type: 'xlr', gender: F }], signal: 'mic' },
+      { count: mono, label: 'Line In', direction: 'in', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'line-bal' },
+      ...(stereoPairs > 0
+        ? [
+            {
+              count: stereoPairs * 2,
+              label: 'Stereo In',
+              labels: stereoLabels(mono + 1, stereoPairs),
+              direction: 'in' as const,
+              connectors: [{ type: 'trs-6.3' as const, gender: F }],
+              signal: 'line-unbal' as const,
+            },
+          ]
+        : []),
+      { count: 2, label: 'Main Out', labels: ['Main Out L', 'Main Out R'], direction: 'out', connectors: [{ type: 'xlr', gender: M }], signal: 'line-bal' },
+      ...(auxSends > 0
+        ? [{ count: auxSends, label: 'Aux Send', direction: 'out' as const, connectors: [{ type: 'trs-6.3' as const, gender: F }], signal: 'line-bal' as const }]
+        : []),
+      ...(controlRoom
+        ? [{ count: 2, label: 'Control Room', labels: ['Control Room L', 'Control Room R'], direction: 'out' as const, connectors: [{ type: 'trs-6.3' as const, gender: F }], signal: 'line-bal' as const }]
+        : []),
+      { count: 1, label: 'Phones', direction: 'out', connectors: [{ type: 'trs-6.3', gender: F }], signal: 'headphone', channels: 2 },
+    ],
+  };
 }
 
 export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
@@ -199,6 +244,9 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       ],
     },
   },
+  { key: 'mixer4', spec: genericMixer('Compact 4-Channel Mixer', 2, 1, 1, false) },
+  { key: 'mixer12', spec: genericMixer('12-Channel Mixer', 4, 4, 2, true) },
+  { key: 'mixer16', spec: genericMixer('16-Channel Mixer', 16, 0, 4, true) },
   {
     key: 'patchbay24',
     spec: {
@@ -220,7 +268,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       manufacturer: 'Generic',
       model: 'Active Studio Monitor',
       category: 'monitor',
-      groups: [{ count: 1, label: 'Input', direction: 'in', connectors: combo, signal: 'line-bal' }],
+      groups: [{ count: 1, label: 'Input', direction: 'in', connectors: combo, signal: 'line-bal' }, mainsInlet],
     },
   },
   {
@@ -263,6 +311,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
         { count: 1, label: 'Out R', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'line-unbal' },
         { count: 1, label: 'MIDI In', direction: 'in', connectors: [{ type: 'midi-din', gender: F }], signal: 'midi' },
         { count: 1, label: 'MIDI Out', direction: 'out', connectors: [{ type: 'midi-din', gender: F }], signal: 'midi' },
+        dcInput,
       ],
     },
   },
@@ -279,6 +328,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       groups: [
         { count: 1, label: 'Input', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument', alsoAccepts: ['line-unbal'] },
         { count: 1, label: 'Output', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+        dcInput,
       ],
       routing: [{ from: 'Input', to: 'Output' }],
     },
@@ -293,6 +343,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
         { count: 1, label: 'Input', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument', alsoAccepts: ['line-unbal'] },
         { count: 1, label: 'Output L', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
         { count: 1, label: 'Output R', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' },
+        dcInput,
       ],
       routing: [
         { from: 'Input', to: 'Output L' },
@@ -311,6 +362,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
         { count: 1, label: 'FX Return', direction: 'in', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'line-unbal' },
         { count: 1, label: 'FX Send', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'line-unbal' },
         { count: 1, label: 'Line Out', direction: 'out', connectors: [{ type: 'xlr', gender: M }], signal: 'line-bal' },
+        mainsInlet,
       ],
       // Effects loop: Input feeds FX Send; FX Return feeds the outputs. Without a
       // cable in FX Return the loop is bridged internally.
@@ -330,10 +382,72 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       groups: [{ count: 2, label: 'USB', direction: 'bidi', connectors: [{ type: 'usb-c', gender: F }], signal: 'data' }],
     },
   },
+  // ---------- Power (shown when the power layer is on) ----------
+  {
+    key: 'wallOutlet',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Wall outlet',
+      category: 'power',
+      groups: [{ count: 2, label: 'Socket', direction: 'out', connectors: [{ type: 'schuko', gender: F }], signal: 'power-ac' }],
+    },
+  },
+  {
+    key: 'powerStrip',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Power strip',
+      category: 'power',
+      groups: [
+        { count: 1, label: 'Plug', direction: 'in', connectors: [{ type: 'schuko', gender: M }], signal: 'power-ac' },
+        { count: 6, label: 'Socket', direction: 'out', connectors: [{ type: 'schuko', gender: F }], signal: 'power-ac' },
+      ],
+    },
+  },
+  {
+    key: 'pedalPsu',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Pedal power supply',
+      category: 'power',
+      groups: [
+        mainsInlet,
+        { count: 8, label: 'DC Out', direction: 'out', connectors: [{ type: 'dc-barrel', gender: F }], signal: 'power-dc' },
+      ],
+    },
+  },
+  {
+    key: 'dcAdapter',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'DC power adapter',
+      category: 'power',
+      groups: [
+        { count: 1, label: 'Mains Plug', direction: 'in', connectors: [{ type: 'schuko', gender: M }], signal: 'power-ac' },
+        { count: 1, label: 'DC Plug', direction: 'out', connectors: [{ type: 'dc-barrel', gender: M }], signal: 'power-dc' },
+      ],
+    },
+  },
+  {
+    key: 'daisyChain',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'DC daisy chain',
+      category: 'power',
+      groups: [
+        { count: 1, label: 'DC In', direction: 'in', connectors: [{ type: 'dc-barrel', gender: F }], signal: 'power-dc' },
+        { count: 5, label: 'DC Plug', direction: 'out', connectors: [{ type: 'dc-barrel', gender: M }], signal: 'power-dc' },
+      ],
+    },
+  },
 ];
 
 /** Sensible default gender for a connector on a device panel. */
 export function defaultConnector(type: Connector['type'], direction: Direction): Connector {
+  // Mains: devices have male inlets, outlets/strips have female sockets.
+  if (type === 'schuko' || type === 'iec' || type === 'iec-c7' || type === 'powercon') {
+    return { type, gender: direction === 'in' ? 'male' : 'female' };
+  }
   if (type === 'toslink' || type === 'rj45' || type === 'dsub25') return { type, gender: type === 'dsub25' ? 'female' : 'none' };
   if (type === 'xlr' || type === 'aes-xlr') return { type, gender: direction === 'out' ? 'male' : 'female' };
   return { type, gender: 'female' };

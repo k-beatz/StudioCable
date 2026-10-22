@@ -42,7 +42,7 @@ export function SystemsPanel() {
           </button>
         );
       })}
-      <button className="system-chip system-chip--add" onClick={create} aria-label={t('systems.add')}>
+      <button className="system-chip system-chip--add" onClick={create} aria-label={t('systems.add')} title={t('systems.emptyHint')}>
         +
       </button>
     </div>

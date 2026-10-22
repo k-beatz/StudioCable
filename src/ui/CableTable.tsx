@@ -3,6 +3,7 @@ import type { Cable } from '../core/model';
 import { describeEnd, updateCable } from '../core/project';
 import { worstSeverity } from '../core/validation';
 import { t, type MessageKey } from '../i18n';
+import { isPowerCable } from '../core/power';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
 import { traceForSelection } from '../store/trace';
@@ -23,6 +24,7 @@ const COLUMNS: { key: SortKey; title: MessageKey }[] = [
 /** Cable list: sortable, filterable, editable in place. */
 export function CableTable() {
   const project = useProjectStore((s) => s.project);
+  const showPower = useProjectStore((s) => s.showPower);
   const selection = useProjectStore((s) => s.selection);
   const apply = useProjectStore((s) => s.apply);
   const select = useProjectStore((s) => s.select);
@@ -43,6 +45,7 @@ export function CableTable() {
     const list = project.cables
       .map((c) => ({ cable: c, from: text(c, 'from'), to: text(c, 'to') }))
       .filter((r) => !onlyPath || !trace || trace.cableIds.has(r.cable.id))
+      .filter((r) => showPower || !isPowerCable(project, r.cable))
       .filter(
         (r) => !q || COLUMNS.some((col) => text(r.cable, col.key).toLowerCase().includes(q)),
       );
@@ -54,7 +57,7 @@ export function CableTable() {
       return sort.desc ? -cmp : cmp;
     });
     return list;
-  }, [project, filter, sort, onlyPath, trace]);
+  }, [project, filter, sort, onlyPath, trace, showPower]);
 
   const update = (id: string, patch: Partial<Cable>) => apply((p) => updateCable(p, id, patch));
 

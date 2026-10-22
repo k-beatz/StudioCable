@@ -4,6 +4,8 @@ import { t } from '../i18n';
 
 /** Signal colors. Always shown together with a text badge, never color alone. */
 export const SIGNAL_COLORS: Record<SignalType, string> = {
+  'power-ac': '#b6bfcf',
+  'power-dc': '#9be15d',
   mic: '#ff7a6b',
   'line-bal': '#6aa8ff',
   'line-unbal': '#a7cbff',

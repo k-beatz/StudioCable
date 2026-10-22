@@ -1,4 +1,5 @@
 import type { Project } from '../core/model';
+import { isPowerCable } from '../core/power';
 import { checkProject, computeOccupancy, type Issue } from '../core/validation';
 import { useProjectStore } from './projectStore';
 
@@ -24,6 +25,22 @@ export function analyze(project: Project): Analysis {
   return result;
 }
 
+const withoutPower = new WeakMap<Project, Analysis>();
+
+/** Like analyze(), but without the issues of power cables (when the power layer is hidden). */
+function analyzeWithoutPower(project: Project): Analysis {
+  let result = withoutPower.get(project);
+  if (!result) {
+    const full = analyze(project);
+    const power = new Set(project.cables.filter((c) => isPowerCable(project, c)).map((c) => c.id));
+    result = { ...full, issues: full.issues.filter((i) => !power.has(i.cableId)) };
+    withoutPower.set(project, result);
+  }
+  return result;
+}
+
 export function useAnalysis(): Analysis {
-  return analyze(useProjectStore((s) => s.project));
+  const project = useProjectStore((s) => s.project);
+  const showPower = useProjectStore((s) => s.showPower);
+  return showPower ? analyze(project) : analyzeWithoutPower(project);
 }

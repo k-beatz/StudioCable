@@ -21,7 +21,8 @@ export type IssueCode =
   | 'balancedMismatch'
   | 'connectorMismatch'
   | 'channelMismatch'
-  | 'portOccupied';
+  | 'portOccupied'
+  | 'mainsIntoDc';
 
 export interface Issue {
   cableId: string;
@@ -30,7 +31,7 @@ export interface Issue {
   params?: Record<string, string | number>;
 }
 
-type SignalFamily = 'analog' | 'digital-audio' | 'midi' | 'clock' | 'data';
+type SignalFamily = 'analog' | 'digital-audio' | 'midi' | 'clock' | 'data' | 'power-ac' | 'power-dc';
 
 const FAMILY: Record<SignalType, SignalFamily> = {
   mic: 'analog',
@@ -43,6 +44,8 @@ const FAMILY: Record<SignalType, SignalFamily> = {
   midi: 'midi',
   clock: 'clock',
   data: 'data',
+  'power-ac': 'power-ac',
+  'power-dc': 'power-dc',
 };
 
 /** Checks one cable. `occupancy` maps "deviceId/portId" to the number of cables on it. */
@@ -76,7 +79,9 @@ export function checkCable(project: Project, cable: Cable, occupancy?: Map<strin
     [source, target] = [a, b];
   }
 
-  if (FAMILY[a.signal] !== FAMILY[b.signal]) {
+  if (source?.signal === 'power-ac' && target?.signal === 'power-dc') {
+    add('error', 'mainsIntoDc');
+  } else if (FAMILY[a.signal] !== FAMILY[b.signal]) {
     add('error', 'incompatibleSignal', { a: a.signal, b: b.signal });
   } else if (source && target && !target.alsoAccepts?.includes(source.signal)) {
     checkSignalLevels(source.signal, target.signal, add);

@@ -28,6 +28,12 @@ export const CONNECTOR_TYPES = [
   'bnc',
   'rj45',
   'dsub25',
+  // Power
+  'schuko',
+  'iec',
+  'iec-c7',
+  'powercon',
+  'dc-barrel',
 ] as const;
 export type ConnectorType = (typeof CONNECTOR_TYPES)[number];
 
@@ -50,8 +56,14 @@ export const SIGNAL_TYPES = [
   'midi',
   'clock',
   'data',
+  // Power: shown only when the power layer is switched on.
+  'power-ac',
+  'power-dc',
 ] as const;
 export type SignalType = (typeof SIGNAL_TYPES)[number];
+
+/** Mains (AC) or low-voltage (DC) power rather than an audio/data signal. */
+export const isPowerSignal = (s: SignalType) => s === 'power-ac' || s === 'power-dc';
 
 export const DEVICE_CATEGORIES = [
   'interface',
@@ -68,6 +80,7 @@ export const DEVICE_CATEGORIES = [
   'pedal',
   'pedalboard',
   'computer',
+  'power',
   'other',
 ] as const;
 export type DeviceCategory = (typeof DEVICE_CATEGORIES)[number];

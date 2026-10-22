@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CableEnd, DeviceInstance, Project } from '../core/model';
 import { tidyLayout, visibleDevices, type Size } from '../core/layout';
+import { isPowerCable, isPowerDevice } from '../core/power';
 import { findCrossings, routeCables, type CableEnds, type Point, type Rect } from '../core/routing';
 import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
@@ -63,9 +64,21 @@ function endpoint(project: Project, end: CableEnd, visible: Set<string>): { node
 }
 
 /** Builds React Flow nodes, keeping React Flow's own data (e.g. measured size). */
-function toNodes(project: Project, boardId: string | null, selection: Selection, prev: DiagramNode[]): DiagramNode[] {
-  const byId = new Map(prev.map((n) => [n.id, n]));
+/** Devices drawn at this level; power-only devices only when the power layer is on. */
+function shownDevices(project: Project, boardId: string | null, showPower: boolean) {
   const devices = visibleDevices(project, boardId);
+  return showPower ? devices : devices.filter((d) => !isPowerDevice(project, d));
+}
+
+function toNodes(
+  project: Project,
+  boardId: string | null,
+  selection: Selection,
+  prev: DiagramNode[],
+  showPower: boolean,
+): DiagramNode[] {
+  const byId = new Map(prev.map((n) => [n.id, n]));
+  const devices = shownDevices(project, boardId, showPower);
   const nodes: DiagramNode[] = devices.map((d) => ({
     ...(byId.get(d.id) as DiagramNode | undefined),
     id: d.id,
@@ -83,6 +96,7 @@ function toNodes(project: Project, boardId: string | null, selection: Selection,
   let leftY = 0;
   let rightY = 0;
   for (const cable of project.cables) {
+    if (!showPower && isPowerCable(project, cable)) continue;
     const [a, b] = cable.ends;
     const aIn = inside.has(a.deviceId);
     const bIn = inside.has(b.deviceId);
@@ -136,10 +150,12 @@ export function GraphView() {
 
   // React Flow keeps measurement data on its nodes, so we hold them in local
   // state and only write positions back to the project when a drag ends.
-  const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, []));
+  const showPower = useProjectStore((s) => s.showPower);
+  const setShowPower = useProjectStore((s) => s.setShowPower);
+  const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
-    setNodes((prev) => toNodes(project, boardId, selection, prev));
-  }, [project, boardId, selection]);
+    setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
+  }, [project, boardId, selection, showPower]);
 
   // Re-frame the view when entering or leaving a board.
   useEffect(() => {
@@ -153,9 +169,10 @@ export function GraphView() {
   );
 
   const baseEdges = useMemo<RoutedEdgeType[]>(() => {
-    const visible = new Set(visibleDevices(project, boardId).map((d) => d.id));
+    const visible = new Set(shownDevices(project, boardId, showPower).map((d) => d.id));
     const result: RoutedEdgeType[] = [];
     for (const cable of project.cables) {
+      if (!showPower && isPowerCable(project, cable)) continue;
       const [from, to] = cable.ends;
       let source = endpoint(project, from, visible);
       let target = endpoint(project, to, visible);
@@ -203,7 +220,7 @@ export function GraphView() {
       });
     }
     return result;
-  }, [project, boardId, byCable, selection, highlight, groups, cableStyle]);
+  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower]);
 
   /** "Tidy up": sort the devices of this level by signal flow, then frame them. */
   const tidyUp = () => {
@@ -272,6 +289,8 @@ export function GraphView() {
       baseEdges.map((e) => ({
         ...e,
         data: { curved: e.data?.curved ?? false, points: routing.routes.get(e.id), bridges: routing.bridges.get(e.id) },
+        // Cables that jump over others are drawn on top, so the bridge (and its gap) is visible.
+        zIndex: (e.zIndex ?? 0) * 2 + (routing.bridges.has(e.id) ? 1 : 0),
       })),
     [baseEdges, routing],
   );
@@ -339,8 +358,15 @@ export function GraphView() {
       <Panel position="top-right">
         <div className="view-options-wrap">
           <div className="view-options-bar">
-            <button className="tidy-button" onClick={tidyUp} disabled={nodes.length < 2} title={t('view.tidyHint')}>
-              <TidyIcon /> {t('view.tidy')}
+            <button
+              className="tidy-button"
+              onClick={tidyUp}
+              disabled={nodes.length < 2}
+              title={t('view.tidyHint')}
+              aria-label={t('view.tidy')}
+            >
+              <TidyIcon />
+              <span className="tidy-label">{t('view.tidy')}</span>
             </button>
             <button
               className={'view-options-toggle' + (optionsOpen ? ' active' : '')}
@@ -365,6 +391,13 @@ export function GraphView() {
               onClick={() => setDimUnused(!dimUnused)}
             >
               {t('view.dimUnused')}
+            </button>
+            <button
+              className={'toggle' + (showPower ? ' active' : '')}
+              aria-pressed={showPower}
+              onClick={() => setShowPower(!showPower)}
+            >
+              ⚡ {t('view.power')}
             </button>
             <button
               className={'toggle' + (showSignalFlow ? ' active' : '')}

@@ -28,6 +28,8 @@ interface ProjectState {
   /** View preferences (remembered on this device, not stored in the project). */
   cableStyle: CableStyle;
   dimUnusedPorts: boolean;
+  /** Show the power layer (power supplies, outlets, power cables and power inputs). */
+  showPower: boolean;
   /** Pedalboard currently opened in the diagram (null = main level). */
   openBoardId: string | null;
   /** System (group) currently highlighted. */
@@ -44,6 +46,7 @@ interface ProjectState {
   setShowSignalFlow: (on: boolean) => void;
   setCableStyle: (style: CableStyle) => void;
   setDimUnusedPorts: (on: boolean) => void;
+  setShowPower: (on: boolean) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
   startConnection: (from: { deviceId: string; portId: string } | null) => void;
@@ -53,19 +56,32 @@ export type CableStyle = 'orthogonal' | 'curved';
 
 const PREFS_KEY = 'studiocable.prefs';
 
-function loadPrefs(): { cableStyle: CableStyle; dimUnusedPorts: boolean } {
+const currentPrefs = (s: Prefs): Prefs => ({
+  cableStyle: s.cableStyle,
+  dimUnusedPorts: s.dimUnusedPorts,
+  showPower: s.showPower,
+});
+
+interface Prefs {
+  cableStyle: CableStyle;
+  dimUnusedPorts: boolean;
+  showPower: boolean;
+}
+
+function loadPrefs(): Prefs {
   try {
     const raw = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}');
     return {
       cableStyle: raw.cableStyle === 'curved' ? 'curved' : 'orthogonal',
       dimUnusedPorts: raw.dimUnusedPorts === true,
+      showPower: raw.showPower === true,
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false };
   }
 }
 
-function savePrefs(prefs: { cableStyle: CableStyle; dimUnusedPorts: boolean }) {
+function savePrefs(prefs: Prefs) {
   try {
     localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
   } catch {
@@ -120,11 +136,15 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   setShowSignalFlow: (showSignalFlow) => set({ showSignalFlow }),
   setCableStyle: (cableStyle) => {
     set({ cableStyle });
-    savePrefs({ cableStyle, dimUnusedPorts: get().dimUnusedPorts });
+    savePrefs({ ...currentPrefs(get()), cableStyle });
   },
   setDimUnusedPorts: (dimUnusedPorts) => {
     set({ dimUnusedPorts });
-    savePrefs({ cableStyle: get().cableStyle, dimUnusedPorts });
+    savePrefs({ ...currentPrefs(get()), dimUnusedPorts });
+  },
+  setShowPower: (showPower) => {
+    set({ showPower });
+    savePrefs({ ...currentPrefs(get()), showPower });
   },
   openBoard: (openBoardId) => {
     blurActiveField();
