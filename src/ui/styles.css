@@ -1250,8 +1250,8 @@ select {
 
 /* ---------- "Modular" look: coloured hardware panels, like a modular synth rack ---------- */
 .app[data-look='modular'] .react-flow {
-  --xy-background-color: #25282e;
-  --canvas-dot: #33373f;
+  --xy-background-color: #12151b;
+  --canvas-dot: rgb(255 255 255 / 0.09);
 }
 .app[data-look='modular'] .device-node {
   --icon-socket: #121418;
@@ -1728,9 +1728,6 @@ select {
 }
 
 /* ---------- StudioCable's own canvas controls and overview ---------- */
-:root {
-  --canvas-seam: rgb(128 140 160 / 0.12);
-}
 .canvas-controls {
   display: flex;
   flex-direction: column;
@@ -1747,13 +1744,12 @@ select {
   color: var(--text);
 }
 
-/* Modular look: a dark brushed-metal desk, hardware-style buttons and a small display. */
+/* Modular look: a dark canvas with a soft blue and violet glow ("Aurora"), hardware-style buttons. */
 .app[data-look='modular'] .react-flow {
-  --canvas-seam: rgb(0 0 0 / 0.35);
   background:
-    radial-gradient(ellipse at 50% 40%, rgb(255 255 255 / 0.05), transparent 70%),
-    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px),
-    #25282e;
+    radial-gradient(60% 50% at 15% 10%, rgb(59 130 246 / 0.16), transparent 70%),
+    radial-gradient(55% 45% at 90% 95%, rgb(139 92 246 / 0.13), transparent 70%),
+    #12151b;
 }
 .app[data-look='modular'] .react-flow__background {
   background: transparent;

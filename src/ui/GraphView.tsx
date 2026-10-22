@@ -147,7 +147,6 @@ export function GraphView() {
   // React Flow keeps measurement data on its nodes, so we hold them in local
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
-  const look = useProjectStore((s) => s.look);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
     setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
@@ -381,12 +380,8 @@ export function GraphView() {
       fitView
       proOptions={{ hideAttribution: true }}
     >
-      {look === 'modular' ? (
-        // Faint seams between metal panels instead of the usual dot grid.
-        <Background variant={BackgroundVariant.Lines} gap={192} lineWidth={1} color="var(--canvas-seam)" />
-      ) : (
-        <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />
-      )}
+      {/* A fine dot grid that moves with the canvas; the colour glow behind it stays put. */}
+      <Background variant={BackgroundVariant.Dots} gap={24} size={1.3} color="var(--canvas-dot)" />
       <CanvasControls />
       <Panel position="top-left">
         <div className="top-left-stack">
