@@ -1484,3 +1484,98 @@ select {
   background: #3a3f48;
   color: #f6f3ea;
 }
+
+/* Modular look: square, hardware-style buttons with a slight shadow. */
+.app[data-look='modular'] button:not(.swatch),
+.app[data-look='modular'] select,
+.app[data-look='modular'] input:not([type='checkbox']),
+.app[data-look='modular'] .segmented,
+.app[data-look='modular'] .systems-panel,
+.app[data-look='modular'] .view-options,
+.app[data-look='modular'] .menu,
+.app[data-look='modular'] .toast,
+.app[data-look='modular'] .connect-banner,
+.app[data-look='modular'] .react-flow__controls-button {
+  border-radius: 4px;
+}
+.app[data-look='modular'] button:not(.swatch):not(.check-item):not(.port-more),
+.app[data-look='modular'] .segmented {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 2px 4px rgb(0 0 0 / 0.3);
+}
+.app[data-look='modular'] .segmented button {
+  /* Buttons inside a group sit flat; the group carries the shadow. */
+  box-shadow: none;
+}
+.app[data-look='modular'] .segmented button.active {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+}
+.app[data-look='modular'] button:not(:disabled):active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+}
+.app[data-look='modular'] .system-chip {
+  border-radius: 4px;
+}
+
+/* Modular look: everything casts a shadow, like hardware on a desk. */
+.app[data-look='modular'] {
+  --shadow-raised: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 3px 8px rgb(0 0 0 / 0.35);
+  --shadow-floating: 0 10px 28px rgb(0 0 0 / 0.45);
+}
+.app[data-look='modular'] .toolbar {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.35);
+}
+.app[data-look='modular'] .view-switch,
+.app[data-look='modular'] .systems-panel,
+.app[data-look='modular'] .breadcrumb,
+.app[data-look='modular'] .react-flow__controls,
+.app[data-look='modular'] .react-flow__minimap,
+.app[data-look='modular'] .external-node {
+  border-radius: 4px;
+  box-shadow: var(--shadow-raised);
+}
+.app[data-look='modular'] .inspector,
+.app[data-look='modular'] .modal,
+.app[data-look='modular'] .menu,
+.app[data-look='modular'] .view-options.open,
+.app[data-look='modular'] .toast,
+.app[data-look='modular'] .connect-banner {
+  box-shadow: var(--shadow-floating);
+}
+.app[data-look='modular'] .modal,
+.app[data-look='modular'] .inspector {
+  border-radius: 6px;
+}
+.app[data-look='modular'] select,
+.app[data-look='modular'] input:not([type='checkbox']) {
+  /* Fields are recessed into the panel. */
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.3);
+}
+.app[data-look='modular'] .category-chip,
+.app[data-look='modular'] .port-badge,
+.app[data-look='modular'] .check-item.checked {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+.app[data-look='modular'] .check-item,
+.app[data-look='modular'] .check-item__dot {
+  border-radius: 4px;
+}
+.app[data-look='modular'] .hanging-cable__label rect,
+.app[data-look='modular'] .react-flow__edge-textbg {
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
+}
+
+/* Wide screens: the tool bar wraps instead of sliding over the systems panel. */
+@media (min-width: 761px) {
+  .react-flow__panel.top.right {
+    max-width: calc(100% - 200px);
+  }
+  .view-options-wrap {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
