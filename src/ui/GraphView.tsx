@@ -158,6 +158,8 @@ export function GraphView() {
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
   const setShowPower = useProjectStore((s) => s.setShowPower);
+  const look = useProjectStore((s) => s.look);
+  const setLook = useProjectStore((s) => s.setLook);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
     setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
@@ -461,6 +463,14 @@ export function GraphView() {
             </button>
           </div>
           <div className={'view-options' + (optionsOpen ? ' open' : '')}>
+            <div className="segmented segmented--small" role="group" aria-label={t('view.look')}>
+              <button className={look === 'modular' ? 'active' : ''} onClick={() => setLook('modular')}>
+                {t('view.lookModular')}
+              </button>
+              <button className={look === 'clean' ? 'active' : ''} onClick={() => setLook('clean')}>
+                {t('view.lookClean')}
+              </button>
+            </div>
             <div className="segmented segmented--small" role="group" aria-label={t('view.cableStyle')}>
               <button className={cableStyle === 'orthogonal' ? 'active' : ''} onClick={() => setCableStyle('orthogonal')}>
                 {t('view.cablesOrthogonal')}

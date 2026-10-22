@@ -1,6 +1,7 @@
-import type { EdgeProps } from '@xyflow/react';
+import { Position, type EdgeProps } from '@xyflow/react';
 import { memo, useEffect, useLayoutEffect, useRef } from 'react';
 import type { RoutedEdgeType } from './RoutedEdge';
+import { isTouchDevice } from './device';
 
 /**
  * A patch cable that hangs down between its two plugs, drawn on top of the
@@ -36,7 +37,13 @@ function curve(sx: number, sy: number, tx: number, ty: number, m: { x: number; y
 }
 
 export const HangingEdge = memo(function HangingEdge(props: EdgeProps<RoutedEdgeType>) {
-  const { sourceX: sx, sourceY: sy, targetX: tx, targetY: ty } = props;
+  // React Flow gives the outer edge of each port; the plug sits on the middle of the jack.
+  const inset = isTouchDevice() ? 17 : 13;
+  const towardsNode = (pos: Position) => (pos === Position.Right ? -inset : pos === Position.Left ? inset : 0);
+  const sx = props.sourceX + towardsNode(props.sourcePosition);
+  const sy = props.sourceY;
+  const tx = props.targetX + towardsNode(props.targetPosition);
+  const ty = props.targetY;
   const paths = useRef<(SVGPathElement | null)[]>([]);
   const label = useRef<SVGGElement>(null);
   const sim = useRef<Sim | null>(null);

@@ -1,6 +1,26 @@
-import type { Connector, SignalType } from '../core/model';
+import type { Connector, DeviceCategory, SignalType } from '../core/model';
 import type { Issue, Severity } from '../core/validation';
 import { t } from '../i18n';
+
+/** Panel colour of each device category in the "Modular" look. */
+export const CATEGORY_PANEL_COLORS: Record<DeviceCategory, string> = {
+  interface: '#2f6f9f',
+  mixer: '#77743c',
+  preamp: '#9a3a4c',
+  outboard: '#8a3a5c',
+  patchbay: '#4f5866',
+  monitor: '#2a7f8a',
+  headphones: '#5a4f8f',
+  microphone: '#2f8a72',
+  instrument: '#4d7f3a',
+  'di-box': '#7a5a3a',
+  amp: '#a0452f',
+  pedal: '#3d8a5c',
+  pedalboard: '#5b4a3a',
+  computer: '#555d68',
+  power: '#8a6a1f',
+  other: '#5f6670',
+};
 
 /** Signal colors. Always shown together with a text badge, never color alone. */
 export const SIGNAL_COLORS: Record<SignalType, string> = {

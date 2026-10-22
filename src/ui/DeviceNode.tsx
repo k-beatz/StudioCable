@@ -8,7 +8,7 @@ import { useGroupIndex, useHighlight, type Highlight } from '../store/highlight'
 import { useProjectStore } from '../store/projectStore';
 import { CategoryIcon } from './CategoryIcon';
 import { ConnectorIcon } from './ConnectorIcon';
-import { connectorsText, SIGNAL_COLORS } from './labels';
+import { CATEGORY_PANEL_COLORS, connectorsText, SIGNAL_COLORS } from './labels';
 import { connectPorts } from './connect';
 import { deleteSelection, setCollapsed } from './actions';
 
@@ -156,7 +156,10 @@ function NodeFrame(props: {
 }) {
   const { highlight, inHighlight, outlined } = props;
   const dimmed = highlight && !inHighlight;
-  const style = highlight?.kind === 'group' ? ({ '--trace': highlight.color } as CSSProperties) : undefined;
+  const style = {
+    '--device': CATEGORY_PANEL_COLORS[props.category],
+    ...(highlight?.kind === 'group' ? { '--trace': highlight.color } : {}),
+  } as CSSProperties;
   return (
     <div
       className={

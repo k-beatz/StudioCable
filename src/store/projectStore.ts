@@ -30,6 +30,8 @@ interface ProjectState {
   dimUnusedPorts: boolean;
   /** Show the power layer (power supplies, outlets, power cables and power inputs). */
   showPower: boolean;
+  /** Overall look of the diagram: "modular" (coloured hardware panels) or "clean". */
+  look: Look;
   /** Pedalboard currently opened in the diagram (null = main level). */
   openBoardId: string | null;
   /** System (group) currently highlighted. */
@@ -49,6 +51,7 @@ interface ProjectState {
   setCableStyle: (style: CableStyle) => void;
   setDimUnusedPorts: (on: boolean) => void;
   setShowPower: (on: boolean) => void;
+  setLook: (look: Look) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
   startConnection: (from: { deviceId: string; portId: string } | null) => void;
@@ -56,6 +59,7 @@ interface ProjectState {
 }
 
 export type CableStyle = 'orthogonal' | 'curved' | 'hanging';
+export type Look = 'modular' | 'clean';
 
 const PREFS_KEY = 'studiocable.prefs';
 
@@ -63,12 +67,14 @@ const currentPrefs = (s: Prefs): Prefs => ({
   cableStyle: s.cableStyle,
   dimUnusedPorts: s.dimUnusedPorts,
   showPower: s.showPower,
+  look: s.look,
 });
 
 interface Prefs {
   cableStyle: CableStyle;
   dimUnusedPorts: boolean;
   showPower: boolean;
+  look: Look;
 }
 
 function loadPrefs(): Prefs {
@@ -78,9 +84,10 @@ function loadPrefs(): Prefs {
       cableStyle: (['curved', 'hanging'] as const).find((c) => c === raw.cableStyle) ?? 'orthogonal',
       dimUnusedPorts: raw.dimUnusedPorts === true,
       showPower: raw.showPower === true,
+      look: raw.look === 'clean' ? 'clean' : 'modular',
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, look: 'modular' };
   }
 }
 
@@ -149,6 +156,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   setShowPower: (showPower) => {
     set({ showPower });
     savePrefs({ ...currentPrefs(get()), showPower });
+  },
+  setLook: (look) => {
+    set({ look });
+    savePrefs({ ...currentPrefs(get()), look });
   },
   openBoard: (openBoardId) => {
     blurActiveField();

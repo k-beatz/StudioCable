@@ -29,6 +29,7 @@ function Shell() {
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [ownMessage, setMessage] = useState<string | null>(null);
   const notice = useProjectStore((s) => s.notice);
+  const look = useProjectStore((s) => s.look);
   const message = ownMessage ?? notice;
   // Short notices from automatic actions disappear by themselves.
   useEffect(() => {
@@ -101,7 +102,7 @@ function Shell() {
   };
 
   return (
-    <div className="app">
+    <div className="app" data-look={look}>
       <header className="toolbar">
         <div className="toolbar__title">
           {t('app.title')} <span className="tag">{t('app.prototype')}</span>
