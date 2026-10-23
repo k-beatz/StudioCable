@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { buildTemplate, defaultConnector, GENERIC_PRESETS, type GenericSpec, type PortGroup } from '../core/generic';
 import {
   CONNECTOR_TYPES,
@@ -9,7 +9,7 @@ import {
   type DeviceTemplate,
   type Direction,
 } from '../core/model';
-import { libraryToTemplate, matchesQuery } from '../core/library';
+import { libraryToTemplate } from '../core/library';
 import { SETUP_PRESETS, type SetupPreset } from '../core/setups';
 import { t, type MessageKey } from '../i18n';
 import { isTouchDevice } from './device';
@@ -28,6 +28,9 @@ type Tab = 'favorites' | 'library' | 'presets' | 'setups' | 'custom';
 /** Modal to add a device: from the library, a quick generic device, or a custom one. */
 export function AddDeviceDialog({ onAdd, onAddSetup, onClose }: Props) {
   const hasFavorites = useFavorites((s) => s.favorites.length > 0);
+  // One search for everything: library, quick devices, setups and own favourites.
+  const [query, setQuery] = useState('');
+  const searching = query.trim() !== '';
   const [tab, setTab] = useState<Tab>(hasFavorites ? 'favorites' : LIBRARY.length > 0 ? 'library' : 'presets');
   const tabs: { key: Tab; label: MessageKey }[] = [
     ...(hasFavorites || tab === 'favorites' ? [{ key: 'favorites' as const, label: 'add.favorites' as const }] : []),
@@ -52,11 +55,23 @@ export function AddDeviceDialog({ onAdd, onAddSetup, onClose }: Props) {
             ✕
           </button>
         </div>
-        {tab === 'favorites' && <FavoritesList onAdd={onAdd} onAddSetup={onAddSetup} />}
-        {tab === 'library' && <LibraryList onAdd={onAdd} />}
-        {tab === 'presets' && <PresetList onAdd={onAdd} />}
-        {tab === 'setups' && <SetupList onAdd={onAddSetup} />}
-        {tab === 'custom' && <CustomBuilder onAdd={onAdd} />}
+        <div className="modal__search">
+          <input
+            type="search"
+            className="filter-input"
+            placeholder={t('add.searchAll')}
+            aria-label={t('add.searchAll')}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoFocus={!isTouchDevice()}
+          />
+        </div>
+        {searching && <SearchResults query={query} onAdd={onAdd} onAddSetup={onAddSetup} />}
+        {!searching && tab === 'favorites' && <FavoritesList onAdd={onAdd} onAddSetup={onAddSetup} />}
+        {!searching && tab === 'library' && <LibraryList onAdd={onAdd} />}
+        {!searching && tab === 'presets' && <PresetList onAdd={onAdd} />}
+        {!searching && tab === 'setups' && <SetupList onAdd={onAddSetup} />}
+        {!searching && tab === 'custom' && <CustomBuilder onAdd={onAdd} />}
       </div>
     </div>
   );
@@ -129,8 +144,118 @@ function FavoritesList({ onAdd, onAddSetup }: Pick<Props, 'onAdd' | 'onAddSetup'
   );
 }
 
+/** Every word of the query must appear somewhere in the text (order doesn't matter). */
+function matchesWords(text: string, query: string) {
+  const lower = text.toLowerCase();
+  return query.toLowerCase().split(/\s+/).filter(Boolean).every((w) => lower.includes(w));
+}
+
+/** Extra words a category is also found by (common names people search for). */
+const CATEGORY_WORDS: Partial<Record<DeviceCategory, string>> = {
+  monitor: 'speaker speakers box loudspeaker studio monitor',
+  headphones: 'phones headset',
+  microphone: 'mic',
+  interface: 'usb soundcard sound card',
+  amp: 'amp amplifier hifi hi-fi',
+  instrument: 'guitar bass keys synth turntable',
+  pedal: 'effect fx stompbox',
+  'di-box': 'di direct box',
+  power: 'power supply psu outlet strip',
+  computer: 'pc mac laptop daw',
+};
+const categoryText = (c: DeviceCategory) => `${t(`category.${c}`)} ${CATEGORY_WORDS[c] ?? ''}`;
+
+function SearchResults({ query, onAdd, onAddSetup }: { query: string } & Pick<Props, 'onAdd' | 'onAddSetup'>) {
+  const own = useFavorites((s) => s.favorites).flatMap((f) => (f.kind === 'template' ? [f] : []));
+  const library = LIBRARY.filter((d) => matchesWords(`${d.manufacturer} ${d.model} ${d.id} ${categoryText(d.category)}`, query));
+  const presets = GENERIC_PRESETS.filter((p) =>
+    matchesWords(`${t(`preset.${p.key}` as MessageKey)} ${p.spec.model} ${categoryText(p.spec.category)}`, query),
+  );
+  const setups = SETUP_PRESETS.filter((s) =>
+    matchesWords(`${t(`setup.${s.key}` as MessageKey)} ${t(`setup.${s.key}.desc` as MessageKey)}`, query),
+  );
+  const ownHits = own.filter((f) => matchesWords(`${f.name} ${categoryText(f.template.category)}`, query));
+  const total = library.length + presets.length + setups.length + ownHits.length;
+
+  const section = (title: string, count: number, items: ReactNode) =>
+    count > 0 && (
+      <section className="search-section">
+        <h3>
+          {title} <span className="muted">({count})</span>
+        </h3>
+        <ul className="preset-list">{items}</ul>
+      </section>
+    );
+
+  return (
+    <div className="modal__body">
+      {total === 0 && <p className="muted">{t('add.noMatches')}</p>}
+      {section(
+        t('favorite.own'),
+        ownHits.length,
+        ownHits.map((f) => (
+          <li key={f.key} className="preset-list__item">
+            <StarButton fav={f} />
+            <button onClick={() => onAdd({ ...JSON.parse(JSON.stringify(f.template)), id: newId('t-') })}>
+              <strong>{f.name}</strong>
+              <small>{t(`category.${f.template.category}`)}</small>
+            </button>
+          </li>
+        )),
+      )}
+      {section(
+        t('add.library'),
+        library.length,
+        library.map((d) => (
+          <li key={d.id} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('library', d.id), kind: 'library', id: d.id }} />
+            <button onClick={() => onAdd(libraryToTemplate(d))}>
+              <span className="preset-list__title">
+                <strong>
+                  {d.manufacturer} {d.model}
+                </strong>
+                {d.status === 'unverified' && <span className="badge badge--warning">{t('library.unverified')}</span>}
+              </span>
+              <small>
+                {t(`category.${d.category}`)} · {portSummary(d.groups)}
+              </small>
+            </button>
+          </li>
+        )),
+      )}
+      {section(
+        t('add.presets'),
+        presets.length,
+        presets.map((p) => (
+          <li key={p.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('preset', p.key), kind: 'preset', id: p.key }} />
+            <button onClick={() => onAdd(buildTemplate(p.spec))}>
+              <strong>{t(`preset.${p.key}` as MessageKey)}</strong>
+              <small>
+                {t(`category.${p.spec.category}`)} · {portSummary(p.spec.groups)}
+              </small>
+            </button>
+          </li>
+        )),
+      )}
+      {section(
+        t('add.setups'),
+        setups.length,
+        setups.map((s) => (
+          <li key={s.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('setup', s.key), kind: 'setup', id: s.key }} />
+            <button onClick={() => onAddSetup(s)}>
+              <strong>{t(`setup.${s.key}` as MessageKey)}</strong>
+              <small>{t(`setup.${s.key}.desc` as MessageKey)}</small>
+            </button>
+          </li>
+        )),
+      )}
+    </div>
+  );
+}
+
 function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
-  const [query, setQuery] = useState('');
   const [category, setCategory] = useState<DeviceCategory | ''>('');
   const [manufacturer, setManufacturer] = useState('');
   const categories = DEVICE_CATEGORIES.filter((c) => LIBRARY.some((d) => d.category === c));
@@ -138,21 +263,12 @@ function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
   const results = LIBRARY.filter(
     (d) =>
       (!category || d.category === category) &&
-      (!manufacturer || d.manufacturer === manufacturer) &&
-      matchesQuery(d, query),
+      (!manufacturer || d.manufacturer === manufacturer),
   );
 
   return (
     <div className="modal__body">
       <div className="search-row">
-        <input
-          type="search"
-          className="filter-input"
-          placeholder={t('add.searchLibrary')}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          autoFocus={!isTouchDevice()}
-        />
         <select value={category} onChange={(e) => setCategory(e.target.value as DeviceCategory | '')}>
           <option value="">{t('add.allCategories')}</option>
           {categories.map((c) => (
@@ -198,25 +314,10 @@ function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
 }
 
 function PresetList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
-  const [query, setQuery] = useState('');
-  const q = query.trim().toLowerCase();
-  const presets = GENERIC_PRESETS.filter(
-    (p) =>
-      !q ||
-      t(`preset.${p.key}` as MessageKey).toLowerCase().includes(q) ||
-      t(`category.${p.spec.category}`).toLowerCase().includes(q),
-  );
+  const presets = GENERIC_PRESETS;
 
   return (
     <div className="modal__body">
-      <input
-        type="search"
-        className="filter-input"
-        placeholder={t('add.search')}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        autoFocus={!isTouchDevice()}
-      />
       <ul className="preset-list">
         {presets.map((p) => (
           <li key={p.key} className="preset-list__item">
