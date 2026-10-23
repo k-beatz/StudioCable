@@ -54,7 +54,7 @@ export const RoutedEdge = memo(function RoutedEdge(props: EdgeProps<RoutedEdgeTy
         <path
           d={halo}
           fill="none"
-          stroke="var(--bg)"
+          stroke="var(--canvas-gap, var(--bg))"
           strokeWidth={width + Math.max(4, 5 / Math.max(zoom, 0.1))}
           strokeLinecap="round"
           style={{ opacity: props.style?.opacity }}

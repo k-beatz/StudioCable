@@ -1250,8 +1250,9 @@ select {
 
 /* ---------- "Modular" look: coloured hardware panels, like a modular synth rack ---------- */
 .app[data-look='modular'] .react-flow {
-  --xy-background-color: #12151b;
-  --canvas-dot: rgb(255 255 255 / 0.09);
+  --xy-background-color: #e8590c;
+  /* Colour of the small gap under a cable bridge. */
+  --canvas-gap: #ee620e;
 }
 .app[data-look='modular'] .device-node {
   --icon-socket: #121418;
@@ -1744,12 +1745,16 @@ select {
   color: var(--text);
 }
 
-/* Modular look: a dark canvas with a soft blue and violet glow ("Aurora"), hardware-style buttons. */
+/* Modular look: a warm orange surface, bright in the middle and deeper towards the edges,
+   with a fine plaster-like grain; hardware-style buttons. */
 .app[data-look='modular'] .react-flow {
   background:
-    radial-gradient(60% 50% at 15% 10%, rgb(59 130 246 / 0.16), transparent 70%),
-    radial-gradient(55% 45% at 90% 95%, rgb(139 92 246 / 0.13), transparent 70%),
-    #12151b;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.36 0 0 0 -0.09'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 100% at 50% 25%, #ff8a2a 0%, #f2670f 45%, #d24a06 80%, #a83604 100%);
+}
+/* Cables get a thin dark casing so orange and red cables stay visible on orange. */
+.app[data-look='modular'] .hanging-cable {
+  filter: drop-shadow(0 0 1px rgb(0 0 0 / 0.9)) drop-shadow(0 0 2px rgb(0 0 0 / 0.6)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.3));
 }
 .app[data-look='modular'] .react-flow__background {
   background: transparent;

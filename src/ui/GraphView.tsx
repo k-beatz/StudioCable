@@ -42,6 +42,7 @@ import { CutterOverlay } from './CutterOverlay';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
+const CABLE_CASING = 'drop-shadow(0 0 1px rgb(0 0 0 / 0.9)) drop-shadow(0 0 2px rgb(0 0 0 / 0.6)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.3))';
 
 /** A short text that changes whenever a node moves, resizes or gains/loses handles. */
 function layoutKeyOf(s: { nodeLookup: Map<string, { id: string; measured: { width?: number; height?: number }; internals: { positionAbsolute: { x: number; y: number }; handleBounds?: { source?: unknown[] | null } } }> }) {
@@ -147,6 +148,7 @@ export function GraphView() {
   // React Flow keeps measurement data on its nodes, so we hold them in local
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
+  const look = useProjectStore((s) => s.look);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
     setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
@@ -214,13 +216,17 @@ export function GraphView() {
           strokeWidth: selected || lit ? 4.5 : 3,
           strokeDasharray:
             port?.signal === 'line-unbal' && !lit ? '7 5' : severity === 'error' && !lit ? '3 4' : undefined,
-          filter: group && !dimmed ? `drop-shadow(0 0 4px ${group.color})` : undefined,
+          // Modular look: a dark casing keeps every cable colour visible on the orange surface.
+          filter:
+            [look === 'modular' ? CABLE_CASING : '', group && !dimmed ? `drop-shadow(0 0 4px ${group.color})` : '']
+              .filter(Boolean)
+              .join(' ') || undefined,
         },
         interactionWidth: 28,
       });
     }
     return result;
-  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting]);
+  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting, look]);
 
   // Escape ends the active tool.
   useEffect(() => {
@@ -380,8 +386,8 @@ export function GraphView() {
       fitView
       proOptions={{ hideAttribution: true }}
     >
-      {/* A fine dot grid that moves with the canvas; the colour glow behind it stays put. */}
-      <Background variant={BackgroundVariant.Dots} gap={24} size={1.3} color="var(--canvas-dot)" />
+      {/* The Modular look has a plain gradient surface; the Clean look keeps a dot grid. */}
+      {look !== 'modular' && <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />}
       <CanvasControls />
       <Panel position="top-left">
         <div className="top-left-stack">
