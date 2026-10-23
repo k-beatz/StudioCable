@@ -102,3 +102,35 @@ describe('suggest wiring for a hi-fi amp', () => {
     ]);
   });
 });
+
+describe('suggest wiring: hi-fi amp next to an interface', () => {
+  it('feeds the amp from the interface and the speakers from the amp, never line into a speaker', async () => {
+    const { suggestWiring } = await import('./autowire');
+    let p: Project = createProject();
+    const ids: string[] = [];
+    for (const [t, name, x] of [
+      [preset('turntable'), 'Turntable', 0],
+      [libraryToTemplate(LIBRARY.find((d) => d.id === 'swissonic-audio-2')!), 'Audio 2', 200],
+      [preset('computer'), 'Computer', 400],
+      [libraryToTemplate(LIBRARY.find((d) => d.id === 'denon-pma-510ae')!), 'Amp', 600],
+      [preset('passiveSpeaker'), 'Left', 900],
+      [preset('passiveSpeaker'), 'Right', 1100],
+    ] as const) {
+      const r = addDevice(p, t, name, { x, y: 0 });
+      p = r.project;
+      ids.push(r.device.id);
+    }
+    const r = suggestWiring(p, ids);
+    const label = (e: { deviceId: string; portId: string }) => {
+      const d = r.project.devices.find((x) => x.id === e.deviceId)!;
+      return `${d.name}/${r.project.templates[d.templateId].ports.find((x) => x.id === e.portId)!.label}`;
+    };
+    const cables = r.project.cables.map((c) => `${label(c.ends[0])} -> ${label(c.ends[1])}`);
+    expect(cables).toContain('Amp/SPEAKERS A L -> Left/Speaker In');
+    expect(cables).toContain('Amp/SPEAKERS A R -> Right/Speaker In');
+    expect(cables).toContain('Audio 2/MAIN OUTPUTS LEFT -> Amp/LINE L');
+    expect(cables).toContain('Audio 2/MAIN OUTPUTS RIGHT -> Amp/LINE R');
+    expect(cables.some((c) => c.startsWith('Audio 2/') && c.endsWith('Speaker In'))).toBe(false);
+
+  });
+});

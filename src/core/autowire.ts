@@ -41,7 +41,9 @@ function portsOf(project: Project, deviceId: string): Candidate[] {
 
 const BAD_OUTPUT = /send|aux|phones|headphone|insert|talkback|thru|through|link|control room|monitor/i;
 const GOOD_OUTPUT = /main|line out|output|^out/i;
-const BAD_INPUT = /return|insert|talkback|2-track|tape|cue/i;
+const BAD_INPUT = /return|insert|talkback|2-track|tape|cue|recorder|play\b/i;
+const FAMILY_ANALOG = new Set(['mic', 'line-bal', 'line-unbal', 'instrument', 'phono', 'headphone']);
+const GOOD_INPUT = /^line\b|line in/i;
 
 /**
  * How good a cable from `a` (sending) to `b` (receiving) would be, or null if
@@ -58,22 +60,28 @@ function score(project: Project, a: Candidate, b: Candidate): number | null {
   const issues = checkCable(project, { id: 'probe', label: '', ends });
   const worst = worstSeverity(issues);
   if (worst === 'error') return null;
+  // Line level into a passive speaker is never a sensible suggestion: that needs an amp.
+  if (issues.some((i) => i.code === 'lineIntoSpeaker')) return null;
   let s = worst === 'warning' ? 40 : worst === 'info' ? 75 : 100;
   if (a.port.signal === b.port.signal || b.port.alsoAccepts?.includes(a.port.signal)) s += 25;
+  // Two-way analog jacks (e.g. a smartphone / headset socket) are for special uses, not the main path.
+  if (a.port.direction === 'bidi' && FAMILY_ANALOG.has(a.port.signal)) s -= 40;
   if (BAD_OUTPUT.test(a.port.label)) s -= 20;
   else if (GOOD_OUTPUT.test(a.port.label)) s += 5;
   // Returns and inserts belong to effect loops; those are wired on purpose, never automatically.
   if (BAD_INPUT.test(b.port.label)) return null;
+  if (GOOD_INPUT.test(b.port.label)) s += 5;
   return s - (a.index + b.index) * 0.01;
 }
 
 /** The other half of a stereo pair ("Out L" -> "Out R", "Input 1" -> "Input 2"), if any. */
 function stereoPartner(ports: Candidate[], c: Candidate): Candidate | undefined {
   const label = c.port.label;
-  const lr = label.match(/^(.*?)(\s*)(L|Left)$/);
+  // "Out L" / "Main Out Left" / "MAIN OUTPUTS LEFT" (any case).
+  const lr = label.match(/^(.*?)(\s*)(L|Left)$/i);
   if (lr) {
-    const want = new Set([`${lr[1]}${lr[2]}R`, `${lr[1]}${lr[2]}Right`]);
-    return ports.find((p) => p.deviceId === c.deviceId && want.has(p.port.label));
+    const want = new Set([`${lr[1]}${lr[2]}R`, `${lr[1]}${lr[2]}Right`].map((x) => x.toLowerCase()));
+    return ports.find((p) => p.deviceId === c.deviceId && want.has(p.port.label.toLowerCase()));
   }
   const num = label.match(/^(.*?)(\d+)$/);
   if (num && Number(num[2]) % 2 === 1) {
@@ -95,10 +103,13 @@ export function connectDevices(project: Project, fromId: string, toId: string): 
   const free = (c: Candidate) => !used.get(key(c));
   const outs = portsOf(project, fromId).filter((c) => c.port.direction !== 'in');
   const ins = portsOf(project, toId).filter((c) => c.port.direction !== 'out');
-  // Do not connect two devices twice for the same kind of signal.
+  // Do not connect two devices twice in the same direction (the way back is fine:
+  // amp REC out -> interface, interface out -> amp line in).
+  const fromIds = new Set(outs.map((o) => o.deviceId));
+  const toIds = new Set(ins.map((i) => i.deviceId));
   const alreadyLinked = project.cables.some((cable) => {
-    const ids = cable.ends.map((e) => e.deviceId);
-    return outs.some((o) => ids.includes(o.deviceId)) && ins.some((i) => ids.includes(i.deviceId));
+    const [a, b] = cable.ends;
+    return (fromIds.has(a.deviceId) && toIds.has(b.deviceId)) || (fromIds.has(b.deviceId) && toIds.has(a.deviceId) && sendsFrom(project, b));
   });
   if (alreadyLinked) return null;
 
@@ -156,6 +167,8 @@ interface TargetRule {
   all?: boolean;
   /** Skip this rule when the setup contains a device of this category (or one of these). */
   unless?: DeviceCategory | DeviceCategory[];
+  /** Only targets with speaker-level inputs (passive speakers) or outputs (hi-fi / power amps). */
+  needs?: 'speakerIn' | 'speakerOut';
 }
 
 const RULES: Partial<Record<DeviceCategory, TargetRule[]>> = {
@@ -168,17 +181,34 @@ const RULES: Partial<Record<DeviceCategory, TargetRule[]>> = {
   outboard: [{ categories: ['interface', 'mixer'] }],
   amp: [
     { categories: ['mixer', 'interface'] },
-    // Hi-fi / power amp on its own: drive the speakers and headphones directly.
+    // Passive speakers always hang on an amp with speaker outputs.
+    { categories: ['monitor'], all: true, needs: 'speakerIn' },
+    // Hi-fi / power amp on its own: drive the (active) speakers and headphones directly.
     { categories: ['monitor'], all: true, unless: ['mixer', 'interface'] },
     { categories: ['headphones'], all: true, unless: ['mixer', 'interface'] },
   ],
   mixer: [
     { categories: ['interface'] },
+    { categories: ['amp'], needs: 'speakerOut', unless: 'interface' },
     { categories: ['monitor'], all: true, unless: 'interface' },
     { categories: ['headphones'], all: true, unless: 'interface' },
   ],
-  interface: [{ categories: ['computer'] }, { categories: ['monitor'], all: true }, { categories: ['headphones'], all: true }],
+  interface: [
+    { categories: ['computer'] },
+    // A hi-fi amp with passive speakers plays what the interface outputs.
+    { categories: ['amp'], needs: 'speakerOut' },
+    { categories: ['monitor'], all: true },
+    { categories: ['headphones'], all: true },
+  ],
 };
+
+/** Does the target have the speaker-level ports the rule asks for? */
+function fitsNeeds(project: Project, d: DeviceInstance, needs: TargetRule['needs']) {
+  if (!needs) return true;
+  return (project.templates[d.templateId]?.ports ?? []).some(
+    (p) => p.signal === 'speaker' && (needs === 'speakerIn' ? p.direction !== 'out' : p.direction !== 'in'),
+  );
+}
 
 /** Signal-flow order, so sources are wired before the devices they feed. */
 const RANK: Partial<Record<DeviceCategory, number>> = {
@@ -225,7 +255,7 @@ export function suggestWiring(project: Project, deviceIds: string[]): WiringResu
     for (const rule of rules) {
       if ([rule.unless ?? []].flat().some((c) => present.has(c))) continue;
       for (const cat of rule.categories) {
-        let targets = devices.filter((t) => t.id !== source.id && category(t) === cat);
+        let targets = devices.filter((t) => t.id !== source.id && category(t) === cat && fitsNeeds(project, t, rule.needs));
         // Same-stage chaining (pedal -> pedal) only into pedals nothing feeds yet, to avoid loops.
         if (cat === category(source) || cat === 'pedal' || cat === 'pedalboard') targets = targets.filter((t) => !hasInput(next, t));
         if (targets.length === 0) continue;
@@ -250,4 +280,11 @@ export function suggestWiring(project: Project, deviceIds: string[]): WiringResu
 
 function devicesOn(project: Project, boardId: string): Set<string> {
   return new Set(project.devices.filter((d) => d.containerId === boardId).map((d) => d.id));
+}
+
+/** Cable ends are stored source first, but a reversed cable is possible: is this end the sending side? */
+function sendsFrom(project: Project, end: CableEnd): boolean {
+  const d = project.devices.find((x) => x.id === end.deviceId);
+  const port = d && project.templates[d.templateId]?.ports.find((p) => p.id === end.portId);
+  return !!port && port.direction !== 'in';
 }
