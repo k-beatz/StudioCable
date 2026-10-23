@@ -190,6 +190,35 @@ function SearchResults({ query, onAdd, onAddSetup }: { query: string } & Pick<Pr
   return (
     <div className="modal__body">
       {total === 0 && <p className="muted">{t('add.noMatches')}</p>}
+      {/* Generic devices first, so they don't get lost among the many real models. */}
+      {section(
+        t('add.presets'),
+        presets.length,
+        presets.map((p) => (
+          <li key={p.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('preset', p.key), kind: 'preset', id: p.key }} />
+            <button onClick={() => onAdd(buildTemplate(p.spec))}>
+              <strong>{t(`preset.${p.key}` as MessageKey)}</strong>
+              <small>
+                {t(`category.${p.spec.category}`)} · {portSummary(p.spec.groups)}
+              </small>
+            </button>
+          </li>
+        )),
+      )}
+      {section(
+        t('add.setups'),
+        setups.length,
+        setups.map((s) => (
+          <li key={s.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('setup', s.key), kind: 'setup', id: s.key }} />
+            <button onClick={() => onAddSetup(s)}>
+              <strong>{t(`setup.${s.key}` as MessageKey)}</strong>
+              <small>{t(`setup.${s.key}.desc` as MessageKey)}</small>
+            </button>
+          </li>
+        )),
+      )}
       {section(
         t('favorite.own'),
         ownHits.length,
@@ -219,34 +248,6 @@ function SearchResults({ query, onAdd, onAddSetup }: { query: string } & Pick<Pr
               <small>
                 {t(`category.${d.category}`)} · {portSummary(d.groups)}
               </small>
-            </button>
-          </li>
-        )),
-      )}
-      {section(
-        t('add.presets'),
-        presets.length,
-        presets.map((p) => (
-          <li key={p.key} className="preset-list__item">
-            <StarButton fav={{ key: favoriteKey('preset', p.key), kind: 'preset', id: p.key }} />
-            <button onClick={() => onAdd(buildTemplate(p.spec))}>
-              <strong>{t(`preset.${p.key}` as MessageKey)}</strong>
-              <small>
-                {t(`category.${p.spec.category}`)} · {portSummary(p.spec.groups)}
-              </small>
-            </button>
-          </li>
-        )),
-      )}
-      {section(
-        t('add.setups'),
-        setups.length,
-        setups.map((s) => (
-          <li key={s.key} className="preset-list__item">
-            <StarButton fav={{ key: favoriteKey('setup', s.key), kind: 'setup', id: s.key }} />
-            <button onClick={() => onAddSetup(s)}>
-              <strong>{t(`setup.${s.key}` as MessageKey)}</strong>
-              <small>{t(`setup.${s.key}.desc` as MessageKey)}</small>
             </button>
           </li>
         )),
