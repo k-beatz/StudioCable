@@ -1,4 +1,5 @@
 import { connectDevices } from './autowire';
+import { phantomBlocker, routeBlockers, type Setting } from './controls';
 import { isPowerSignal, type CableEnd, type Port, type Project } from './model';
 import { getPort } from './project';
 import { checkCable, type Issue } from './validation';
@@ -9,6 +10,8 @@ import { checkCable, type Issue } from './validation';
  * device it uses the device's internal routing if it has one (pedals, amp
  * effect loops, patchbays); otherwise any input is assumed to reach any
  * output, as on a mixer or interface. Power ports are ignored.
+ * Knobs and switches count: if the cables are fine but a switch closes the
+ * path inside a device, the diagnosis names it and offers the right position.
  */
 
 export interface DiagnosisStep {
@@ -24,11 +27,21 @@ export interface Diagnosis {
   /** The way the signal takes: to the target, or as far as it gets. */
   steps: DiagnosisStep[];
   /** Why it stops (only when it does not arrive). */
-  problem?: 'sourceUnplugged' | 'targetUnplugged' | 'stops';
+  problem?: 'sourceUnplugged' | 'targetUnplugged' | 'stops' | 'setting';
+  /** problem 'setting': the knobs or switches that close the path, with a position that opens it. */
+  settings?: SettingChange[];
   /** The device where the signal ends (only when it does not arrive). */
   stuckAt?: string;
   /** A suggested cable (or stereo pair) that closes the gap, as a ready-made project. */
   fix?: { project: Project; added: string[]; fromDevice: string; toDevice: string };
+}
+
+export interface SettingChange {
+  deviceId: string;
+  controlId: string;
+  label: string;
+  from: Setting;
+  to: Setting;
 }
 
 const key = (e: CableEnd) => `${e.deviceId}/${e.portId}`;
@@ -42,7 +55,7 @@ function portsOfDevice(project: Project, deviceId: string): Port[] {
 }
 
 /** Ports the signal can leave a device by, after entering at `port`. */
-function throughDevice(project: Project, at: CableEnd, occupied: Set<string>): CableEnd[] {
+function throughDevice(project: Project, at: CableEnd, occupied: Set<string>, ignoreControls = false): CableEnd[] {
   const d = project.devices.find((x) => x.id === at.deviceId);
   const template = d && project.templates[d.templateId];
   if (!template) return [];
@@ -50,12 +63,21 @@ function throughDevice(project: Project, at: CableEnd, occupied: Set<string>): C
     return template.routing
       .filter((r) => r.from === at.portId)
       .filter((r) => !r.breakWhenPatched?.some((p) => occupied.has(`${at.deviceId}/${p}`)))
+      .filter((r) => ignoreControls || routeBlockers(template, d, r).length === 0)
       .map((r) => ({ deviceId: at.deviceId, portId: r.to }));
   }
   return template.ports.filter((p) => isAudio(p) && sends(p) && p.id !== at.portId).map((p) => ({ deviceId: at.deviceId, portId: p.id }));
 }
 
-export function diagnose(project: Project, sourceId: string, targetId: string): Diagnosis {
+interface Search {
+  via: Map<string, DiagnosisStep | null>;
+  order: string[];
+  start: CableEnd[];
+  occupied: Set<string>;
+  cablesFrom: Map<string, { cableId: string; to: CableEnd }[]>;
+}
+
+function search(project: Project, sourceId: string, targetId: string, ignoreControls: boolean): Search {
   const occupied = new Set(project.cables.flatMap((c) => c.ends.map(key)));
   const cablesFrom = new Map<string, { cableId: string; to: CableEnd }[]>();
   for (const c of project.cables) {
@@ -78,6 +100,7 @@ export function diagnose(project: Project, sourceId: string, targetId: string): 
   while (queue.length) {
     const out = queue.shift()!;
     for (const { cableId, to } of cablesFrom.get(key(out)) ?? []) {
+      if (!ignoreControls && cablePhantom(project, out, to)) continue;
       if (!via.has(to.deviceId)) {
         const cable = project.cables.find((c) => c.id === cableId)!;
         const issues = checkCable(project, cable).filter((i) => i.severity !== 'info');
@@ -85,7 +108,7 @@ export function diagnose(project: Project, sourceId: string, targetId: string): 
         order.push(to.deviceId);
       }
       if (to.deviceId === targetId) continue;
-      for (const next of throughDevice(project, to, occupied)) {
+      for (const next of throughDevice(project, to, occupied, ignoreControls)) {
         if (seenPorts.has(key(next))) continue;
         seenPorts.add(key(next));
         queue.push(next);
@@ -93,13 +116,29 @@ export function diagnose(project: Project, sourceId: string, targetId: string): 
     }
   }
 
-  const pathTo = (deviceId: string): DiagnosisStep[] => {
+  return { via, order, start, occupied, cablesFrom };
+}
+
+export function diagnose(project: Project, sourceId: string, targetId: string): Diagnosis {
+  const { via, order, start, occupied, cablesFrom } = search(project, sourceId, targetId, false);
+  const pathTo = (deviceId: string, from = via): DiagnosisStep[] => {
     const steps: DiagnosisStep[] = [];
-    for (let step = via.get(deviceId); step; step = via.get(step.from.deviceId)) steps.unshift(step);
+    for (let step = from.get(deviceId); step; step = from.get(step.from.deviceId)) steps.unshift(step);
     return steps;
   };
 
   if (via.has(targetId) && targetId !== sourceId) return { arrives: true, steps: pathTo(targetId) };
+
+  // The cables are there, but a knob or switch closes the way inside a device.
+  const free = search(project, sourceId, targetId, true);
+  if (free.via.has(targetId) && targetId !== sourceId) {
+    const steps = pathTo(targetId, free.via);
+    const settings = blockingSettings(project, steps);
+    if (settings.length) {
+      const first = steps.findIndex((s) => s.to.deviceId === settings[0].deviceId);
+      return { arrives: false, steps: steps.slice(0, first + 1), problem: 'setting', stuckAt: settings[0].deviceId, settings };
+    }
+  }
 
   // It does not arrive: find where it stops and what would close the gap.
   const sourceUnplugged = !start.some((s) => occupied.has(key(s)));
@@ -155,4 +194,45 @@ function devicesLeadingTo(
     }
   }
   return result;
+}
+
+/** The controls that close the internal hops of a path (between consecutive cables). */
+function blockingSettings(project: Project, steps: DiagnosisStep[]): SettingChange[] {
+  const changes: SettingChange[] = [];
+  for (let i = 0; i < steps.length; i++) {
+    const b = cablePhantom(project, steps[i].from, steps[i].to);
+    if (b) changes.push({ deviceId: steps[i].to.deviceId, controlId: b.control.id, label: b.control.label, from: b.value, to: b.needed });
+    if (i + 1 === steps.length) break;
+    const at = steps[i].to;
+    const out = steps[i + 1].from;
+    const d = project.devices.find((x) => x.id === at.deviceId);
+    const template = d && project.templates[d.templateId];
+    const route = template?.routing?.find((r) => r.from === at.portId && r.to === out.portId);
+    if (!template || !route) continue;
+    for (const b of routeBlockers(template, d, route)) {
+      if (changes.some((c) => c.deviceId === d.id && c.controlId === b.control.id)) continue;
+      changes.push({ deviceId: d.id, controlId: b.control.id, label: b.control.label, from: b.value, to: b.needed });
+    }
+  }
+  return changes;
+}
+
+/** Applies setting changes (e.g. the ones a diagnosis proposes). */
+export function applySettings(project: Project, changes: SettingChange[]): Project {
+  return {
+    ...project,
+    devices: project.devices.map((d) => {
+      const mine = changes.filter((c) => c.deviceId === d.id);
+      if (!mine.length) return d;
+      return { ...d, settings: { ...d.settings, ...Object.fromEntries(mine.map((c) => [c.controlId, c.to])) } };
+    }),
+  };
+}
+
+/** A condenser mic cable into an input whose phantom power is switched off. */
+function cablePhantom(project: Project, from: CableEnd, to: CableEnd) {
+  if (!getPort(project, from)?.needsPhantom) return undefined;
+  const d = project.devices.find((x) => x.id === to.deviceId);
+  const template = d && project.templates[d.templateId];
+  return template ? phantomBlocker(template, d, to.portId) : undefined;
 }

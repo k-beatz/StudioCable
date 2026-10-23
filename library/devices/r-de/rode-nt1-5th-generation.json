@@ -27,7 +27,7 @@
           "gender": "male"
         }
       ],
-      "signal": "mic"
+      "signal": "mic", "needsPhantom": true
     },
     {
       "count": 0,

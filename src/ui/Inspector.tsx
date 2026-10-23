@@ -1,3 +1,5 @@
+import { ControlPanel } from './Controls';
+import { resetControls } from './actions';
 import { useState } from 'react';
 import { newId } from '../core/ids';
 import type { Cable, DeviceInstance, Group, Project } from '../core/model';
@@ -131,6 +133,18 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           </ul>
         </div>
       )}
+      {template?.controls?.length ? (
+        <div className="field">
+          <span>{t('device.controls')}</span>
+          <ControlPanel device={device} template={template} large />
+          <small className="muted">{t('device.controlsHint')}</small>
+          {device.settings && (
+            <button className="link-button" onClick={() => resetControls(device.id)}>
+              {t('device.controlsReset')}
+            </button>
+          )}
+        </div>
+      ) : null}
       <BoardField device={device} project={project} />
       {template && template.category !== 'power' && <PowerField templateId={template.id} project={project} />}
       <RackField device={device} project={project} />

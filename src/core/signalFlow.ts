@@ -1,4 +1,5 @@
 import type { DeviceInstance, Port, Project } from './model';
+import { routeOpen } from './controls';
 import { getPort } from './project';
 
 /**
@@ -7,7 +8,8 @@ import { getPort } from './project';
  * The studio is treated as a graph whose nodes are ports. Signals move along
  * cables (from a sending port to a receiving port) and along a device's
  * internal routing (e.g. preamp input -> output, patchbay normal). A route
- * with `breakWhenPatched` is skipped while one of those ports has a cable.
+ * with `breakWhenPatched` is skipped while one of those ports has a cable,
+ * and one whose knobs or switches close it (`when`, level at 0) as well.
  */
 
 export interface PortRef {
@@ -71,14 +73,14 @@ function neighbors(project: Project, ref: PortRef, dir: Direction, occupied: Set
   // Through the device.
   if (afterInternal) return result;
   const device = project.devices.find((d) => d.id === ref.deviceId);
-  const routing = device ? project.templates[device.templateId]?.routing : undefined;
-  for (const route of routing ?? []) {
+  const template = device ? project.templates[device.templateId] : undefined;
+  for (const route of template?.routing ?? []) {
     const [here, there] = dir === 'downstream' ? [route.from, route.to] : [route.to, route.from];
     if (here !== ref.portId) continue;
     const broken = route.breakWhenPatched?.some((p) => occupied.has(`${ref.deviceId}/${p}`));
     // Skip dead ends inside the device (e.g. an empty patchbay front jack).
     const leadsOn = occupied.has(`${ref.deviceId}/${there}`);
-    if (!broken && leadsOn) result.push({ to: { deviceId: ref.deviceId, portId: there }, link: { kind: 'internal' } });
+    if (!broken && leadsOn && routeOpen(template!, device, route)) result.push({ to: { deviceId: ref.deviceId, portId: there }, link: { kind: 'internal' } });
   }
   return result;
 }

@@ -14,6 +14,8 @@ export const CONNECTOR_TYPES = [
   'trs-6.3',
   'ts-6.3',
   'trs-3.5',
+  /** 3.5 mm 4-pole jack (headset / smartphone: stereo out + mic). */
+  'trrs-3.5',
   'ts-3.5',
   'rca',
   'speakon',
@@ -99,6 +101,8 @@ export interface Port {
   alsoAccepts?: SignalType[];
   /** 1 = mono, 2 = stereo, 8 = ADAT etc. Omitted = mono. */
   channels?: number;
+  /** Condenser mic output: no signal without phantom power from the input it is plugged into. */
+  needsPhantom?: boolean;
 }
 
 /**
@@ -110,6 +114,40 @@ export interface InternalRoute {
   from: string;
   to: string;
   breakWhenPatched?: string[];
+  /** The path only exists while every condition holds (switch positions, knob ranges). */
+  when?: RouteCondition[];
+}
+
+/**
+ * A knob or switch on the device. Its position is stored per device
+ * (DeviceInstance.settings) and can open or close internal paths.
+ */
+export interface Control {
+  id: string;
+  /** Label as printed on the device, e.g. "GAIN 1" or "PHAN". */
+  label: string;
+  kind: 'knob' | 'switch';
+  /** Switches: the positions, e.g. ["MONO", "STEREO"] or ["OFF", "ON"]. */
+  positions?: string[];
+  /** Knobs: value 0 to 10. Switches: one of `positions`. */
+  default: string | number;
+  /** Knobs: print at the ends of the scale, e.g. "MIN" / "MAX" or "DIRECT" / "DAW". */
+  minLabel?: string;
+  maxLabel?: string;
+  /** Knobs: sets the level of these ports (port IDs). Turned fully down (0), nothing passes them. */
+  levelOf?: string[];
+  /** Phantom power switch for these inputs (port IDs): the position "ON" powers them. */
+  phantomFor?: string[];
+}
+
+export const KNOB_MAX = 10;
+
+/** `is`: switch is in one of these positions. `min` / `max`: knob value range (inclusive). */
+export interface RouteCondition {
+  control: string;
+  is?: string[];
+  min?: number;
+  max?: number;
 }
 
 export interface Source {
@@ -126,6 +164,8 @@ export interface DeviceTemplate {
   category: DeviceCategory;
   ports: Port[];
   routing?: InternalRoute[];
+  /** Knobs and switches that change the internal routing. */
+  controls?: Control[];
   origin: TemplateOrigin;
   /** Library devices: ID of the library entry this template was created from. */
   libraryId?: string;
@@ -150,6 +190,8 @@ export interface DeviceInstance {
   rackSlot?: number;
   /** Height in rack units (U). */
   rackHeight?: number;
+  /** Positions of the template's controls by control ID; missing = the control's default. */
+  settings?: Record<string, string | number>;
 }
 
 export interface CableEnd {

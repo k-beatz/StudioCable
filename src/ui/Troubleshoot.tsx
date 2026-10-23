@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { diagnose } from '../core/diagnose';
+import { applySettings, diagnose } from '../core/diagnose';
+import { formatSetting } from '../core/controls';
 import { isPowerDevice } from '../core/power';
 import { describeEnd } from '../core/project';
 import { t } from '../i18n';
@@ -78,7 +79,26 @@ export function Troubleshoot() {
               <p className="troubleshoot__verdict">
                 ✗ {t(`trouble.problem.${result.problem ?? 'stops'}`, { from: name(from), to: name(to), at: name(result.stuckAt) })}
               </p>
-              {result.fix ? (
+              {result.settings ? (
+                <div className="troubleshoot__fix">
+                  <span>{t('trouble.settingHint')}</span>
+                  <ul>
+                    {result.settings.map((c) => {
+                      const d = project.devices.find((x) => x.id === c.deviceId);
+                      const control = d && project.templates[d.templateId]?.controls?.find((x) => x.id === c.controlId);
+                      const fmt = (v: string | number) => (control ? formatSetting(control, v) : String(v));
+                      return (
+                        <li key={c.deviceId + c.controlId}>
+                          {t('trouble.settingChange', { label: c.label, device: d?.name ?? '?', from: fmt(c.from), to: fmt(c.to) })}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <button className="primary" onClick={() => apply((p) => applySettings(p, result.settings!))}>
+                    {t('trouble.applySetting')}
+                  </button>
+                </div>
+              ) : result.fix ? (
                 <div className="troubleshoot__fix">
                   <span>{t('trouble.fixHint')}</span>
                   <ul>

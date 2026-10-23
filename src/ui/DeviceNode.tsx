@@ -11,6 +11,7 @@ import { ConnectorIcon } from './ConnectorIcon';
 import { CATEGORY_PANEL_COLORS, connectorsText, SIGNAL_COLORS } from './labels';
 import { connectPorts } from './connect';
 import { deleteSelection, setCollapsed } from './actions';
+import { ControlPanel } from './Controls';
 
 /** Devices with more ports than this get the "show only used ports" button. */
 const COLLAPSIBLE_FROM = 5;
@@ -38,6 +39,7 @@ export const DeviceNode = memo(function DeviceNode({ data, selected }: NodeProps
   const ports = usePortState();
   const highlight = useHighlight();
   const groups = useGroupIndex();
+  const showControls = useProjectStore((s) => s.showControls);
   if (!device || !template) return null;
 
   const rows = template.ports
@@ -56,6 +58,7 @@ export const DeviceNode = memo(function DeviceNode({ data, selected }: NodeProps
       outlined={highlight?.outlinedIds.has(device.id) ?? false}
       groups={groups.byDevice.get(device.id) ?? []}
     >
+      {showControls && <ControlPanel device={device} template={template} />}
       <PortColumns rows={rows} ports={ports} collapsed={!!device.collapsed} onExpand={() => setCollapsed(device.id, false)} />
     </NodeFrame>
   );

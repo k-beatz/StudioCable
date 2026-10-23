@@ -1,11 +1,13 @@
 import { newId } from './ids';
 import type {
+  Control,
   Connector,
   DeviceCategory,
   DeviceTemplate,
   Direction,
   InternalRoute,
   Port,
+  RouteCondition,
   SignalType,
   TemplateOrigin,
 } from './model';
@@ -25,6 +27,7 @@ export interface PortGroup {
   signal: SignalType;
   alsoAccepts?: SignalType[];
   channels?: number;
+  needsPhantom?: boolean;
 }
 
 export interface GenericSpec {
@@ -33,7 +36,9 @@ export interface GenericSpec {
   category: DeviceCategory;
   groups: PortGroup[];
   /** Internal paths by port label (e.g. preamp in -> out). */
-  routing?: { from: string; to: string; breakWhenPatched?: string[] }[];
+  routing?: { from: string; to: string; breakWhenPatched?: string[]; when?: RouteCondition[] }[];
+  /** Knobs and switches; `levelOf` by port label. */
+  controls?: Control[];
 }
 
 export function portLabels(g: PortGroup): string[] {
@@ -51,6 +56,7 @@ export function buildTemplate(spec: GenericSpec, origin: TemplateOrigin = 'gener
       signal: g.signal,
       ...(g.alsoAccepts?.length ? { alsoAccepts: [...g.alsoAccepts] } : {}),
       ...(g.channels && g.channels > 1 ? { channels: g.channels } : {}),
+      ...(g.needsPhantom ? { needsPhantom: true } : {}),
     })),
   );
   const byLabel = new Map(ports.map((p) => [p.label, p.id]));
@@ -59,8 +65,14 @@ export function buildTemplate(spec: GenericSpec, origin: TemplateOrigin = 'gener
     const to = byLabel.get(r.to);
     if (!from || !to) return [];
     const breaks = (r.breakWhenPatched ?? []).flatMap((l) => byLabel.get(l) ?? []);
-    return [breaks.length ? { from, to, breakWhenPatched: breaks } : { from, to }];
+    return [{ from, to, ...(breaks.length ? { breakWhenPatched: breaks } : {}), ...(r.when?.length ? { when: r.when.map((c) => ({ ...c })) } : {}) }];
   });
+  const controls: Control[] = (spec.controls ?? []).map((c) => ({
+    ...c,
+    ...(c.positions ? { positions: [...c.positions] } : {}),
+    ...(c.levelOf ? { levelOf: c.levelOf.flatMap((l) => byLabel.get(l) ?? []) } : {}),
+    ...(c.phantomFor ? { phantomFor: c.phantomFor.flatMap((l) => byLabel.get(l) ?? []) } : {}),
+  }));
   return {
     id: newId('t-'),
     manufacturer: spec.manufacturer,
@@ -68,6 +80,7 @@ export function buildTemplate(spec: GenericSpec, origin: TemplateOrigin = 'gener
     category: spec.category,
     ports,
     ...(routing.length ? { routing } : {}),
+    ...(controls.length ? { controls } : {}),
     origin,
   };
 }
@@ -298,6 +311,15 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       model: 'Microphone',
       category: 'microphone',
       groups: [{ count: 1, label: 'Out', direction: 'out', connectors: [{ type: 'xlr', gender: M }], signal: 'mic' }],
+    },
+  },
+  {
+    key: 'condenserMic',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Condenser Microphone',
+      category: 'microphone',
+      groups: [{ count: 1, label: 'Out', direction: 'out', connectors: [{ type: 'xlr', gender: M }], signal: 'mic', needsPhantom: true }],
     },
   },
   {

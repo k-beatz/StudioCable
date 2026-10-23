@@ -1976,3 +1976,121 @@ select {
 .topbar .menu-backdrop {
   z-index: -1;
 }
+
+/* ---------- Knobs & switches ---------- */
+.control-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+  padding: 8px 8px 6px;
+  border-bottom: 1px solid var(--border);
+  background: rgb(0 0 0 / 0.12);
+  cursor: default;
+}
+.control-panel--large {
+  gap: 10px 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 52px;
+  max-width: 64px;
+  text-align: center;
+}
+.control__label {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  color: var(--muted);
+}
+.control__value {
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.control--off .control__value {
+  color: var(--warning, #f5a524);
+}
+.knob {
+  width: 34px;
+  height: 34px;
+  touch-action: none;
+  cursor: ns-resize;
+  border-radius: 50%;
+}
+.control-panel--large .knob {
+  width: 44px;
+  height: 44px;
+}
+.knob:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.knob svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.knob__scale {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.25);
+  stroke-width: 2;
+}
+.knob__cap {
+  fill: #2a2d33;
+  stroke: #0d0e11;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.5));
+}
+.knob__pointer {
+  stroke: #f2f2f2;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 48px;
+  min-height: 26px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  background: #24272d;
+  color: #e9e9e9;
+  border: 1px solid #0d0e11;
+  box-shadow: 0 2px 2px rgb(0 0 0 / 0.35);
+}
+.switch__led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4a1414;
+}
+.switch--on .switch__led {
+  background: #ff3b30;
+  box-shadow: 0 0 6px #ff3b30;
+}
+@media (pointer: coarse) {
+  .knob {
+    width: 40px;
+    height: 40px;
+  }
+  .switch {
+    min-height: 32px;
+  }
+}
+.app[data-look='modular'] .control-panel .control__label {
+  color: rgb(255 255 255 / 0.72);
+}
+.app[data-look='modular'] .control-panel .control__value {
+  color: #fff;
+}

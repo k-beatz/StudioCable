@@ -39,7 +39,7 @@ export function ConnectorIcon({ connectors, color, size = 20 }: { connectors: Co
         {hole(10, 13.4)}
       </>
     );
-  } else if ((type === 'trs-6.3' || type === 'ts-6.3' || type === 'trs-3.5' || type === 'ts-3.5') && male) {
+  } else if ((type === 'trs-6.3' || type === 'ts-6.3' || type === 'trs-3.5' || type === 'trrs-3.5' || type === 'ts-3.5') && male) {
     // Jack plug seen from the side.
     shape = (
       <>
@@ -55,10 +55,11 @@ export function ConnectorIcon({ connectors, color, size = 20 }: { connectors: Co
         <circle cx={10} cy={10} r={2.2} fill={pin} />
       </>
     );
-  } else if (type === 'trs-3.5' || type === 'ts-3.5') {
+  } else if (type === 'trs-3.5' || type === 'trrs-3.5' || type === 'ts-3.5') {
     shape = (
       <>
         <circle cx={10} cy={10} r={6} fill={body} stroke={color} strokeWidth={2} />
+        {type === 'trrs-3.5' && <circle cx={10} cy={10} r={3.6} fill="none" stroke={pin} strokeWidth={0.8} />}
         <circle cx={10} cy={10} r={1.8} fill={pin} />
       </>
     );

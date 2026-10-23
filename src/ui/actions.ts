@@ -15,3 +15,17 @@ export function deleteSelection(): boolean {
 export function setCollapsed(deviceId: string, collapsed: boolean) {
   useProjectStore.getState().apply((p) => updateDevice(p, deviceId, { collapsed: collapsed || undefined }));
 }
+
+/** Turns a knob or flips a switch on a device (one undo step). */
+export function setControl(deviceId: string, controlId: string, value: string | number) {
+  useProjectStore.getState().apply((p) => {
+    const device = p.devices.find((d) => d.id === deviceId);
+    if (!device || device.settings?.[controlId] === value) return p;
+    return updateDevice(p, deviceId, { settings: { ...device.settings, [controlId]: value } });
+  });
+}
+
+/** Puts all knobs and switches of a device back to their defaults. */
+export function resetControls(deviceId: string) {
+  useProjectStore.getState().apply((p) => updateDevice(p, deviceId, { settings: undefined }));
+}

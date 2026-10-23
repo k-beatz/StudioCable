@@ -37,6 +37,8 @@ export function TopBar(props: {
   const setCableStyle = useProjectStore((s) => s.setCableStyle);
   const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
   const setDimUnused = useProjectStore((s) => s.setDimUnusedPorts);
+  const showControls = useProjectStore((s) => s.showControls);
+  const setShowControls = useProjectStore((s) => s.setShowControls);
   const { undo, redo } = useProjectStore.getState();
   const { issues } = useAnalysis();
   const { tidyUp, suggest } = useDiagramActions();
@@ -121,6 +123,9 @@ export function TopBar(props: {
           </div>
           <button className={'toggle' + (dimUnused ? ' active' : '')} aria-pressed={dimUnused} onClick={() => setDimUnused(!dimUnused)}>
             {t('view.dimUnused')}
+          </button>
+          <button className={'toggle' + (showControls ? ' active' : '')} aria-pressed={showControls} onClick={() => setShowControls(!showControls)}>
+            {t('view.showControls')}
           </button>
         </Menu>
       </nav>

@@ -1,4 +1,5 @@
 import type { Cable, Port, Project, SignalType } from './model';
+import { controlValue, phantomBlocker } from './controls';
 import { getPort } from './project';
 
 /**
@@ -24,7 +25,8 @@ export type IssueCode =
   | 'portOccupied'
   | 'mainsIntoDc'
   | 'phonoNeedsPreamp'
-  | 'lineIntoPhono';
+  | 'lineIntoPhono'
+  | 'phantomOff';
 
 export interface Issue {
   cableId: string;
@@ -91,6 +93,15 @@ export function checkCable(project: Project, cable: Cable, occupancy?: Map<strin
   }
 
   checkConnectors(a, b, add);
+
+  // A condenser mic on an input whose phantom switch is off stays silent.
+  if (source?.needsPhantom && target) {
+    const end = cable.ends[target === a ? 0 : 1];
+    const device = project.devices.find((d) => d.id === end.deviceId);
+    const template = device && project.templates[device.templateId];
+    const blocker = template && phantomBlocker(template, device, end.portId);
+    if (blocker) add('warning', 'phantomOff', { control: blocker.control.label, value: String(controlValue(blocker.control, device)) });
+  }
 
   const ca = a.channels ?? 1;
   const cb = b.channels ?? 1;

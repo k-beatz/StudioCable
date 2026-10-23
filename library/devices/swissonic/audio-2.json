@@ -1,0 +1,93 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "swissonic-audio-2",
+  "manufacturer": "Swissonic",
+  "model": "Audio 2",
+  "category": "interface",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "Audio 2 user manual (Thomann, EN)",
+      "url": "https://fast-images.static-thomann.de/pics/atg/atgdata/document/manual/541118_v2_en_online.pdf"
+    },
+    { "title": "Product page (Thomann)", "url": "https://www.thomann.de/de/swissonic_audio_2.htm" }
+  ],
+  "notes": "2-in/2-out USB interface, 24 bit / 192 kHz, USB bus-powered (5 V, min. 500 mA). Ports and controls follow the manual, chapter 'Connections and controls'. CH1/CH2: XLR/6.35 mm combo (mic, line, instrument), 48 V phantom via the PHAN slider. PHONE I/O: 3.5 mm 4-pin jack for a smartphone; the phone's audio is played through the interface, the interface's inputs are sent to the phone. Modelling assumptions, not stated in the manual: MONITORING fully to DIRECT means no DAW playback on the outputs, fully to DAW means no direct signal; MONO puts CH1 and CH2 on both main outputs, STEREO puts CH1 left and CH2 right; MAIN OUTPUT and PHONES volume at MIN are treated as silent; the phone's audio goes to the main outputs and the headphones. The manual lists HI-Z once; the product page says each channel has one - shown here as one switch until checked on the device. Start positions (STEREO, PHAN off, HI-Z off, knobs in the middle) are app defaults, not a factory setting.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["CH1", "CH2"],
+      "direction": "in",
+      "connectors": [
+        { "type": "xlr", "gender": "female" },
+        { "type": "trs-6.3", "gender": "female" }
+      ],
+      "signal": "mic",
+      "alsoAccepts": ["line-bal", "line-unbal", "instrument"]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["MAIN OUTPUTS LEFT", "MAIN OUTPUTS RIGHT"],
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["PHONES"],
+      "direction": "out",
+      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["PHONE I/O"],
+      "direction": "bidi",
+      "connectors": [{ "type": "trrs-3.5", "gender": "female" }],
+      "signal": "line-unbal",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": ["USB TO PC"],
+      "direction": "bidi",
+      "connectors": [{ "type": "usb-b", "gender": "female" }],
+      "signal": "data"
+    }
+  ],
+  "controls": [
+    { "id": "gain1", "label": "GAIN CH1", "kind": "knob", "default": 5, "minLabel": "MIN", "maxLabel": "MAX" },
+    { "id": "gain2", "label": "GAIN CH2", "kind": "knob", "default": 5, "minLabel": "MIN", "maxLabel": "MAX" },
+    { "id": "hiz", "label": "HI-Z", "kind": "switch", "positions": ["OFF", "ON"], "default": "OFF" },
+    { "id": "phan", "label": "PHAN +48 V", "kind": "switch", "positions": ["OFF", "ON"], "default": "OFF", "phantomFor": ["CH1", "CH2"] },
+    { "id": "monitoring", "label": "MONITORING", "kind": "knob", "default": 5, "minLabel": "DIRECT", "maxLabel": "DAW" },
+    { "id": "mode", "label": "MONO / STEREO", "kind": "switch", "positions": ["STEREO", "MONO"], "default": "STEREO" },
+    { "id": "phones", "label": "PHONES VOLUME", "kind": "knob", "default": 5, "minLabel": "MIN", "maxLabel": "MAX", "levelOf": ["PHONES"] },
+    {
+      "id": "main",
+      "label": "MAIN OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": ["MAIN OUTPUTS LEFT", "MAIN OUTPUTS RIGHT"]
+    }
+  ],
+  "routing": [
+    { "from": ["CH1", "CH2"], "to": ["USB TO PC", "PHONE I/O"] },
+    { "from": "CH1", "to": "MAIN OUTPUTS LEFT", "when": [{ "control": "monitoring", "max": 9 }] },
+    { "from": "CH2", "to": "MAIN OUTPUTS RIGHT", "when": [{ "control": "monitoring", "max": 9 }] },
+    { "from": "CH1", "to": "MAIN OUTPUTS RIGHT", "when": [{ "control": "monitoring", "max": 9 }, { "control": "mode", "is": ["MONO"] }] },
+    { "from": "CH2", "to": "MAIN OUTPUTS LEFT", "when": [{ "control": "monitoring", "max": 9 }, { "control": "mode", "is": ["MONO"] }] },
+    { "from": ["CH1", "CH2"], "to": "PHONES", "when": [{ "control": "monitoring", "max": 9 }] },
+    { "from": "USB TO PC", "to": ["MAIN OUTPUTS LEFT", "MAIN OUTPUTS RIGHT", "PHONES"], "when": [{ "control": "monitoring", "min": 1 }] },
+    { "from": "PHONE I/O", "to": ["MAIN OUTPUTS LEFT", "MAIN OUTPUTS RIGHT", "PHONES"] }
+  ]
+}

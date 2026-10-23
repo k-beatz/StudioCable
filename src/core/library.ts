@@ -3,8 +3,11 @@ import {
   CONNECTOR_TYPES,
   DEVICE_CATEGORIES,
   SIGNAL_TYPES,
+  KNOB_MAX,
+  type Control,
   type DeviceCategory,
   type DeviceTemplate,
+  type RouteCondition,
   type Source,
 } from './model';
 
@@ -30,6 +33,8 @@ export interface LibraryDevice {
   notes?: string;
   groups: PortGroup[];
   routing?: LibraryRoute[];
+  /** Knobs and switches (see library/README.md). `levelOf` lists port labels. */
+  controls?: Control[];
 }
 
 /**
@@ -40,6 +45,8 @@ export interface LibraryRoute {
   from: string | string[];
   to: string | string[];
   breakWhenPatched?: string[];
+  /** The path exists only while the controls are in these positions. */
+  when?: RouteCondition[];
 }
 
 const asList = (x: string | string[]) => (Array.isArray(x) ? x : [x]);
@@ -49,7 +56,12 @@ function expandRoutes(routes: LibraryRoute[] = []): NonNullable<GenericSpec['rou
     asList(r.from).flatMap((from) =>
       asList(r.to)
         .filter((to) => to !== from)
-        .map((to) => (r.breakWhenPatched ? { from, to, breakWhenPatched: r.breakWhenPatched } : { from, to })),
+        .map((to) => ({
+          from,
+          to,
+          ...(r.breakWhenPatched ? { breakWhenPatched: r.breakWhenPatched } : {}),
+          ...(r.when ? { when: r.when } : {}),
+        })),
     ),
   );
 }
@@ -88,9 +100,32 @@ export function validateLibraryDevice(data: unknown): string[] {
       labels.add(label);
     }
   });
+  const controls = new Map<string, Control>();
+  for (const c of d.controls ?? []) {
+    const where = `control "${c.id}"`;
+    if (!c.id || controls.has(c.id)) errors.push(`${where}: missing or duplicate id`);
+    controls.set(c.id, c);
+    if (!c.label) errors.push(`${where}: label missing`);
+    if (c.kind === 'switch') {
+      if (!c.positions || c.positions.length < 2) errors.push(`${where}: a switch needs at least two positions`);
+      else if (!c.positions.includes(String(c.default))) errors.push(`${where}: default must be one of the positions`);
+    } else if (c.kind === 'knob') {
+      if (typeof c.default !== 'number' || c.default < 0 || c.default > KNOB_MAX) errors.push(`${where}: default must be 0 to ${KNOB_MAX}`);
+      for (const label of c.levelOf ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
+    } else errors.push(`${where}: kind must be knob or switch`);
+    if (c.phantomFor && !(c.kind === 'switch' && c.positions?.includes('ON'))) errors.push(`${where}: a phantom switch needs an "ON" position`);
+    for (const label of c.phantomFor ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
+  }
   for (const r of d.routing ?? []) {
     for (const label of [...asList(r.from), ...asList(r.to), ...(r.breakWhenPatched ?? [])]) {
       if (!labels.has(label)) errors.push(`routing refers to unknown port "${label}"`);
+    }
+    for (const cond of r.when ?? []) {
+      const c = controls.get(cond.control);
+      if (!c) errors.push(`routing refers to unknown control "${cond.control}"`);
+      else if (cond.is && (c.kind !== 'switch' || cond.is.some((v) => !c.positions?.includes(v)))) {
+        errors.push(`routing: "${cond.control}" has no position ${JSON.stringify(cond.is)}`);
+      }
     }
   }
   return errors;

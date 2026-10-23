@@ -61,5 +61,34 @@ doesn't exist) fails the tests.
 - `routing` is optional. It is used for signal flow tracing. Mixers usually
   leave it out, because their internal routing depends on knobs and buttons.
 
+### Knobs and switches (optional)
+
+Controls that change where the signal goes inside the device. The user can
+turn and flip them in the app, and troubleshooting takes them into account.
+
+```json
+"controls": [
+  { "id": "monitoring", "label": "MONITORING", "kind": "knob", "default": 5, "minLabel": "DIRECT", "maxLabel": "DAW" },
+  { "id": "main", "label": "MAIN OUTPUT", "kind": "knob", "default": 5, "levelOf": ["Main Out L", "Main Out R"] },
+  { "id": "mode", "label": "MONO / STEREO", "kind": "switch", "positions": ["STEREO", "MONO"], "default": "STEREO" },
+  { "id": "phan", "label": "+48V", "kind": "switch", "positions": ["OFF", "ON"], "default": "OFF", "phantomFor": ["Mic In 1"] }
+],
+"routing": [
+  { "from": "Mic In 1", "to": "Main Out L", "when": [{ "control": "monitoring", "max": 9 }] },
+  { "from": "Mic In 1", "to": "Main Out R", "when": [{ "control": "mode", "is": ["MONO"] }] }
+]
+```
+
+- Knobs go from 0 to 10. `levelOf`: the knob sets the level of these ports;
+  at 0 nothing passes them.
+- `when` on a route: the path only exists while every condition holds
+  (`is` = switch positions, `min` / `max` = knob range, inclusive).
+- `phantomFor`: a phantom power switch for these inputs; the position `"ON"`
+  powers them. A mic output with `"needsPhantom": true` (condenser mic) on such
+  an input gives no signal while it is off.
+- What a control does must come from the source. Where the manual leaves it
+  open (e.g. whether "MIN" is fully silent), say so in `notes`. Default
+  positions are app defaults, not factory settings.
+
 Allowed values for `category`, `direction`, connector `type`, `gender` and
 `signal` are listed in `src/core/model.ts`.

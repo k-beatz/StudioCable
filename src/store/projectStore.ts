@@ -28,6 +28,8 @@ interface ProjectState {
   dimUnusedPorts: boolean;
   /** Show the power layer (power supplies, outlets, power cables and power inputs). */
   showPower: boolean;
+  /** Show knobs and switches on the devices that have them. */
+  showControls: boolean;
   /** Overall look of the diagram: "modular" (coloured hardware panels) or "clean". */
   look: Look;
   /** Pedalboard currently opened in the diagram (null = main level). */
@@ -52,6 +54,7 @@ interface ProjectState {
   setCableStyle: (style: CableStyle) => void;
   setDimUnusedPorts: (on: boolean) => void;
   setShowPower: (on: boolean) => void;
+  setShowControls: (on: boolean) => void;
   setLook: (look: Look) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
@@ -71,6 +74,7 @@ const currentPrefs = (s: Prefs): Prefs => ({
   cableStyle: s.cableStyle,
   dimUnusedPorts: s.dimUnusedPorts,
   showPower: s.showPower,
+  showControls: s.showControls,
   look: s.look,
 });
 
@@ -78,6 +82,7 @@ interface Prefs {
   cableStyle: CableStyle;
   dimUnusedPorts: boolean;
   showPower: boolean;
+  showControls: boolean;
   look: Look;
 }
 
@@ -88,10 +93,11 @@ function loadPrefs(): Prefs {
       cableStyle: (['curved', 'hanging'] as const).find((c) => c === raw.cableStyle) ?? 'orthogonal',
       dimUnusedPorts: raw.dimUnusedPorts === true,
       showPower: raw.showPower === true,
+      showControls: raw.showControls !== false,
       look: raw.look === 'clean' ? 'clean' : 'modular',
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, look: 'modular' };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, showControls: true, look: 'modular' };
   }
 }
 
@@ -160,6 +166,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   setShowPower: (showPower) => {
     set({ showPower });
     savePrefs({ ...currentPrefs(get()), showPower });
+  },
+  setShowControls: (showControls) => {
+    set({ showControls });
+    savePrefs({ ...currentPrefs(get()), showControls });
   },
   setLook: (look) => {
     set({ look });
