@@ -14,6 +14,8 @@ import { SETUP_PRESETS, type SetupPreset } from '../core/setups';
 import { t, type MessageKey } from '../i18n';
 import { isTouchDevice } from './device';
 import { LIBRARY } from '../library';
+import { newId } from '../core/ids';
+import { favoriteKey, useFavorites, type Favorite } from '../store/favorites';
 
 interface Props {
   onAdd: (template: DeviceTemplate) => void;
@@ -21,12 +23,14 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = 'library' | 'presets' | 'setups' | 'custom';
+type Tab = 'favorites' | 'library' | 'presets' | 'setups' | 'custom';
 
 /** Modal to add a device: from the library, a quick generic device, or a custom one. */
 export function AddDeviceDialog({ onAdd, onAddSetup, onClose }: Props) {
-  const [tab, setTab] = useState<Tab>(LIBRARY.length > 0 ? 'library' : 'presets');
+  const hasFavorites = useFavorites((s) => s.favorites.length > 0);
+  const [tab, setTab] = useState<Tab>(hasFavorites ? 'favorites' : LIBRARY.length > 0 ? 'library' : 'presets');
   const tabs: { key: Tab; label: MessageKey }[] = [
+    ...(hasFavorites || tab === 'favorites' ? [{ key: 'favorites' as const, label: 'add.favorites' as const }] : []),
     { key: 'library', label: 'add.library' },
     { key: 'presets', label: 'add.presets' },
     { key: 'setups', label: 'add.setups' },
@@ -48,6 +52,7 @@ export function AddDeviceDialog({ onAdd, onAddSetup, onClose }: Props) {
             ✕
           </button>
         </div>
+        {tab === 'favorites' && <FavoritesList onAdd={onAdd} onAddSetup={onAddSetup} />}
         {tab === 'library' && <LibraryList onAdd={onAdd} />}
         {tab === 'presets' && <PresetList onAdd={onAdd} />}
         {tab === 'setups' && <SetupList onAdd={onAddSetup} />}
@@ -65,6 +70,63 @@ function portSummary(groups: PortGroup[]): string {
   const bidi = count('bidi');
   if (bidi) parts.push(`${bidi} ${t('add.bidi')}`);
   return parts.join(' · ');
+}
+
+/** ☆ / ★ next to an entry in the lists. */
+export function StarButton({ fav }: { fav: Favorite }) {
+  const on = useFavorites((s) => s.favorites.some((f) => f.key === fav.key));
+  const toggle = useFavorites((s) => s.toggle);
+  return (
+    <button
+      className={'star-button' + (on ? ' star-button--on' : '')}
+      aria-pressed={on}
+      aria-label={t(on ? 'favorite.remove' : 'favorite.add')}
+      title={t(on ? 'favorite.remove' : 'favorite.add')}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggle(fav);
+      }}
+    >
+      {on ? '★' : '☆'}
+    </button>
+  );
+}
+
+function FavoritesList({ onAdd, onAddSetup }: Pick<Props, 'onAdd' | 'onAddSetup'>) {
+  const favorites = useFavorites((s) => s.favorites);
+  const rows = favorites.flatMap((f): { f: Favorite; title: string; sub: string; add: () => void }[] => {
+    if (f.kind === 'library') {
+      const d = LIBRARY.find((x) => x.id === f.id);
+      return d ? [{ f, title: `${d.manufacturer} ${d.model}`, sub: `${t(`category.${d.category}`)} · ${portSummary(d.groups)}`, add: () => onAdd(libraryToTemplate(d)) }] : [];
+    }
+    if (f.kind === 'preset') {
+      const p = GENERIC_PRESETS.find((x) => x.key === f.id);
+      return p ? [{ f, title: t(`preset.${p.key}` as MessageKey), sub: `${t(`category.${p.spec.category}`)} · ${portSummary(p.spec.groups)}`, add: () => onAdd(buildTemplate(p.spec)) }] : [];
+    }
+    if (f.kind === 'setup') {
+      const s = SETUP_PRESETS.find((x) => x.key === f.id);
+      return s ? [{ f, title: t(`setup.${s.key}` as MessageKey), sub: t('add.setups'), add: () => onAddSetup(s) }] : [];
+    }
+    // Own device: a fresh copy of the stored template each time.
+    const copy: DeviceTemplate = { ...JSON.parse(JSON.stringify(f.template)), id: newId('t-') };
+    return [{ f, title: f.name, sub: `${t('favorite.own')} · ${t(`category.${f.template.category}`)}`, add: () => onAdd(copy) }];
+  });
+  return (
+    <div className="modal__body">
+      {rows.length === 0 && <p className="muted">{t('add.favoritesEmpty')}</p>}
+      <ul className="preset-list">
+        {rows.map((r) => (
+          <li key={r.f.key} className="preset-list__item">
+            <button onClick={r.add}>
+              <strong>{r.title}</strong>
+              <small>{r.sub}</small>
+            </button>
+            <StarButton fav={r.f} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
@@ -115,7 +177,8 @@ function LibraryList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
       {LIBRARY.length > 0 && results.length === 0 && <p className="muted">{t('add.noMatches')}</p>}
       <ul className="preset-list">
         {results.map((d) => (
-          <li key={d.id}>
+          <li key={d.id} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('library', d.id), kind: 'library', id: d.id }} />
             <button onClick={() => onAdd(libraryToTemplate(d))}>
               <span className="preset-list__title">
                 <strong>
@@ -156,7 +219,8 @@ function PresetList({ onAdd }: { onAdd: (template: DeviceTemplate) => void }) {
       />
       <ul className="preset-list">
         {presets.map((p) => (
-          <li key={p.key}>
+          <li key={p.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('preset', p.key), kind: 'preset', id: p.key }} />
             <button onClick={() => onAdd(buildTemplate(p.spec))}>
               <strong>{t(`preset.${p.key}` as MessageKey)}</strong>
               <small>
@@ -177,7 +241,8 @@ function SetupList({ onAdd }: { onAdd: (setup: SetupPreset) => void }) {
       <p className="muted">{t('add.setupsHint')}</p>
       <ul className="preset-list">
         {SETUP_PRESETS.map((s) => (
-          <li key={s.key}>
+          <li key={s.key} className="preset-list__item">
+            <StarButton fav={{ key: favoriteKey('setup', s.key), kind: 'setup', id: s.key }} />
             <button onClick={() => onAdd(s)}>
               <strong>{t(`setup.${s.key}` as MessageKey)}</strong>
               <small>{t(`setup.${s.key}.desc` as MessageKey)}</small>

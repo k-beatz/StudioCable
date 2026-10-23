@@ -1,8 +1,10 @@
+import { StarButton } from './AddDeviceDialog';
+import { favoriteKey, type Favorite } from '../store/favorites';
 import { ControlPanel } from './Controls';
 import { resetControls } from './actions';
 import { useState } from 'react';
 import { newId } from '../core/ids';
-import type { Cable, DeviceInstance, Group, Project } from '../core/model';
+import type { Cable, DeviceInstance, DeviceTemplate, Group, Project } from '../core/model';
 import type { Trace } from '../core/signalFlow';
 import {
   addDevice,
@@ -111,8 +113,11 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
       </label>
       <div className="field">
         <span>{t('device.model')}</span>
-        <div>
-          {template?.manufacturer} {template?.model}
+        <div className="model-row">
+          <span>
+            {template?.manufacturer} {template?.model}
+          </span>
+          {template && template.category !== 'pedalboard' && <StarButton fav={favoriteFor(template)} />}
         </div>
       </div>
       {template?.origin === 'library' && (
@@ -584,4 +589,11 @@ function GroupInspector({ group, project }: { group: Group; project: Project }) 
       </div>
     </>
   );
+}
+
+/** Library devices are remembered by their entry; anything else as a copy of its template. */
+function favoriteFor(template: DeviceTemplate): Favorite {
+  if (template.libraryId) return { key: favoriteKey('library', template.libraryId), kind: 'library', id: template.libraryId };
+  const name = `${template.manufacturer} ${template.model}`.trim();
+  return { key: favoriteKey('template', name), kind: 'template', name, template };
 }

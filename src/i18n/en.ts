@@ -185,6 +185,11 @@ export const en = {
 
   'add.title': 'Add device',
   'add.library': 'Library',
+  'add.favorites': '★ Favorites',
+  'add.favoritesEmpty': 'No favorites yet. Tap the ☆ next to a device, quick device or setup to keep it here.',
+  'favorite.add': 'Add to favorites',
+  'favorite.remove': 'Remove from favorites',
+  'favorite.own': 'Own device',
   'add.searchLibrary': 'Search manufacturer or model…',
   'add.allCategories': 'All categories',
   'add.allManufacturers': 'All manufacturers',

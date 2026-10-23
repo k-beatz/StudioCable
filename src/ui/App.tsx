@@ -8,6 +8,7 @@ import { openTextFile, saveTextFile } from '../platform/files';
 import { useProjectStore } from '../store/projectStore';
 import { AddDeviceDialog } from './AddDeviceDialog';
 import { CableTable } from './CableTable';
+import { ControlLoupe } from './Controls';
 import { ChecksList } from './ChecksList';
 import { GraphView } from './GraphView';
 import { Inspector } from './Inspector';
@@ -128,6 +129,7 @@ function Shell() {
           {view === 'graph' && (
             <>
               <GraphView />
+              <ControlLoupe />
               {project.devices.length === 0 && (
                 <div className="empty-state">
                   <h2>{t('empty.title')}</h2>
