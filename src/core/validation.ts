@@ -22,7 +22,9 @@ export type IssueCode =
   | 'connectorMismatch'
   | 'channelMismatch'
   | 'portOccupied'
-  | 'mainsIntoDc';
+  | 'mainsIntoDc'
+  | 'phonoNeedsPreamp'
+  | 'lineIntoPhono';
 
 export interface Issue {
   cableId: string;
@@ -38,6 +40,7 @@ const FAMILY: Record<SignalType, SignalFamily> = {
   'line-bal': 'analog',
   'line-unbal': 'analog',
   instrument: 'analog',
+  phono: 'analog',
   speaker: 'analog',
   headphone: 'analog',
   'digital-audio': 'digital-audio',
@@ -105,6 +108,8 @@ function checkSignalLevels(
   const isLine = (s: SignalType) => s === 'line-bal' || s === 'line-unbal';
 
   if (src === 'speaker') return add('error', 'speakerIntoNonSpeaker');
+  if (src === 'phono') return add('warning', 'phonoNeedsPreamp');
+  if (dst === 'phono') return add('warning', 'lineIntoPhono');
   if (dst === 'speaker') return add('warning', 'lineIntoSpeaker');
   if (dst === 'mic' && (isLine(src) || src === 'headphone')) return add('warning', 'lineIntoMic');
   if (src === 'mic' && dst !== 'mic') return add('info', 'micIntoLine');

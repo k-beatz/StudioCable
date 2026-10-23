@@ -272,6 +272,15 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
     },
   },
   {
+    key: 'passiveSpeaker',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Passive Speaker',
+      category: 'monitor',
+      groups: [{ count: 1, label: 'Speaker In', direction: 'in', connectors: [{ type: 'banana', gender: F }], signal: 'speaker' }],
+    },
+  },
+  {
     key: 'headphones',
     spec: {
       manufacturer: 'Generic',
@@ -298,6 +307,15 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       model: 'Electric Guitar / Bass',
       category: 'instrument',
       groups: [{ count: 1, label: 'Out', direction: 'out', connectors: [{ type: 'ts-6.3', gender: F }], signal: 'instrument' }],
+    },
+  },
+  {
+    key: 'turntable',
+    spec: {
+      manufacturer: 'Generic',
+      model: 'Turntable (MM)',
+      category: 'instrument',
+      groups: [{ count: 0, label: '', labels: ['Out L', 'Out R'], direction: 'out', connectors: [{ type: 'rca', gender: F }], signal: 'phono' }],
     },
   },
   {

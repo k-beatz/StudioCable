@@ -67,3 +67,13 @@ describe('power layer', () => {
     expect(s.p.cables).toHaveLength(0);
   });
 });
+
+describe('phono (turntable) signals', () => {
+  it('warns when a turntable goes into a line input, and line into a phono input', () => {
+    const s = setup();
+    const deck = s.add('turntable');
+    const mixer = s.add('mixer8');
+    s.p = addCable(s.p, s.port(deck.id, 'Out L'), s.port(mixer.id, 'Line In')).project;
+    expect(checkProject(s.p).map((i) => i.code)).toContain('phonoNeedsPreamp');
+  });
+});

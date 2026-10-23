@@ -50,6 +50,8 @@ export const SIGNAL_TYPES = [
   'line-bal',
   'line-unbal',
   'instrument',
+  /** Turntable (MM) cartridge: millivolts, needs RIAA equalisation in a phono stage. */
+  'phono',
   'speaker',
   'headphone',
   'digital-audio',

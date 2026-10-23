@@ -24,6 +24,7 @@ export const CATEGORY_PANEL_COLORS: Record<DeviceCategory, string> = {
 
 /** Signal colors. Always shown together with a text badge, never color alone. */
 export const SIGNAL_COLORS: Record<SignalType, string> = {
+  phono: '#e3b27a',
   'power-ac': '#b6bfcf',
   'power-dc': '#9be15d',
   mic: '#ff7a6b',
