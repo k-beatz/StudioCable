@@ -26,7 +26,9 @@ export type IssueCode =
   | 'mainsIntoDc'
   | 'phonoNeedsPreamp'
   | 'lineIntoPhono'
-  | 'phantomOff';
+  | 'phantomOff'
+  | 'speakerWire'
+  | 'polaritySwapped';
 
 export interface Issue {
   cableId: string;
@@ -94,6 +96,11 @@ export function checkCable(project: Project, cable: Cable, occupancy?: Map<strin
 
   checkConnectors(a, b, add);
 
+  if (a.signal === 'speaker' && b.signal === 'speaker') {
+    if (cable.polarity === 'swapped') add('warning', 'polaritySwapped');
+    else if (isWire(a) && isWire(b)) add('info', 'speakerWire');
+  }
+
   // A condenser mic on an input whose phantom switch is off stays silent.
   if (source?.needsPhantom && target) {
     const end = cable.ends[target === a ? 0 : 1];
@@ -129,9 +136,15 @@ function checkSignalLevels(
   if (isLine(src) && isLine(dst)) return add('info', 'balancedMismatch');
 }
 
+/** Speaker terminals that take a stripped two-core wire. */
+const WIRE_TERMINALS = new Set(['speaker-terminal', 'spring-clip', 'bare-wire']);
+const isWire = (p: Port) => p.connectors.some((c) => WIRE_TERMINALS.has(c.type));
+
 function checkConnectors(a: Port, b: Port, add: (s: Severity, c: IssueCode, p?: Issue['params']) => void) {
   const typesA = new Set(a.connectors.map((c) => c.type));
   if (b.connectors.some((c) => typesA.has(c.type))) return;
+  // A plain speaker wire fits screw terminals and spring clips alike.
+  if (isWire(a) && isWire(b)) return;
   // No common connector: a cable with different ends (or an adapter) is needed.
   add('info', 'connectorMismatch', {
     a: a.connectors[0]?.type ?? '?',

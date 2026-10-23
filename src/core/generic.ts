@@ -290,7 +290,7 @@ export const GENERIC_PRESETS: { key: string; spec: GenericSpec }[] = [
       manufacturer: 'Generic',
       model: 'Passive Speaker',
       category: 'monitor',
-      groups: [{ count: 1, label: 'Speaker In', direction: 'in', connectors: [{ type: 'banana', gender: F }], signal: 'speaker' }],
+      groups: [{ count: 1, label: 'Speaker In', direction: 'in', connectors: [{ type: 'spring-clip', gender: F }], signal: 'speaker' }],
     },
   },
   {

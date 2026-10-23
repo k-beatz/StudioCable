@@ -97,6 +97,21 @@ function Switch({ control, value, onChange }: { control: Control; value: string;
   const positions = control.positions ?? [];
   const next = positions[(positions.indexOf(value) + 1) % positions.length];
   const on = value === 'ON';
+  if (positions.length > 3) {
+    // Selectors with many positions (e.g. an input selector) get a list.
+    return (
+      <div className="control control--switch control--select">
+        <select className="switch" aria-label={control.label} value={value} onClick={(e) => e.stopPropagation()} onChange={(e) => onChange(e.target.value)}>
+          {positions.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
+        <span className="control__label">{control.label}</span>
+      </div>
+    );
+  }
   return (
     <div className="control control--switch">
       <button

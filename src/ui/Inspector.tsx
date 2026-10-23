@@ -9,6 +9,7 @@ import {
   addGroup,
   childrenOf,
   describeEnd,
+  getPort,
   GROUP_COLORS,
   removeCable,
   removeDevice,
@@ -266,6 +267,19 @@ function CableInspector({ cable, project }: { cable: Cable; project: Project }) 
             </li>
           ))}
         </ul>
+      )}
+      {cable.ends.every((e) => getPort(project, e)?.signal === 'speaker') && (
+        <div className="field">
+          <span>{t('cable.polarity')}</span>
+          <div className="segmented segmented--small" role="group" aria-label={t('cable.polarity')}>
+            <button className={cable.polarity ? '' : 'active'} onClick={() => update({ polarity: undefined })}>
+              {t('cable.polarityOk')}
+            </button>
+            <button className={cable.polarity ? 'active' : ''} onClick={() => update({ polarity: 'swapped' })}>
+              {t('cable.polaritySwapped')}
+            </button>
+          </div>
+        </div>
       )}
       <label className="field">
         <span>{t('cable.type')}</span>

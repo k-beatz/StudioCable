@@ -154,8 +154,8 @@ interface TargetRule {
   categories: DeviceCategory[];
   /** Connect to every device of the first matching category (e.g. both monitors). */
   all?: boolean;
-  /** Skip this rule when the setup contains a device of this category. */
-  unless?: DeviceCategory;
+  /** Skip this rule when the setup contains a device of this category (or one of these). */
+  unless?: DeviceCategory | DeviceCategory[];
 }
 
 const RULES: Partial<Record<DeviceCategory, TargetRule[]>> = {
@@ -166,7 +166,12 @@ const RULES: Partial<Record<DeviceCategory, TargetRule[]>> = {
   'di-box': [{ categories: ['preamp', 'mixer', 'interface'] }],
   preamp: [{ categories: ['interface', 'mixer'] }],
   outboard: [{ categories: ['interface', 'mixer'] }],
-  amp: [{ categories: ['mixer', 'interface'] }],
+  amp: [
+    { categories: ['mixer', 'interface'] },
+    // Hi-fi / power amp on its own: drive the speakers and headphones directly.
+    { categories: ['monitor'], all: true, unless: ['mixer', 'interface'] },
+    { categories: ['headphones'], all: true, unless: ['mixer', 'interface'] },
+  ],
   mixer: [
     { categories: ['interface'] },
     { categories: ['monitor'], all: true, unless: 'interface' },
@@ -218,7 +223,7 @@ export function suggestWiring(project: Project, deviceIds: string[]): WiringResu
   for (const source of order) {
     const rules = RULES[category(source)] ?? [];
     for (const rule of rules) {
-      if (rule.unless && present.has(rule.unless)) continue;
+      if ([rule.unless ?? []].flat().some((c) => present.has(c))) continue;
       for (const cat of rule.categories) {
         let targets = devices.filter((t) => t.id !== source.id && category(t) === cat);
         // Same-stage chaining (pedal -> pedal) only into pedals nothing feeds yet, to avoid loops.

@@ -11,66 +11,1173 @@
       "title": "PMA-510AE info sheet (Denon Europe)",
       "url": "https://www.denon.com/on/demandware.static/-/Library-Sites-denon_europe_shared/default/dw919d2ac9/downloads/archived/pma-510ae-info-sheet-en.pdf"
     },
-    { "title": "Product page, archived (Denon)", "url": "https://www.denon.com/en/product/archive-amplifiers/pma-510ae/PMA510AE.html" }
+    {
+      "title": "Product page, archived (Denon)",
+      "url": "https://www.denon.com/en/product/archive-amplifiers/pma-510ae/PMA510AE.html"
+    }
   ],
-  "notes": "Integrated stereo amplifier, 45 W + 45 W into 8 ohms. Inputs and outputs follow the 'Ports' list of the info sheet: Phono (MM), CD, Tuner, Line, Recorder-1/-2 playback in, Recorder-1/-2 REC out, speaker A/B switches, headphone jack. NOT stated in the info sheet and assumed: RCA jacks for all line/phono inputs and REC outputs, screw terminals for the speakers, 6.3 mm jack for headphones - please check on the device. Left out: the switched AC outlet (socket type not stated), the phono ground terminal and the remote control. The archived product page also shows 'Bluetooth / Digital inputs', but that belongs to the successor PMA-600NE shown there. Routing: the selected input goes to the speakers, the headphones and both REC outputs.",
+  "notes": "Integrated stereo amplifier, 45 W + 45 W into 8 ohms. Inputs and outputs follow the 'Ports' list of the info sheet: Phono (MM), CD, Tuner, Line, Recorder-1/-2 playback in, Recorder-1/-2 REC out, speaker A/B switches, headphone jack. NOT stated in the info sheet and assumed: RCA jacks for all line/phono inputs and REC outputs, screw terminals (+/-) for the speakers, 6.3 mm jack for headphones - please check on the device. Controls from the info sheet: input (function) switching, volume, Speaker A / B switches, muting (remote), Source Direct, Bass and Treble (+/-8 dB), Balance. Loudness is mentioned as a circuit, but not whether it is a knob or a button, so it is left out. Modelling assumptions: the selected input goes to the speakers, the headphones and both REC outputs; muting silences speakers and headphones; volume at MIN is treated as silent; Source Direct, Bass, Treble and Balance change the sound, not the signal path. Whether plugging in headphones switches off the speakers is not stated and is not modelled. Start positions (CD, Speakers A on, volume low) are app defaults. Left out: the switched AC outlet (socket type not stated), the phono ground terminal and the remote control. The archived product page also shows 'Bluetooth / Digital inputs', but that belongs to the successor PMA-600NE shown there.",
   "groups": [
     {
       "count": 0,
       "label": "",
-      "labels": ["PHONO L", "PHONO R"],
+      "labels": [
+        "PHONO L",
+        "PHONO R"
+      ],
       "direction": "in",
-      "connectors": [{ "type": "rca", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
       "signal": "phono"
     },
     {
       "count": 0,
       "label": "",
       "labels": [
-        "CD L", "CD R",
-        "TUNER L", "TUNER R",
-        "LINE L", "LINE R",
-        "RECORDER-1 PLAY L", "RECORDER-1 PLAY R",
-        "RECORDER-2 PLAY L", "RECORDER-2 PLAY R"
+        "CD L",
+        "CD R",
+        "TUNER L",
+        "TUNER R",
+        "LINE L",
+        "LINE R",
+        "RECORDER-1 PLAY L",
+        "RECORDER-1 PLAY R",
+        "RECORDER-2 PLAY L",
+        "RECORDER-2 PLAY R"
       ],
       "direction": "in",
-      "connectors": [{ "type": "rca", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
       "signal": "line-unbal"
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["RECORDER-1 REC L", "RECORDER-1 REC R", "RECORDER-2 REC L", "RECORDER-2 REC R"],
+      "labels": [
+        "RECORDER-1 REC L",
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC L",
+        "RECORDER-2 REC R"
+      ],
       "direction": "out",
-      "connectors": [{ "type": "rca", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
       "signal": "line-unbal"
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["SPEAKERS A L", "SPEAKERS A R", "SPEAKERS B L", "SPEAKERS B R"],
+      "labels": [
+        "SPEAKERS A L",
+        "SPEAKERS A R",
+        "SPEAKERS B L",
+        "SPEAKERS B R"
+      ],
       "direction": "out",
-      "connectors": [{ "type": "banana", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "speaker-terminal",
+          "gender": "female"
+        }
+      ],
       "signal": "speaker"
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["PHONES"],
+      "labels": [
+        "PHONES"
+      ],
       "direction": "out",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "headphone",
       "channels": 2
     }
   ],
   "routing": [
     {
-      "from": ["PHONO L", "CD L", "TUNER L", "LINE L", "RECORDER-1 PLAY L", "RECORDER-2 PLAY L"],
-      "to": ["SPEAKERS A L", "SPEAKERS B L", "RECORDER-1 REC L", "RECORDER-2 REC L", "PHONES"]
+      "from": "PHONO L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        }
+      ]
     },
     {
-      "from": ["PHONO R", "CD R", "TUNER R", "LINE R", "RECORDER-1 PLAY R", "RECORDER-2 PLAY R"],
-      "to": ["SPEAKERS A R", "SPEAKERS B R", "RECORDER-1 REC R", "RECORDER-2 REC R", "PHONES"]
+      "from": "PHONO L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "PHONO R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "PHONO"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "CD R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "CD"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "TUNER R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "TUNER"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "LINE R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "LINE"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-1 PLAY R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY L",
+      "to": [
+        "RECORDER-1 REC L",
+        "RECORDER-2 REC L"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY R",
+      "to": [
+        "RECORDER-1 REC R",
+        "RECORDER-2 REC R"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "speakerA",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "speakerB",
+          "is": [
+            "ON"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "RECORDER-2 PLAY R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "RECORDER-2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "input",
+      "label": "INPUT SELECTOR",
+      "kind": "switch",
+      "positions": [
+        "PHONO",
+        "CD",
+        "TUNER",
+        "LINE",
+        "RECORDER-1",
+        "RECORDER-2"
+      ],
+      "default": "CD"
+    },
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "kind": "knob",
+      "default": 3,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "SPEAKERS A L",
+        "SPEAKERS A R",
+        "SPEAKERS B L",
+        "SPEAKERS B R",
+        "PHONES"
+      ]
+    },
+    {
+      "id": "speakerA",
+      "label": "SPEAKERS A",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
+    },
+    {
+      "id": "speakerB",
+      "label": "SPEAKERS B",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "mute",
+      "label": "MUTING",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "sourceDirect",
+      "label": "SOURCE DIRECT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "bass",
+      "label": "BASS",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "−8 dB",
+      "maxLabel": "+8 dB"
+    },
+    {
+      "id": "treble",
+      "label": "TREBLE",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "−8 dB",
+      "maxLabel": "+8 dB"
+    },
+    {
+      "id": "balance",
+      "label": "BALANCE",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R"
     }
   ]
 }

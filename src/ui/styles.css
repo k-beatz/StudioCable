@@ -2094,3 +2094,9 @@ select {
 .app[data-look='modular'] .control-panel .control__value {
   color: #fff;
 }
+select.switch {
+  appearance: none;
+  min-width: 72px;
+  text-align: center;
+  cursor: pointer;
+}

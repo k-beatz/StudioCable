@@ -207,8 +207,14 @@ function blockingSettings(project: Project, steps: DiagnosisStep[]): SettingChan
     const out = steps[i + 1].from;
     const d = project.devices.find((x) => x.id === at.deviceId);
     const template = d && project.templates[d.templateId];
-    const route = template?.routing?.find((r) => r.from === at.portId && r.to === out.portId);
-    if (!template || !route) continue;
+    if (!template) continue;
+    // The search keeps one way per device, so the signal may have entered through
+    // another (plugged-in) input than `at`, e.g. the right channel of a stereo pair.
+    const plugged = new Set(project.cables.flatMap((c) => c.ends.filter((e) => e.deviceId === d.id).map((e) => e.portId)));
+    const route = (template.routing ?? [])
+      .filter((r) => r.to === out.portId && (r.from === at.portId || plugged.has(r.from)))
+      .sort((a, b) => Number(b.from === at.portId) - Number(a.from === at.portId) || routeBlockers(template, d, a).length - routeBlockers(template, d, b).length)[0];
+    if (!route) continue;
     for (const b of routeBlockers(template, d, route)) {
       if (changes.some((c) => c.deviceId === d.id && c.controlId === b.control.id)) continue;
       changes.push({ deviceId: d.id, controlId: b.control.id, label: b.control.label, from: b.value, to: b.needed });

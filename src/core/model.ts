@@ -20,6 +20,12 @@ export const CONNECTOR_TYPES = [
   'rca',
   'speakon',
   'banana',
+  /** Screw terminal / binding post (+/−): takes bare wire, banana plugs or spades. */
+  'speaker-terminal',
+  /** Spring clip terminal (+/−), typical on simple speakers: bare wire only. */
+  'spring-clip',
+  /** Cable end without a plug: stripped two-core speaker wire. */
+  'bare-wire',
   'midi-din',
   'usb-a',
   'usb-b',
@@ -208,6 +214,8 @@ export interface Cable {
   /** ends[0] is normally the source (output) side. */
   ends: [CableEnd, CableEnd];
   cableType?: string;
+  /** Speaker cables: "swapped" = + and − crossed at one end (speaker out of phase). */
+  polarity?: 'swapped';
   lengthM?: number;
   color?: string;
   note?: string;

@@ -71,6 +71,31 @@ export function ConnectorIcon({ connectors, color, size = 20 }: { connectors: Co
         <circle cx={10} cy={10} r={1.5} fill={pin} />
       </>
     );
+  } else if (type === 'bare-wire') {
+    // Stripped two-core wire: red (+) and black (−) ends.
+    shape = (
+      <>
+        <path d="M1 7 H13 M1 13 H13" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+        <path d="M13 7 H18 M13 13 H18" strokeWidth={1.6} strokeLinecap="round" stroke="#c98a3a" />
+        <circle cx={6} cy={7} r={1.6} fill="#d33a2c" />
+        <circle cx={6} cy={13} r={1.6} fill="#1b1b1b" />
+      </>
+    );
+  } else if (type === 'speaker-terminal' || type === 'spring-clip') {
+    // Two terminals: red (+) and black (−).
+    const terminal = (cx: number, fill: string) =>
+      type === 'spring-clip' ? (
+        <rect x={cx - 3} y={6} width={6} height={8} rx={1} fill={fill} stroke={color} strokeWidth={1} />
+      ) : (
+        <circle cx={cx} cy={10} r={3.4} fill={fill} stroke={color} strokeWidth={1} />
+      );
+    shape = (
+      <>
+        <rect x={1.5} y={3.5} width={17} height={13} rx={3} fill={body} stroke={color} strokeWidth={2} />
+        {terminal(6, '#d33a2c')}
+        {terminal(14, '#1b1b1b')}
+      </>
+    );
   } else if (type === 'speakon') {
     shape = (
       <>
