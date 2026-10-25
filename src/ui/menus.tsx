@@ -69,9 +69,24 @@ export function Menu<K extends string>(props: {
   );
 }
 
-export function MenuItem(props: { icon?: ReactNode; label: string; hint?: string; disabled?: boolean; onClick: () => void }) {
+export function MenuItem(props: {
+  icon?: ReactNode;
+  label: string;
+  hint?: string;
+  disabled?: boolean;
+  /** Toggle-like entries (a highlighted system, the power layer): shown as on. */
+  active?: boolean;
+  onClick: () => void;
+}) {
+  const toggle = props.active !== undefined;
   return (
-    <button className="menu-item" role="menuitem" disabled={props.disabled} onClick={props.onClick}>
+    <button
+      className={'menu-item' + (props.active ? ' active' : '')}
+      role={toggle ? 'menuitemcheckbox' : 'menuitem'}
+      aria-checked={toggle ? props.active : undefined}
+      disabled={props.disabled}
+      onClick={props.onClick}
+    >
       {props.icon && <span className="menu-item__icon">{props.icon}</span>}
       <span className="menu-item__text">
         <strong>{props.label}</strong>
@@ -98,6 +113,18 @@ export function ChecksIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="12" height="12" rx="2" />
       <path d="M5 8.2l2 2 4-4.4" />
+    </svg>
+  );
+}
+
+/** Three linked dots: systems (devices that belong together). */
+export function SystemsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="4" cy="4" r="2.2" />
+      <circle cx="12" cy="4" r="2.2" />
+      <circle cx="8" cy="12" r="2.2" />
+      <path d="M6.2 4h3.6M5 6l2 4M11 6l-2 4" />
     </svg>
   );
 }

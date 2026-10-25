@@ -1033,46 +1033,6 @@ select {
   gap: 8px;
   max-width: min(520px, 60vw);
 }
-.systems-panel {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 12px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-}
-.systems-panel__title {
-  padding: 0 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.system-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 34px;
-  padding: 0 12px;
-  border-radius: 17px;
-  border: 1.5px solid var(--border);
-  background: var(--panel-2);
-  font-size: 12px;
-  font-weight: 600;
-}
-.system-chip.active {
-  background: var(--panel-3);
-  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px currentColor;
-}
-.system-chip--add {
-  width: 34px;
-  padding: 0;
-  justify-content: center;
-  font-size: 18px;
-}
 .system-chip__dot {
   width: 10px;
   height: 10px;
@@ -1228,16 +1188,6 @@ select {
   .top-left-stack {
     max-width: calc(100vw - 32px);
   }
-  .systems-panel {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    max-width: 100%;
-    scrollbar-width: none;
-  }
-  .system-chip {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
   .table-view {
     padding-bottom: 8px;
   }
@@ -1346,7 +1296,6 @@ select {
 .app[data-look='modular'] select,
 .app[data-look='modular'] input:not([type='checkbox']),
 .app[data-look='modular'] .segmented,
-.app[data-look='modular'] .systems-panel,
 .app[data-look='modular'] .toast,
 .app[data-look='modular'] .connect-banner,
 .app[data-look='modular'] .react-flow__controls-button {
@@ -1369,9 +1318,6 @@ select {
   transform: translateY(1px);
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
 }
-.app[data-look='modular'] .system-chip {
-  border-radius: 4px;
-}
 
 /* Modular look: everything casts a shadow, like hardware on a desk. */
 .app[data-look='modular'] {
@@ -1379,7 +1325,6 @@ select {
   --shadow-floating: 0 10px 28px rgb(0 0 0 / 0.45);
 }
 .app[data-look='modular'] .view-switch,
-.app[data-look='modular'] .systems-panel,
 .app[data-look='modular'] .breadcrumb,
 .app[data-look='modular'] .react-flow__controls,
 .app[data-look='modular'] .react-flow__minimap,
@@ -1810,9 +1755,27 @@ select {
   font-size: 11px;
 }
 
-.system-chip--power.active {
-  border-color: #ffd34d;
-  color: #ffd34d;
+/* Toggle entries in a menu (highlighted system, power layer). */
+.menu-item.active {
+  background: var(--panel-2);
+}
+.menu-item.active .menu-item__text strong::after {
+  content: ' ✓';
+  color: var(--accent);
+}
+.menu-separator {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--border);
+}
+.topbar__active-system {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  font-weight: 700;
+  border-width: 2px;
 }
 .cutter-overlay {
   cursor: crosshair;
@@ -1866,6 +1829,9 @@ select {
 }
 .topbar-menu {
   position: relative;
+}
+.topbar button {
+  white-space: nowrap;
 }
 .topbar-menu__button {
   min-height: 40px;
@@ -1953,7 +1919,12 @@ select {
     gap: 0;
   }
   .topbar-menu__button {
-    padding: 0 8px;
+    padding: 0 7px;
+    font-size: 0.9rem;
+  }
+  /* Five menus have to fit next to "+" and undo: no carets on phones. */
+  .topbar-menu__caret {
+    display: none;
   }
   .topbar__actions {
     margin-left: auto;
@@ -2227,4 +2198,77 @@ select.switch {
 }
 .search-section .preset-list {
   margin-top: 8px;
+}
+
+/* ---------- Top bar: fit every width ---------- */
+.bar-narrow {
+  display: none;
+}
+.topbar__system-dot {
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+.topbar__menus,
+.topbar__views,
+.topbar__actions {
+  flex: none;
+}
+@media (max-width: 1500px) {
+  .topbar__brand,
+  .topbar__chip-name {
+    display: none;
+  }
+}
+@media (max-width: 1250px) {
+  .topbar {
+    gap: 6px;
+  }
+  .topbar__add-label,
+  .topbar-menu__caret {
+    display: none;
+  }
+  .topbar__add {
+    min-width: var(--touch);
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .topbar-menu__button {
+    padding: 0 9px;
+  }
+  .topbar__views button {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+@media (max-width: 1000px) {
+  .bar-wide {
+    display: none !important;
+  }
+  .bar-narrow {
+    display: flex;
+  }
+  .topbar__views button {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+@media (max-width: 760px) {
+  /* The highlighted system shows as a dot on the Systems button instead. */
+  .topbar__active-system {
+    display: none;
+  }
+  .topbar-menu__button {
+    padding: 0 6px;
+    font-size: 0.85rem;
+  }
+  /* Very small phones: the menus scroll sideways rather than push undo off the screen. */
+  .topbar__menus {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .topbar__menus::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -1,17 +1,18 @@
 import { useState } from 'react';
+import { addGroup } from '../core/project';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
 import { deleteSelection } from './actions';
 import { useDiagramActions } from './diagramActions';
-import { ChainIcon, ChecksIcon, CutterIcon, Menu, MenuItem, SuggestIcon, TidyIcon } from './menus';
+import { ChainIcon, ChecksIcon, CutterIcon, Menu, MenuItem, SuggestIcon, SystemsIcon, TidyIcon } from './menus';
 
 export type View = 'graph' | 'rack' | 'cables' | 'checks';
 
-type MenuId = 'file' | 'tools' | 'helper' | 'view' | 'more';
+type MenuId = 'file' | 'tools' | 'helper' | 'systems' | 'view' | 'more';
 
 /**
- * The one bar at the top of the screen: menus (File, Tools, Helper, View),
+ * The one bar at the top of the screen: menus (File, Tools, Helper, Systems, View),
  * the views (Diagram, Rack, Cables), undo/redo/delete and "Add device".
  * On phones the views move to a tab bar at the bottom and File, redo and
  * delete go into the "⋯" menu.
@@ -39,7 +40,14 @@ export function TopBar(props: {
   const setDimUnused = useProjectStore((s) => s.setDimUnusedPorts);
   const showControls = useProjectStore((s) => s.showControls);
   const setShowControls = useProjectStore((s) => s.setShowControls);
-  const { undo, redo } = useProjectStore.getState();
+  const groups = useProjectStore((s) => s.project.groups);
+  const focusGroupId = useProjectStore((s) => s.focusGroupId);
+  const setFocusGroup = useProjectStore((s) => s.setFocusGroup);
+  const showPower = useProjectStore((s) => s.showPower);
+  const setShowPower = useProjectStore((s) => s.setShowPower);
+  const select = useProjectStore((s) => s.select);
+  const focused = groups.find((g) => g.id === focusGroupId);
+  const { undo, redo, apply } = useProjectStore.getState();
   const { issues } = useAnalysis();
   const { tidyUp, suggest } = useDiagramActions();
   const hasDevices = project.devices.length > 1;
@@ -51,6 +59,24 @@ export function TopBar(props: {
     action();
   };
   const startTool = (which: 'chain' | 'cut') => inDiagram(() => setTool(which));
+
+  /** Highlights a system (tap again to stop) and opens it in the side panel. */
+  const toggleSystem = (id: string) =>
+    inDiagram(() => {
+      const on = id !== focusGroupId;
+      setFocusGroup(on ? id : null);
+      select(on ? { kind: 'group', id } : null);
+    });
+  const newSystem = inDiagram(() => {
+    let id = '';
+    apply((p) => {
+      const r = addGroup(p, t('systems.defaultName', { n: p.groups.length + 1 }));
+      id = r.group.id;
+      return r.project;
+    });
+    setFocusGroup(id);
+    select({ kind: 'group', id });
+  });
 
   const fileItems = (
     <>
@@ -67,11 +93,11 @@ export function TopBar(props: {
       </div>
 
       <button className="primary topbar__add" onClick={props.onAdd} aria-label={t('toolbar.addDevice')}>
-        +<span className="wide-only"> {t('toolbar.addDevice')}</span>
+        +<span className="topbar__add-label"> {t('toolbar.addDevice')}</span>
       </button>
 
       <nav className="topbar__menus">
-        <Menu id="file" label={t('menu.file')} open={open} setOpen={setOpen} className="wide-only">
+        <Menu id="file" label={t('menu.file')} open={open} setOpen={setOpen} className="bar-wide">
           {fileItems}
         </Menu>
 
@@ -100,6 +126,43 @@ export function TopBar(props: {
             onClick={() => props.setView('checks')}
           />
         </Menu>
+
+        <Menu
+          id="systems"
+          label={
+            <>
+              {focused && <span className="system-chip__dot topbar__system-dot" style={{ background: focused.color }} />}
+              {t('systems.title')}
+            </>
+          }
+          open={open}
+          setOpen={setOpen}
+        >
+          {focused && <MenuItem label={t('systems.showAll')} hint={t('systems.endFocus')} onClick={() => setFocusGroup(null)} />}
+          {groups.map((g) => (
+            <MenuItem
+              key={g.id}
+              icon={<span className="system-chip__dot" style={{ background: g.color }} />}
+              label={g.name}
+              hint={t('systems.count', { devices: g.deviceIds.length, cables: g.cableIds.length })}
+              active={g.id === focusGroupId}
+              onClick={toggleSystem(g.id)}
+            />
+          ))}
+          <MenuItem icon={<SystemsIcon />} label={t('systems.new')} hint={t('systems.emptyHint')} onClick={newSystem} />
+          <div className="menu-separator" role="separator" />
+          <MenuItem icon={<span aria-hidden="true">⚡</span>} label={t('view.power')} hint={t('view.powerHint')} active={showPower} onClick={() => setShowPower(!showPower)} />
+        </Menu>
+
+        {focused && (
+          // The highlighted system stays visible here; one tap ends the highlight.
+          <button className="topbar__active-system" style={{ borderColor: focused.color }} onClick={() => setFocusGroup(null)} title={t('systems.endFocus')}>
+            <span className="system-chip__dot" style={{ background: focused.color }} />
+            <span className="topbar__chip-name">{focused.name}</span>
+            <span aria-hidden="true">✕</span>
+            <span className="visually-hidden">{t('systems.endFocus')}</span>
+          </button>
+        )}
 
         <Menu id="view" label={t('view.options')} open={open} setOpen={setOpen}>
           <div className="segmented segmented--small" role="group" aria-label={t('view.look')}>
@@ -142,13 +205,13 @@ export function TopBar(props: {
         <button className="icon-button" onClick={undo} disabled={!canUndo} aria-label={t('toolbar.undo')} title={t('toolbar.undo')}>
           ↶
         </button>
-        <button className="icon-button wide-only" onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
+        <button className="icon-button bar-wide" onClick={redo} disabled={!canRedo} aria-label={t('toolbar.redo')} title={t('toolbar.redo')}>
           ↷
         </button>
-        <button className="icon-button wide-only" onClick={deleteSelection} disabled={!canDelete} aria-label={t('toolbar.delete')} title={t('toolbar.delete')}>
+        <button className="icon-button bar-wide" onClick={deleteSelection} disabled={!canDelete} aria-label={t('toolbar.delete')} title={t('toolbar.delete')}>
           <TrashIcon />
         </button>
-        <Menu id="more" label="⋯" ariaLabel={t('toolbar.more')} open={open} setOpen={setOpen} className="narrow-only">
+        <Menu id="more" label="⋯" ariaLabel={t('toolbar.more')} open={open} setOpen={setOpen} className="bar-narrow">
           {fileItems}
           <MenuItem label={t('toolbar.redo')} disabled={!canRedo} onClick={redo} />
           <MenuItem label={t('toolbar.delete')} disabled={!canDelete} onClick={deleteSelection} />

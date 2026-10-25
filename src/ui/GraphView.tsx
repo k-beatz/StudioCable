@@ -32,7 +32,6 @@ import {
   type ExternalNodeType,
 } from './DeviceNode';
 import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
-import { SystemsPanel } from './SystemsPanel';
 import { connectPorts } from './connect';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
 import { HangingEdge } from './HangingEdge';
@@ -389,19 +388,18 @@ export function GraphView() {
       {/* The Modular look has a plain gradient surface; the Clean look keeps a dot grid. */}
       {look !== 'modular' && <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />}
       <CanvasControls />
-      <Panel position="top-left">
-        <div className="top-left-stack">
-          {board && (
+      {board && (
+        <Panel position="top-left">
+          <div className="top-left-stack">
             <div className="breadcrumb">
               <button className="breadcrumb__back" onClick={() => openBoard(null)}>
                 ← {t('board.back')}
               </button>
               <span className="breadcrumb__here">{board.name}</span>
             </div>
-          )}
-          <SystemsPanel />
-        </div>
-      </Panel>
+          </div>
+        </Panel>
+      )}
       {tool === 'chain' && <ChainOverlay onFinish={finishChain} />}
       {tool === 'cut' && <CutterOverlay onMark={setCutting} onCut={cut} />}
       {tool && (

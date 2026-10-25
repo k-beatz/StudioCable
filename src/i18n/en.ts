@@ -86,6 +86,9 @@ export const en = {
 
   'systems.title': 'Systems',
   'systems.add': 'Add system',
+  'systems.count': '{devices} devices · {cables} cables',
+  'systems.endFocus': 'Stop highlighting this system',
+  'systems.showAll': 'Show everything',
   'systems.addTo': 'Add to system…',
   'systems.new': 'New system',
   'systems.removeFrom': 'Remove from {name}',
@@ -96,7 +99,7 @@ export const en = {
   'systems.cables': 'Cables',
   'systems.delete': 'Delete system',
   'systems.explain':
-    'A system marks devices and cables that belong together in one colour, for example a guitar, its pedals, the amp and the mixer input it goes into. Tap the system above the diagram to highlight it; tap it again to see everything.',
+    'A system marks devices and cables that belong together in one colour, for example a guitar, its pedals, the amp and the mixer input it goes into. Choose it in the Systems menu at the top to highlight it; tap the coloured chip next to the menu to see everything again.',
   'systems.pickDevices': 'Tick the devices that belong to this system. Cables between them are added automatically.',
   'systems.emptyHint': 'Group devices that belong together',
   'systems.hint': 'Devices that are only partly used (e.g. one input of a mixer) are marked through their cables.',
