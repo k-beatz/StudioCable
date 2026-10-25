@@ -1809,9 +1809,50 @@ select {
   border-bottom: 1px solid var(--border);
 }
 .topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-weight: 800;
   font-size: 1.05rem;
   white-space: nowrap;
+}
+.logo {
+  display: inline-flex;
+}
+.logo img {
+  display: block;
+  height: 100%;
+  width: auto;
+  user-select: none;
+}
+.logo__light {
+  display: none !important;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .logo__dark {
+    display: none !important;
+  }
+  :root:not([data-theme='dark']) .logo__light {
+    display: block !important;
+  }
+}
+:root[data-theme='light'] .logo__dark {
+  display: none !important;
+}
+:root[data-theme='light'] .logo__light {
+  display: block !important;
+}
+.topbar__logo {
+  height: 34px;
+}
+.empty-state__logo {
+  height: 64px;
+  max-width: 90vw;
+  margin-bottom: 8px;
+}
+.empty-state__logo img {
+  max-width: 100%;
+  object-fit: contain;
 }
 .topbar__menus {
   display: flex;
@@ -2433,4 +2474,22 @@ select.switch {
 .note-editor__done {
   background: #2b2300;
   color: #fff;
+}
+/* The Modular look keeps a dark bar and an orange canvas in both themes: always the light-ink logo. */
+.app[data-look='modular'] .logo__dark {
+  display: block !important;
+}
+.app[data-look='modular'] .logo__light {
+  display: none !important;
+}
+.empty-state__logo {
+  box-sizing: content-box;
+  padding: 14px 20px;
+  border-radius: 6px;
+  background: rgb(20 22 28 / 0.72);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+.app[data-look='clean'] .empty-state__logo {
+  background: none;
+  box-shadow: none;
 }

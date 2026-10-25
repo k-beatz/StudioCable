@@ -1,8 +1,8 @@
 [package]
 name = "studiocable"
 version = "0.1.0"
-description = "StudioCable – plan and document studio wiring"
-authors = ["StudioCable"]
+description = "CableBrain – plan and document studio wiring"
+authors = ["CableBrain"]
 license = ""
 repository = "https://github.com/k-beatz/StudioCable"
 edition = "2021"

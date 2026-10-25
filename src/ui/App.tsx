@@ -2,7 +2,7 @@ import { ReactFlowProvider, useReactFlow, type Node, type XYPosition } from '@xy
 import { useEffect, useState } from 'react';
 import type { DeviceTemplate } from '../core/model';
 import { addSetup, freeAreaBelow, type SetupPreset } from '../core/setups';
-import { addDevice, createProject, setContainer, FILE_EXTENSION, parseProject, ProjectParseError, serializeProject } from '../core/project';
+import { addDevice, createProject, setContainer, FILE_EXTENSION, OLD_FILE_EXTENSIONS, parseProject, ProjectParseError, serializeProject } from '../core/project';
 import { t, type MessageKey } from '../i18n';
 import { openTextFile, saveTextFile } from '../platform/files';
 import { useProjectStore } from '../store/projectStore';
@@ -10,6 +10,7 @@ import { AddDeviceDialog } from './AddDeviceDialog';
 import { CableTable } from './CableTable';
 import { ControlLoupe } from './Controls';
 import { NoteEditor } from './Notes';
+import { Logo } from './Logo';
 import { ChecksList } from './ChecksList';
 import { GraphView } from './GraphView';
 import { Inspector } from './Inspector';
@@ -81,7 +82,7 @@ function Shell() {
   const openFile = async () => {
     let text: string | null;
     try {
-      text = await openTextFile(`${FILE_EXTENSION},.json,application/json`);
+      text = await openTextFile([FILE_EXTENSION, ...OLD_FILE_EXTENSIONS, '.json', 'application/json'].join(','));
     } catch {
       setMessage(t('file.error.read'));
       return;
@@ -134,6 +135,7 @@ function Shell() {
               <NoteEditor />
               {project.devices.length === 0 && (
                 <div className="empty-state">
+                  <Logo className="empty-state__logo" />
                   <h2>{t('empty.title')}</h2>
                   <p>{t('empty.text')}</p>
                   <button className="primary" onClick={() => setAdding(true)}>

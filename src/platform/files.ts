@@ -7,7 +7,7 @@
 /** True when running inside the installed Tauri app rather than a browser. */
 export const isNativeApp = () => typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 
-/** Extension without the dot, e.g. "studiocable" or "json". */
+/** Extension without the dot, e.g. "cablebrain" or "json". */
 const extensionOf = (fileName: string) => fileName.slice(fileName.lastIndexOf('.') + 1);
 
 /** Saves a text file. Resolves true if it was written, false if the user cancelled. */
@@ -17,7 +17,7 @@ export async function saveTextFile(fileName: string, content: string, mimeType =
     const { writeTextFile } = await import('@tauri-apps/plugin-fs');
     const path = await save({
       defaultPath: fileName,
-      filters: [{ name: 'StudioCable', extensions: [extensionOf(fileName)] }],
+      filters: [{ name: 'CableBrain', extensions: [extensionOf(fileName)] }],
     });
     if (!path) return false;
     await writeTextFile(path, content);
@@ -38,7 +38,7 @@ export async function saveTextFile(fileName: string, content: string, mimeType =
 
 /**
  * Lets the user pick a file; resolves with its text, or null if cancelled.
- * `accept` uses the browser format, e.g. ".studiocable,.json,application/json".
+ * `accept` uses the browser format, e.g. ".cablebrain,.studiocable,.json".
  */
 export async function openTextFile(accept: string): Promise<string | null> {
   if (isNativeApp()) {
@@ -52,7 +52,7 @@ export async function openTextFile(accept: string): Promise<string | null> {
     const path = await open({
       multiple: false,
       directory: false,
-      filters: /Android/i.test(navigator.userAgent) ? [] : [{ name: 'StudioCable', extensions }],
+      filters: /Android/i.test(navigator.userAgent) ? [] : [{ name: 'CableBrain', extensions }],
     });
     if (!path) return null;
     return readTextFile(path);

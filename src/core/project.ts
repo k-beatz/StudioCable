@@ -233,7 +233,9 @@ export function describeEnd(project: Project, end: CableEnd): string {
 
 // ---------- Serialization ----------
 
-export const FILE_EXTENSION = '.studiocable';
+export const FILE_EXTENSION = '.cablebrain';
+/** Files from before the app was renamed (StudioCable -> CableBrain) still open. */
+export const OLD_FILE_EXTENSIONS = ['.studiocable'];
 
 export function serializeProject(project: Project): string {
   return JSON.stringify({ format: 'studiocable-project', ...project }, null, 2);

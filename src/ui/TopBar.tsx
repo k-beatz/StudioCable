@@ -5,6 +5,7 @@ import { useAnalysis } from '../store/analysis';
 import { useProjectStore } from '../store/projectStore';
 import { deleteSelection } from './actions';
 import { useDiagramActions } from './diagramActions';
+import { Logo } from './Logo';
 import { ChainIcon, ChecksIcon, CutterIcon, Menu, MenuItem, SuggestIcon, SystemsIcon, TidyIcon } from './menus';
 
 export type View = 'graph' | 'rack' | 'cables' | 'checks';
@@ -91,7 +92,7 @@ export function TopBar(props: {
   return (
     <header className="topbar">
       <div className="topbar__brand wide-only">
-        {t('app.title')} <span className="tag">{t('app.prototype')}</span>
+        <Logo className="topbar__logo" /> <span className="tag">{t('app.prototype')}</span>
       </div>
 
       <button className="primary topbar__add" onClick={props.onAdd} aria-label={t('toolbar.addDevice')}>

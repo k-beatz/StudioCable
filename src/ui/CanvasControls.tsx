@@ -2,7 +2,7 @@ import { Panel, useReactFlow } from '@xyflow/react';
 import { t } from '../i18n';
 import { isTouchDevice } from './device';
 
-/** StudioCable's own zoom buttons, replacing React Flow's standard controls. */
+/** CableBrain's own zoom buttons, replacing React Flow's standard controls. */
 export function CanvasControls() {
   const flow = useReactFlow();
   const touch = isTouchDevice();

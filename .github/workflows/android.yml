@@ -79,7 +79,7 @@ jobs:
             if [ ! -f .signing/test.jks ]; then
               openssl rand -hex 24 > .signing/password
               keytool -genkeypair -keystore .signing/test.jks -alias test -keyalg RSA -keysize 2048 \
-                -validity 10000 -storepass "$(cat .signing/password)" -dname "CN=StudioCable Test Build"
+                -validity 10000 -storepass "$(cat .signing/password)" -dname "CN=CableBrain Test Build"
             fi
             KS=.signing/test.jks; PASS="$(cat .signing/password)"; ALIAS=test
           fi
@@ -87,21 +87,21 @@ jobs:
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
           UNSIGNED=$(find src-tauri/gen/android/app/build/outputs/apk -name '*release*.apk' | head -1)
           "$BT/zipalign" -f -p 4 "$UNSIGNED" aligned.apk
-          "$BT/apksigner" sign --ks "$KS" --ks-pass env:PASS --ks-key-alias "$ALIAS" --out StudioCable.apk aligned.apk
-          "$BT/apksigner" verify StudioCable.apk
-          ls -la StudioCable.apk
+          "$BT/apksigner" sign --ks "$KS" --ks-pass env:PASS --ks-key-alias "$ALIAS" --out CableBrain.apk aligned.apk
+          "$BT/apksigner" verify CableBrain.apk
+          ls -la CableBrain.apk
         shell: bash
 
       - uses: actions/upload-artifact@v4
         with:
-          name: StudioCable-android
-          path: StudioCable.apk
+          name: CableBrain-android
+          path: CableBrain.apk
 
       - name: Publish as "android-latest" pre-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          NOTES="Latest test build from ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Open this page on your Android phone, tap StudioCable.apk and install it."
+          NOTES="Latest test build from ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Open this page on your Android phone, tap CableBrain.apk and install it."
           gh release delete android-latest --yes --cleanup-tag || true
-          gh release create android-latest StudioCable.apk --prerelease --target "$GITHUB_SHA" \
-            --title "StudioCable for Android (test build)" --notes "$NOTES"
+          gh release create android-latest CableBrain.apk --prerelease --target "$GITHUB_SHA" \
+            --title "CableBrain for Android (test build)" --notes "$NOTES"
