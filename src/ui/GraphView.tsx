@@ -39,6 +39,7 @@ import { ChainOverlay } from './ChainOverlay';
 import { CanvasControls } from './CanvasControls';
 import { CutterOverlay } from './CutterOverlay';
 import { NotePad } from './Notes';
+import { play } from './sound';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
@@ -248,7 +249,10 @@ export function GraphView() {
       return;
     }
     const result = connectChain(project, deviceIds);
-    if (result.added.length) apply(() => result.project);
+    if (result.added.length) {
+      apply(() => result.project);
+      play('plug');
+    }
     const first = result.failed[0];
     setNotice(
       [
@@ -269,6 +273,7 @@ export function GraphView() {
   const cut = (ids: string[]) => {
     apply((p) => ids.reduce((acc, id) => removeCable(acc, id), p));
     setNotice(t('tool.cut', { count: ids.length }));
+    play('unplug');
   };
 
   const removeSuggested = () => {

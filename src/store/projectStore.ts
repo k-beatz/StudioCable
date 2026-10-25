@@ -32,6 +32,8 @@ interface ProjectState {
   showControls: boolean;
   /** Show sticky notes and the note pad. */
   showNotes: boolean;
+  /** Subtle sounds (plugging cables, knobs, switches). */
+  sound: boolean;
   /** Sticky note open in the editor. */
   editingNoteId: string | null;
   /** Overall look of the diagram: "modular" (coloured hardware panels) or "clean". */
@@ -60,6 +62,7 @@ interface ProjectState {
   setShowPower: (on: boolean) => void;
   setShowControls: (on: boolean) => void;
   setShowNotes: (on: boolean) => void;
+  setSound: (on: boolean) => void;
   setEditingNote: (id: string | null) => void;
   setLook: (look: Look) => void;
   openBoard: (id: string | null) => void;
@@ -82,6 +85,7 @@ const currentPrefs = (s: Prefs): Prefs => ({
   showPower: s.showPower,
   showControls: s.showControls,
   showNotes: s.showNotes,
+  sound: s.sound,
   look: s.look,
 });
 
@@ -91,6 +95,7 @@ interface Prefs {
   showPower: boolean;
   showControls: boolean;
   showNotes: boolean;
+  sound: boolean;
   look: Look;
 }
 
@@ -103,10 +108,11 @@ function loadPrefs(): Prefs {
       showPower: raw.showPower === true,
       showControls: raw.showControls !== false,
       showNotes: raw.showNotes !== false,
+      sound: raw.sound !== false,
       look: raw.look === 'clean' ? 'clean' : 'modular',
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, showControls: true, showNotes: true, look: 'modular' };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, showControls: true, showNotes: true, sound: true, look: 'modular' };
   }
 }
 
@@ -186,6 +192,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     savePrefs({ ...currentPrefs(get()), showNotes });
   },
   setEditingNote: (editingNoteId) => set({ editingNoteId }),
+  setSound: (sound) => {
+    set({ sound });
+    savePrefs({ ...currentPrefs(get()), sound });
+  },
   setLook: (look) => {
     set({ look });
     savePrefs({ ...currentPrefs(get()), look });

@@ -3,6 +3,7 @@ import { suggestWiring } from '../core/autowire';
 import { shownDevices, tidyLayout, type Size } from '../core/layout';
 import { t } from '../i18n';
 import { useProjectStore } from '../store/projectStore';
+import { play } from './sound';
 
 /**
  * Actions of the Tools and Helper menus. They work on the diagram level that
@@ -38,6 +39,7 @@ export function useDiagramActions() {
     }
     apply(() => result.project);
     setSuggestedCables(result.added);
+    play('plug');
   };
 
   return { tidyUp, suggest };

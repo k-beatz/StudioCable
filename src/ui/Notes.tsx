@@ -5,6 +5,7 @@ import { addNote, removeNote, updateNote } from '../core/notes';
 import { NOTE_COLORS, type Note } from '../core/model';
 import { t } from '../i18n';
 import { useProjectStore } from '../store/projectStore';
+import { play } from './sound';
 
 /**
  * Sticky notes ("post-its"). A pad sits in the corner of the diagram; drag a
@@ -86,6 +87,7 @@ export function NotePad() {
       return r.project;
     });
     setEditingNote(id);
+    play('note');
   };
 
   return (

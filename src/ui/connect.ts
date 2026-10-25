@@ -1,6 +1,7 @@
 import type { CableEnd } from '../core/model';
 import { addCable, getPort } from '../core/project';
 import { useProjectStore } from '../store/projectStore';
+import { play } from './sound';
 
 /**
  * Creates a cable between two ports (used by drag-to-connect and tap-to-connect).
@@ -17,4 +18,5 @@ export function connectPorts(a: CableEnd, b: CableEnd): void {
   if (fromPort?.direction === 'in' || toPort?.direction === 'out') [from, to] = [to, from];
   apply((p) => addCable(p, from, to).project);
   startConnection(null);
+  play('plug');
 }

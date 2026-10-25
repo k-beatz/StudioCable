@@ -39,6 +39,7 @@ export const en = {
   'view.dimUnused': 'Dim unused ports',
   'view.showControls': 'Knobs & switches',
   'view.showNotes': 'Sticky notes',
+  'view.sound': 'Sounds',
   'notes.pad': 'Sticky notes: drag one onto a device or cable',
   'notes.padLabel': 'Note',
   'notes.dropHint': 'Drag a note off the pad and drop it onto a device or a cable.',

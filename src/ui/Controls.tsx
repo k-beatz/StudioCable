@@ -4,6 +4,7 @@ import { KNOB_MAX, type Control, type DeviceInstance, type DeviceTemplate } from
 import { t } from '../i18n';
 import { useControlPreview } from '../store/controlPreview';
 import { setControl } from './actions';
+import { play } from './sound';
 
 /**
  * The knobs and switches of a device, drawn like a small front panel. Knobs
@@ -60,6 +61,7 @@ function Knob({ deviceName, control, value, onChange }: { deviceName: string; co
   const move = (e: PointerEvent) => {
     if (!drag.current) return;
     const v = clamp(drag.current.start + (drag.current.y - e.clientY) / DRAG_STEP);
+    if (v !== dragValue) play('tick');
     setDragValue(v);
     if (drag.current.finger) useControlPreview.getState().show({ deviceName, control, value: v });
   };
@@ -75,6 +77,7 @@ function Knob({ deviceName, control, value, onChange }: { deviceName: string; co
     if (step === undefined && e.key !== 'Home' && e.key !== 'End') return;
     e.preventDefault();
     e.stopPropagation();
+    play('tick');
     onChange(e.key === 'Home' ? 0 : e.key === 'End' ? KNOB_MAX : clamp(value + (step ?? 0)));
   };
 
@@ -143,6 +146,7 @@ function Switch({ deviceName, control, value, onChange }: { deviceName: string; 
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => {
             onChange(e.target.value);
+            play('switch');
             if (finger.current) flashPreview(deviceName, control, e.target.value);
           }}
         >
@@ -166,6 +170,7 @@ function Switch({ deviceName, control, value, onChange }: { deviceName: string; 
         onClick={(e) => {
           e.stopPropagation();
           onChange(next);
+          play('switch');
           if (finger.current) flashPreview(deviceName, control, next);
         }}
       >
