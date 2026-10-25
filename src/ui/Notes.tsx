@@ -40,6 +40,18 @@ function useNotes(kind: Target['kind'], id: string): Note[] {
   return useMemo(() => (all ?? []).filter((n) => n.target.kind === kind && n.target.id === id), [all, kind, id]);
 }
 
+/** Marks the device or cable a dragged note is over (straight on the DOM: it changes on every move). */
+let marked: Element | null = null;
+function markTarget(target: Target | null) {
+  const el = target
+    ? document.querySelector(`.react-flow__${target.kind === 'device' ? 'node' : 'edge'}[data-id="${CSS.escape(target.id)}"]`)
+    : null;
+  if (el === marked) return;
+  marked?.classList.remove('note-target');
+  el?.classList.add('note-target');
+  marked = el;
+}
+
 /** The pad in the bottom-right corner of the diagram. */
 export function NotePad() {
   const [drag, setDrag] = useState<{ x: number; y: number; over: Target | null } | null>(null);
@@ -53,11 +65,14 @@ export function NotePad() {
   const move = (e: PointerEvent<HTMLButtonElement>) => {
     if (!drag) return;
     moved.current = true;
-    setDrag({ x: e.clientX, y: e.clientY, over: targetAt(e.clientX, e.clientY) });
+    const over = targetAt(e.clientX, e.clientY);
+    markTarget(over);
+    setDrag({ x: e.clientX, y: e.clientY, over });
   };
   const up = (e: PointerEvent<HTMLButtonElement>) => {
     if (!drag) return;
     const target = moved.current ? targetAt(e.clientX, e.clientY) : null;
+    markTarget(null);
     setDrag(null);
     const { apply, setEditingNote, setNotice } = useProjectStore.getState();
     if (!target) {
@@ -82,7 +97,10 @@ export function NotePad() {
         onPointerDown={down}
         onPointerMove={move}
         onPointerUp={up}
-        onPointerCancel={() => setDrag(null)}
+        onPointerCancel={() => {
+          markTarget(null);
+          setDrag(null);
+        }}
       >
         <span className="note-pad__sheet" />
         <span className="note-pad__sheet" />
