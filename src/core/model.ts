@@ -234,6 +234,16 @@ export interface Group {
   cableIds: string[];
 }
 
+export const NOTE_COLORS = ['#ffe066', '#ffadd2', '#b7eb8f', '#91d5ff'] as const;
+
+/** A sticky note on a device or a cable. */
+export interface Note {
+  id: string;
+  text: string;
+  color: string;
+  target: { kind: 'device' | 'cable'; id: string };
+}
+
 export interface Project {
   schemaVersion: number;
   id: string;
@@ -246,4 +256,6 @@ export interface Project {
   nextCableNumber: number;
   /** Height of the project's 19" rack in units (default 12). */
   rackUnits?: number;
+  /** Sticky notes on devices and cables. */
+  notes?: Note[];
 }

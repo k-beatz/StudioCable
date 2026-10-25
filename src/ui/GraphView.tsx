@@ -38,6 +38,7 @@ import { HangingEdge } from './HangingEdge';
 import { ChainOverlay } from './ChainOverlay';
 import { CanvasControls } from './CanvasControls';
 import { CutterOverlay } from './CutterOverlay';
+import { NotePad } from './Notes';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
@@ -148,6 +149,7 @@ export function GraphView() {
   // state and only write positions back to the project when a drag ends.
   const showPower = useProjectStore((s) => s.showPower);
   const look = useProjectStore((s) => s.look);
+  const showNotes = useProjectStore((s) => s.showNotes);
   const [nodes, setNodes] = useState<DiagramNode[]>(() => toNodes(project, boardId, selection, [], showPower));
   useEffect(() => {
     setNodes((prev) => toNodes(project, boardId, selection, prev, showPower));
@@ -388,6 +390,7 @@ export function GraphView() {
       {/* The Modular look has a plain gradient surface; the Clean look keeps a dot grid. */}
       {look !== 'modular' && <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />}
       <CanvasControls />
+      {showNotes && <NotePad />}
       {board && (
         <Panel position="top-left">
           <div className="top-left-stack">

@@ -30,6 +30,10 @@ interface ProjectState {
   showPower: boolean;
   /** Show knobs and switches on the devices that have them. */
   showControls: boolean;
+  /** Show sticky notes and the note pad. */
+  showNotes: boolean;
+  /** Sticky note open in the editor. */
+  editingNoteId: string | null;
   /** Overall look of the diagram: "modular" (coloured hardware panels) or "clean". */
   look: Look;
   /** Pedalboard currently opened in the diagram (null = main level). */
@@ -55,6 +59,8 @@ interface ProjectState {
   setDimUnusedPorts: (on: boolean) => void;
   setShowPower: (on: boolean) => void;
   setShowControls: (on: boolean) => void;
+  setShowNotes: (on: boolean) => void;
+  setEditingNote: (id: string | null) => void;
   setLook: (look: Look) => void;
   openBoard: (id: string | null) => void;
   setFocusGroup: (id: string | null) => void;
@@ -75,6 +81,7 @@ const currentPrefs = (s: Prefs): Prefs => ({
   dimUnusedPorts: s.dimUnusedPorts,
   showPower: s.showPower,
   showControls: s.showControls,
+  showNotes: s.showNotes,
   look: s.look,
 });
 
@@ -83,6 +90,7 @@ interface Prefs {
   dimUnusedPorts: boolean;
   showPower: boolean;
   showControls: boolean;
+  showNotes: boolean;
   look: Look;
 }
 
@@ -94,10 +102,11 @@ function loadPrefs(): Prefs {
       dimUnusedPorts: raw.dimUnusedPorts === true,
       showPower: raw.showPower === true,
       showControls: raw.showControls !== false,
+      showNotes: raw.showNotes !== false,
       look: raw.look === 'clean' ? 'clean' : 'modular',
     };
   } catch {
-    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, showControls: true, look: 'modular' };
+    return { cableStyle: 'orthogonal', dimUnusedPorts: false, showPower: false, showControls: true, showNotes: true, look: 'modular' };
   }
 }
 
@@ -131,6 +140,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   notice: null,
   tool: null,
   suggestedCables: null,
+  editingNoteId: null,
 
   apply: (fn) => {
     const { project, past } = get();
@@ -171,6 +181,11 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ showControls });
     savePrefs({ ...currentPrefs(get()), showControls });
   },
+  setShowNotes: (showNotes) => {
+    set({ showNotes });
+    savePrefs({ ...currentPrefs(get()), showNotes });
+  },
+  setEditingNote: (editingNoteId) => set({ editingNoteId }),
   setLook: (look) => {
     set({ look });
     savePrefs({ ...currentPrefs(get()), look });

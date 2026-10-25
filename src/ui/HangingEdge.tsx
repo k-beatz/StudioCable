@@ -2,6 +2,7 @@ import { Position, type EdgeProps } from '@xyflow/react';
 import { memo, useEffect, useLayoutEffect, useRef } from 'react';
 import type { RoutedEdgeType } from './RoutedEdge';
 import { isTouchDevice } from './device';
+import { CableNoteMarks } from './Notes';
 
 /**
  * A patch cable that hangs down between its two plugs, drawn on top of the
@@ -147,6 +148,7 @@ export const HangingEdge = memo(function HangingEdge(props: EdgeProps<RoutedEdge
       {labelText && (
         <g ref={label} className="hanging-cable__label">
           <rect x={-labelWidth / 2} y={-9} width={labelWidth} height={18} rx={9} fill={color} />
+          <CableNoteMarks cableId={props.id} x={labelWidth / 2 - 14} y={0} />
           <text textAnchor="middle" dy="0.35em">
             {labelText}
           </text>

@@ -1,6 +1,7 @@
 import { BaseEdge, getBezierPath, getSmoothStepPath, useStore, type Edge, type EdgeProps } from '@xyflow/react';
 import { memo } from 'react';
 import { drawCable, labelPoint, type Point } from '../core/routing';
+import { CableNoteMarks } from './Notes';
 
 export type RoutedEdgeData = {
   /** Corner points from the router; missing until the devices have been measured. */
@@ -75,6 +76,7 @@ export const RoutedEdge = memo(function RoutedEdge(props: EdgeProps<RoutedEdgeTy
         markerEnd={props.markerEnd}
         interactionWidth={props.interactionWidth}
       />
+      <CableNoteMarks cableId={props.id} x={labelX} y={labelY} />
     </>
   );
 });

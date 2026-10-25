@@ -39,6 +39,8 @@ export function TopBar(props: {
   const dimUnused = useProjectStore((s) => s.dimUnusedPorts);
   const setDimUnused = useProjectStore((s) => s.setDimUnusedPorts);
   const showControls = useProjectStore((s) => s.showControls);
+  const showNotes = useProjectStore((s) => s.showNotes);
+  const setShowNotes = useProjectStore((s) => s.setShowNotes);
   const setShowControls = useProjectStore((s) => s.setShowControls);
   const groups = useProjectStore((s) => s.project.groups);
   const focusGroupId = useProjectStore((s) => s.focusGroupId);
@@ -189,6 +191,9 @@ export function TopBar(props: {
           </button>
           <button className={'toggle' + (showControls ? ' active' : '')} aria-pressed={showControls} onClick={() => setShowControls(!showControls)}>
             {t('view.showControls')}
+          </button>
+          <button className={'toggle' + (showNotes ? ' active' : '')} aria-pressed={showNotes} onClick={() => setShowNotes(!showNotes)}>
+            {t('view.showNotes')}
           </button>
         </Menu>
       </nav>

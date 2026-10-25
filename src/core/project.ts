@@ -65,6 +65,10 @@ export function removeDevice(project: Project, id: string): Project {
       deviceIds: g.deviceIds.filter((d) => d !== id),
       cableIds: g.cableIds.filter((c) => cableIds.has(c)),
     })),
+    // Notes go with the device and its cables.
+    ...(project.notes
+      ? { notes: project.notes.filter((n) => (n.target.kind === 'device' ? n.target.id !== id : cableIds.has(n.target.id))) }
+      : {}),
   };
 }
 
@@ -94,6 +98,7 @@ export function removeCable(project: Project, id: string): Project {
     ...project,
     cables: project.cables.filter((c) => c.id !== id),
     groups: project.groups.map((g) => ({ ...g, cableIds: g.cableIds.filter((c) => c !== id) })),
+    ...(project.notes ? { notes: project.notes.filter((n) => n.target.id !== id) } : {}),
   };
 }
 

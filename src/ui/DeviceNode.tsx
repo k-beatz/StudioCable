@@ -12,6 +12,7 @@ import { CATEGORY_PANEL_COLORS, connectorsText, SIGNAL_COLORS } from './labels';
 import { connectPorts } from './connect';
 import { deleteSelection, setCollapsed } from './actions';
 import { ControlPanel } from './Controls';
+import { DeviceNotes } from './Notes';
 
 /** Devices with more ports than this get the "show only used ports" button. */
 const COLLAPSIBLE_FROM = 5;
@@ -219,6 +220,7 @@ function NodeFrame(props: {
         )}
       </div>
       {props.children}
+      <DeviceNotes deviceId={props.deviceId} />
     </div>
   );
 }
