@@ -16,7 +16,12 @@ export function useDiagramActions() {
     const { apply, openBoardId } = useProjectStore.getState();
     const sizes = new Map<string, Size>();
     for (const n of flow.getNodes()) {
-      if (n.measured?.width && n.measured.height) sizes.set(n.id, { width: n.measured.width, height: n.measured.height });
+      if (!n.measured?.width || !n.measured.height) continue;
+      // Where each port (handle) sits, so tidy-up can line connected ports up.
+      const bounds = flow.getInternalNode(n.id)?.internals.handleBounds;
+      const portY: Record<string, number> = {};
+      for (const h of [...(bounds?.source ?? []), ...(bounds?.target ?? [])]) if (h.id) portY[h.id] = h.y + h.height / 2;
+      sizes.set(n.id, { width: n.measured.width, height: n.measured.height, portY });
     }
     apply((p) => tidyLayout(p, openBoardId, sizes));
     setTimeout(() => flow.fitView({ padding: 0.15, duration: 400 }), 60);

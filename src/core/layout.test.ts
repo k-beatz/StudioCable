@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildTemplate, GENERIC_PRESETS } from './generic';
-import { levelEdges, tidyLayout } from './layout';
+import { estimateSize, levelEdges, tidyLayout } from './layout';
 import type { Project } from './model';
 import { addCable, addDevice, createProject, setContainer } from './project';
 
@@ -109,5 +109,29 @@ describe('tidyLayout', () => {
     s.cable(s.port(mic, 'Out'), s.port(mixer, 'Mic In'));
     const p = tidyLayout(s.p, null, new Map([[mic, { width: 600, height: 100 }]]));
     expect(pos(p, mixer).x - pos(p, mic).x).toBeGreaterThanOrEqual(600);
+  });
+
+  it('lines connected ports up, so a cable runs straight', () => {
+    const s = studio();
+    const iface = s.add('interface2x2', 'Interface');
+    const mic = s.add('dynamicMic', 'Mic');
+    s.cable(s.port(mic, 'Out'), s.port(iface, 'Input 2'));
+    const p = tidyLayout(s.p, null);
+    const portAt = (id: string, label: string) => {
+      const d = p.devices.find((x) => x.id === id)!;
+      const port = p.templates[d.templateId].ports.find((x) => x.label === label)!;
+      return d.position.y + estimateSize(p, d).portY![port.id];
+    };
+    expect(Math.abs(portAt(mic, 'Out') - portAt(iface, 'Input 2'))).toBeLessThanOrEqual(5);
+  });
+
+  it('leaves more room between columns when many cables run through', () => {
+    const s = studio();
+    const mixer = s.add('mixer8', 'Mixer');
+    const mics = ['A', 'B', 'C', 'D', 'E', 'F'].map((n) => s.add('dynamicMic', n));
+    mics.forEach((m, i) => s.cable(s.port(m, 'Out'), s.port(mixer, `Mic In ${i + 1}`)));
+    const p = tidyLayout(s.p, null);
+    const gap = pos(p, mixer).x - (pos(p, mics[0]).x + 260);
+    expect(gap).toBeGreaterThanOrEqual(6 * 16);
   });
 });

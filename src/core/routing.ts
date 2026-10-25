@@ -39,7 +39,7 @@ export interface RouteOptions {
   bendCost: number;
 }
 
-export const DEFAULT_ROUTE_OPTIONS: RouteOptions = { margin: 24, spacing: 7, bendCost: 60 };
+export const DEFAULT_ROUTE_OPTIONS: RouteOptions = { margin: 24, spacing: 12, bendCost: 60 };
 
 /** Routes all cables. Returns each cable's path as a list of corner points. */
 export function routeCables(
@@ -295,13 +295,15 @@ function nudge(routes: Map<string, Point[]>, spacing: number): Map<string, Point
         segs.push({ cable, index: k, pos: vertical ? a.x : a.y, from, to, order });
       }
     }
-    // Group by line, then into clusters of overlapping segments.
-    const byLine = new Map<number, Seg[]>();
-    for (const s of segs) {
-      const k = Math.round(s.pos);
-      byLine.set(k, [...(byLine.get(k) ?? []), s]);
+    // Group by line (lines closer than the spacing look like one), then into clusters of
+    // segments that overlap or nearly touch: cables that only meet end to end look joined too.
+    const lines: Seg[][] = [];
+    for (const s of [...segs].sort((a, b) => a.pos - b.pos)) {
+      const last = lines[lines.length - 1];
+      if (last && s.pos - last[last.length - 1].pos < spacing) last.push(s);
+      else lines.push([s]);
     }
-    for (const line of byLine.values()) {
+    for (const line of lines) {
       line.sort((a, b) => a.from - b.from);
       let cluster: Seg[] = [];
       let reach = -Infinity;
@@ -311,7 +313,7 @@ function nudge(routes: Map<string, Point[]>, spacing: number): Map<string, Point
         cluster = [];
       };
       for (const s of line) {
-        if (s.from >= reach - 1) flush();
+        if (s.from > reach + spacing) flush();
         cluster.push(s);
         reach = Math.max(reach, s.to);
       }
@@ -322,11 +324,16 @@ function nudge(routes: Map<string, Point[]>, spacing: number): Map<string, Point
 }
 
 function spread(cluster: Seg[], spacing: number, vertical: boolean, routes: Map<string, Point[]>) {
-  const sorted = [...cluster].sort((a, b) => a.order - b.order);
-  const n = sorted.length;
-  const gap = n > 1 ? Math.min(spacing, 36 / (n - 1)) : 0;
-  sorted.forEach((s, k) => {
-    const offset = (k - (n - 1) / 2) * gap;
+  // One lane per cable (a cable with two pieces in the cluster keeps one lane).
+  const lanes = [...new Set([...cluster].sort((a, b) => a.order - b.order).map((s) => s.cable))];
+  const n = lanes.length;
+  // Lines in a cluster may differ by a few pixels: spread around their middle.
+  const centre = cluster.reduce((sum, s) => sum + s.pos, 0) / cluster.length;
+  // Stay within the free margin around devices.
+  const gap = n > 1 ? Math.min(spacing, 48 / (n - 1)) : 0;
+  cluster.forEach((s) => {
+    const k = lanes.indexOf(s.cable);
+    const offset = centre + (k - (n - 1) / 2) * gap - s.pos;
     const pts = routes.get(s.cable)!;
     if (vertical) {
       pts[s.index].x += offset;
