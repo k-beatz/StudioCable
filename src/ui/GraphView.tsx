@@ -40,6 +40,7 @@ import { CanvasControls } from './CanvasControls';
 import { CutterOverlay } from './CutterOverlay';
 import { NotePad } from './Notes';
 import { play } from './sound';
+import { ConnectLoupe } from './ConnectLoupe';
 
 const nodeTypes = { device: DeviceNode, board: BoardNode, external: ExternalNode };
 const edgeTypes = { routed: RoutedEdge, hanging: HangingEdge };
@@ -395,6 +396,7 @@ export function GraphView() {
       {/* The Modular look has a plain gradient surface; the Clean look keeps a dot grid. */}
       {look !== 'modular' && <Background variant={BackgroundVariant.Dots} gap={24} size={1.4} color="var(--canvas-dot)" />}
       <CanvasControls />
+      <ConnectLoupe />
       {showNotes && <NotePad />}
       {board && (
         <Panel position="top-left">

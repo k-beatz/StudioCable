@@ -2557,3 +2557,58 @@ select.switch {
   text-transform: none;
   letter-spacing: normal;
 }
+
+/* Loupe while dragging a cable with a finger. */
+.connect-loupe-panel {
+  pointer-events: none;
+}
+.connect-loupe {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.5);
+}
+.connect-loupe--ok {
+  border-color: #52c41a;
+}
+.connect-loupe--warning {
+  border-color: var(--warning);
+}
+.connect-loupe--error {
+  border-color: #ff4d4f;
+}
+.connect-loupe__view {
+  position: relative;
+  overflow: hidden;
+  background: var(--xy-background-color, #863509);
+}
+.connect-loupe__view::after {
+  /* Cross-hair: where the cable end is. */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border: 2px dashed #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 0.4);
+  z-index: 2;
+}
+.connect-loupe__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 260px;
+  padding: 6px 10px 8px;
+  font-size: 12px;
+}
+.connect-loupe .loupe-target {
+  background: rgb(255 255 255 / 0.22);
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
