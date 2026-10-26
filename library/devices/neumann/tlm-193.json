@@ -12,7 +12,7 @@
       "url": "https://www.neumann.com/en-en/products/microphones/tlm-193/"
     }
   ],
-  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data.",
+  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data. The source shows no knobs or switches on the device.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,8 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
     }
   ]
 }

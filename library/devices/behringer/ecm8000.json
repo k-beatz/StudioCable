@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0506-AAA"
     }
   ],
-  "notes": "Measurement electret condenser microphone. Output: gold-plated XLR (gender not stated; male by convention). Needs phantom power. Works with phantom power from +15 to +48 V. Omnidirectional, for room measurement and RTA.",
+  "notes": "Measurement electret condenser microphone. Output: gold-plated XLR (gender not stated; male by convention). Needs phantom power. Works with phantom power from +15 to +48 V. Omnidirectional, for room measurement and RTA. The source shows no knobs or switches on the device.",
   "groups": [
     {
       "count": 0,
@@ -31,7 +31,8 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
     }
   ]
 }

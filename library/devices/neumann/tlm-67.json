@@ -12,7 +12,7 @@
       "url": "https://www.neumann.com/en-en/products/microphones/tlm-67/"
     }
   ],
-  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data.",
+  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data. Switches from the manufacturer's product page; they shape the sound only and do not block the signal. The page names pad and low cut but not their values, so they are shown as OFF/ON.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,41 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "pattern",
+      "label": "PATTERN",
+      "kind": "switch",
+      "positions": [
+        "OMNI",
+        "CARDIOID",
+        "FIGURE 8"
+      ],
+      "default": "CARDIOID"
+    },
+    {
+      "id": "pad",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "lowcut",
+      "label": "LOW CUT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
     }
   ]
 }

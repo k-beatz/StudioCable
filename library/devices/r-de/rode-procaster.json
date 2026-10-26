@@ -2,17 +2,17 @@
   "format": "studiocable-device",
   "schemaVersion": 1,
   "id": "rode-procaster",
-  "manufacturer": "R\u00d8DE",
+  "manufacturer": "RØDE",
   "model": "Procaster",
   "category": "microphone",
   "status": "unverified",
   "sources": [
     {
-      "title": "Procaster product page and specifications (R\u00d8DE)",
+      "title": "Procaster product page and specifications (RØDE)",
       "url": "https://rode.com/en/microphones/broadcast/procaster"
     }
   ],
-  "notes": "Dynamic microphone. Output: XLR (gender not stated; male by convention). No phantom power needed.",
+  "notes": "Dynamic microphone. Output: XLR (gender not stated; male by convention). No phantom power needed. The source shows no knobs or switches on the device.",
   "groups": [
     {
       "count": 0,

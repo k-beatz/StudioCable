@@ -12,7 +12,7 @@
       "url": "https://www.neumann.com/en-en/products/microphones/bcm-104/"
     }
   ],
-  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data.",
+  "notes": "Condenser microphone. Output: XLR (the technical data lists the matching cable connector as XLR 3 F, so the microphone side is XLR male). Needs phantom power. Phantom power: P48 (IEC 61938) per the technical data. Switches from the manufacturer's product page; they shape the sound only and do not block the signal. The switches are hidden under the headgrille.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,30 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "pad",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-14 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "lowcut",
+      "label": "LOW CUT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "100 Hz"
+      ],
+      "default": "OFF"
     }
   ]
 }

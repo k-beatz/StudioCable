@@ -2,17 +2,17 @@
   "format": "studiocable-device",
   "schemaVersion": 1,
   "id": "rode-nt1-5th-generation",
-  "manufacturer": "R\u00d8DE",
+  "manufacturer": "RØDE",
   "model": "NT1 5th Generation",
   "category": "microphone",
   "status": "unverified",
   "sources": [
     {
-      "title": "NT1 5th Generation product page (R\u00d8DE)",
+      "title": "NT1 5th Generation product page (RØDE)",
       "url": "https://rode.com/en/microphones/studio-condenser/nt1-5th-generation"
     }
   ],
-  "notes": "Condenser microphone with R\u00d8DE's Dual Connect output: use it either as an analogue XLR microphone (phantom power) or directly via USB-C with a 32-bit float digital output. XLR gender not stated (male by convention).",
+  "notes": "Condenser microphone with RØDE's Dual Connect output: use it either as an analogue XLR microphone (phantom power) or directly via USB-C with a 32-bit float digital output. XLR gender not stated (male by convention). Its processing (high-pass, compressor, gate, gain) is set in RØDE software, not on the microphone, so no controls are listed.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,8 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
     },
     {
       "count": 0,

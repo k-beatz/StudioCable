@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0502-AAG"
     }
   ],
-  "notes": "Dynamic cardioid (with on/off switch) microphone. Output: 3-pin XLR (gender not stated; male by convention). No phantom power needed.",
+  "notes": "Dynamic cardioid (with on/off switch) microphone. Output: 3-pin XLR (gender not stated; male by convention). No phantom power needed. On/off switch from the quick start guide: in OFF the mic sends nothing.",
   "groups": [
     {
       "count": 0,
@@ -32,6 +32,21 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "power",
+      "label": "ON/OFF",
+      "kind": "switch",
+      "positions": [
+        "ON",
+        "OFF"
+      ],
+      "default": "ON",
+      "onFor": [
+        "Output"
+      ]
     }
   ]
 }

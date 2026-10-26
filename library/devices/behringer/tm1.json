@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0504-AAJ"
     }
   ],
-  "notes": "Large-diaphragm condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Sold as a recording package; the guide asks for +48 V phantom power.",
+  "notes": "Large-diaphragm condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Sold as a recording package; the guide asks for +48 V phantom power. The source shows no knobs or switches on the device.",
   "groups": [
     {
       "count": 0,
@@ -31,7 +31,8 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
     }
   ]
 }

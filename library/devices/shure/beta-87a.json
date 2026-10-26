@@ -12,7 +12,7 @@
       "url": "https://pubs.shure.com/guide/Beta87A/en-US"
     }
   ],
-  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power.",
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power. The source shows no knobs or switches on the device.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,8 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
     }
   ]
 }

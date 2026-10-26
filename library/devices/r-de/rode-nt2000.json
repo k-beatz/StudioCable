@@ -2,17 +2,17 @@
   "format": "studiocable-device",
   "schemaVersion": 1,
   "id": "rode-nt2000",
-  "manufacturer": "R\u00d8DE",
+  "manufacturer": "RØDE",
   "model": "NT2000",
   "category": "microphone",
   "status": "unverified",
   "sources": [
     {
-      "title": "NT2000 product page and specifications (R\u00d8DE)",
+      "title": "NT2000 product page and specifications (RØDE)",
       "url": "https://rode.com/en/microphones/studio-condenser/nt2000"
     }
   ],
-  "notes": "Condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Power requirements: P24 or P48.",
+  "notes": "Condenser microphone. Output: XLR (gender not stated; male by convention). Needs phantom power. Power requirements: P24 or P48. Controls from the RØDE product page; they shape the sound only and do not block the signal. All three are continuously variable; the middle of PATTERN is cardioid.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,34 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "pattern",
+      "label": "PATTERN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "OMNI",
+      "maxLabel": "FIGURE 8"
+    },
+    {
+      "id": "pad",
+      "label": "PAD",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "0 dB",
+      "maxLabel": "-10 dB"
+    },
+    {
+      "id": "hpf",
+      "label": "HIGH-PASS",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "20 Hz",
+      "maxLabel": "150 Hz"
     }
   ]
 }
