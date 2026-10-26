@@ -120,4 +120,34 @@ describe('knobs and switches', () => {
     expect(errors).toContain('default must be one of the positions');
     expect(errors).toContain('unknown control "nope"');
   });
+
+  it('per-channel controls and routes ("count" with {n}) expand and work', () => {
+    const mixer: LibraryDevice = {
+      format: 'studiocable-device',
+      schemaVersion: 1,
+      id: 'test-mini-mixer',
+      manufacturer: 'Test',
+      model: 'Mini',
+      category: 'mixer',
+      status: 'unverified',
+      sources: [{ url: 'https://example.com' }],
+      groups: [
+        { count: 2, label: 'IN', direction: 'in', connectors: [{ type: 'xlr', gender: 'female' }], signal: 'mic' },
+        { count: 0, label: '', labels: ['MAIN L'], direction: 'out', connectors: [{ type: 'trs-6.3', gender: 'female' }], signal: 'line-bal' },
+      ],
+      controls: [
+        { id: 'level{n}', label: 'LEVEL', kind: 'knob', default: 5, count: 2, section: 'CH {n}', levelOf: ['IN {n}'] },
+        { id: 'mute{n}', label: 'MUTE', kind: 'switch', positions: ['OFF', 'ON'], default: 'OFF', count: 2, section: 'CH {n}' },
+      ],
+      routing: [{ count: 2, from: 'IN {n}', to: 'MAIN L', when: [{ control: 'mute{n}', is: ['OFF'] }] }],
+    };
+    expect(validateLibraryDevice(mixer)).toEqual([]);
+    const t = libraryToTemplate(mixer);
+    expect(t.controls?.map((c) => `${c.section}/${c.id}`)).toEqual(['CH 1/level1', 'CH 2/level2', 'CH 1/mute1', 'CH 2/mute2']);
+    expect(t.routing?.map((r) => r.when?.[0].control)).toEqual(['mute1', 'mute2']);
+    const label = (id: string) => t.ports.find((p) => p.id === id)!.label;
+    expect(t.controls?.find((c) => c.id === 'level2')?.levelOf?.map(label)).toEqual(['IN 2']);
+    // A typo in a per-channel reference is still caught.
+    expect(validateLibraryDevice({ ...mixer, routing: [{ count: 2, from: 'IN {n}', to: 'MAIN L', when: [{ control: 'mut{n}', is: ['OFF'] }] }] }).join()).toContain('unknown control "mut1"');
+  });
 });

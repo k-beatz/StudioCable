@@ -33,3 +33,8 @@ export function setControl(deviceId: string, controlId: string, value: string | 
 export function resetControls(deviceId: string) {
   useProjectStore.getState().apply((p) => updateDevice(p, deviceId, { settings: undefined }));
 }
+
+/** Folds or unfolds the knobs and switches on a device block. */
+export function setControlsOpen(deviceId: string, open: boolean) {
+  useProjectStore.getState().apply((p) => updateDevice(p, deviceId, { controlsOpen: open || undefined }));
+}

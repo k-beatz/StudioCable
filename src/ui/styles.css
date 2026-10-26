@@ -2612,3 +2612,50 @@ select.switch {
   outline: 2px solid #ffffff;
   outline-offset: -2px;
 }
+/* Controls grouped by panel section (channel strips, master). */
+.control-panel--sections {
+  align-items: flex-start;
+  gap: 8px;
+}
+.control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.12);
+}
+.control-section__title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--muted);
+}
+.app[data-look='modular'] .control-section__title {
+  color: rgb(255 255 255 / 0.8);
+}
+.control-section__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 4px;
+  max-width: 140px;
+}
+.control-panel--large .control-section__controls {
+  max-width: none;
+}
+.controls-toggle {
+  display: block;
+  width: calc(100% - 16px);
+  margin: 6px 8px;
+  min-height: 30px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+  background: rgb(0 0 0 / 0.2);
+  border: none;
+  color: inherit;
+}

@@ -144,6 +144,8 @@ export interface Control {
   levelOf?: string[];
   /** Phantom power switch for these inputs (port IDs): the position "ON" powers them. */
   phantomFor?: string[];
+  /** Where it sits on the panel, e.g. "CH 1" or "MAIN"; controls are shown grouped by it. */
+  section?: string;
 }
 
 export const KNOB_MAX = 10;
@@ -198,6 +200,8 @@ export interface DeviceInstance {
   rackHeight?: number;
   /** Positions of the template's controls by control ID; missing = the control's default. */
   settings?: Record<string, string | number>;
+  /** Diagram shows the knobs and switches (devices with many controls start folded). */
+  controlsOpen?: boolean;
 }
 
 export interface CableEnd {

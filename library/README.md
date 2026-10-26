@@ -79,6 +79,11 @@ turn and flip them in the app, and troubleshooting takes them into account.
 ]
 ```
 
+- Per channel: `"count": 8` repeats a control (or a route) for channels 1–8;
+  `{n}` in `id`, `label`, `section`, port labels and control IDs becomes the
+  channel number, e.g.
+  `{ "id": "level{n}", "label": "LEVEL", "kind": "knob", "default": 5, "count": 8, "section": "CH {n}", "levelOf": ["MIC {n}"] }`.
+- `section` groups controls on screen like on the panel ("CH 1", "MAIN").
 - Knobs go from 0 to 10. `levelOf`: the knob sets the level of these ports;
   at 0 nothing passes them.
 - `when` on a route: the path only exists while every condition holds

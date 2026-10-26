@@ -133,6 +133,8 @@ export const en = {
   'device.controlsHint': 'Positions change the signal paths inside the device. Troubleshoot takes them into account.',
   'device.controlsReset': 'Reset to default',
   'device.knobHint': 'Drag up or down to turn',
+  'device.controlsShow': '{count} knobs & switches',
+  'device.controlsHide': 'Hide knobs & switches',
   'toolbar.delete': 'Delete selected',
 
   'cable.id': 'ID',

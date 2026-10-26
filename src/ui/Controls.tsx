@@ -3,7 +3,7 @@ import { controlValue, formatSetting } from '../core/controls';
 import { KNOB_MAX, type Control, type DeviceInstance, type DeviceTemplate } from '../core/model';
 import { t } from '../i18n';
 import { useControlPreview } from '../store/controlPreview';
-import { setControl } from './actions';
+import { setControl, setControlsOpen } from './actions';
 import { play } from './sound';
 
 /**
@@ -14,16 +14,59 @@ import { play } from './sound';
 export function ControlPanel(props: { device: DeviceInstance; template: DeviceTemplate; large?: boolean }) {
   const controls = props.template.controls ?? [];
   if (!controls.length) return null;
+  const render = (c: Control) =>
+    c.kind === 'knob' ? (
+      <Knob key={c.id} deviceName={props.device.name} control={c} value={Number(controlValue(c, props.device))} onChange={(v) => setControl(props.device.id, c.id, v)} />
+    ) : (
+      <Switch key={c.id} deviceName={props.device.name} control={c} value={String(controlValue(c, props.device))} onChange={(v) => setControl(props.device.id, c.id, v)} />
+    );
+  // Grouped by panel section ("CH 1", "MAIN", …), in the order they first appear.
+  const sections: { name: string; controls: Control[] }[] = [];
+  for (const c of controls) {
+    const name = c.section ?? '';
+    const s = sections.find((x) => x.name === name);
+    if (s) s.controls.push(c);
+    else sections.push({ name, controls: [c] });
+  }
   return (
-    <div className={'control-panel nodrag nopan' + (props.large ? ' control-panel--large' : '')}>
-      {controls.map((c) =>
-        c.kind === 'knob' ? (
-          <Knob key={c.id} deviceName={props.device.name} control={c} value={Number(controlValue(c, props.device))} onChange={(v) => setControl(props.device.id, c.id, v)} />
-        ) : (
-          <Switch key={c.id} deviceName={props.device.name} control={c} value={String(controlValue(c, props.device))} onChange={(v) => setControl(props.device.id, c.id, v)} />
-        ),
-      )}
+    <div className={'control-panel nodrag nopan' + (props.large ? ' control-panel--large' : '') + (sections.length > 1 ? ' control-panel--sections' : '')}>
+      {sections.length === 1
+        ? sections[0].controls.map(render)
+        : sections.map((s) => (
+            <div key={s.name} className="control-section">
+              {s.name && <span className="control-section__title">{s.name}</span>}
+              <div className="control-section__controls">{s.controls.map(render)}</div>
+            </div>
+          ))}
     </div>
+  );
+}
+
+/** From this many controls on, a device block shows them folded (one button) until opened. */
+export const FOLD_CONTROLS_FROM = 9;
+
+/** The knobs and switches on a device block: folded behind a button on devices with many of them. */
+export function NodeControls({ device, template }: { device: DeviceInstance; template: DeviceTemplate }) {
+  const count = template.controls?.length ?? 0;
+  if (!count) return null;
+  const foldable = count >= FOLD_CONTROLS_FROM;
+  const open = !foldable || device.controlsOpen;
+  return (
+    <>
+      {foldable && (
+        <button
+          className={'controls-toggle nodrag' + (open ? ' open' : '')}
+          aria-expanded={!!open}
+          onClick={(e) => {
+            e.stopPropagation();
+            setControlsOpen(device.id, !open);
+          }}
+        >
+          🎛 {t(open ? 'device.controlsHide' : 'device.controlsShow', { count })}
+        </button>
+      )}
+      {open && <ControlPanel device={device} template={template} />}
+    </>
   );
 }
 

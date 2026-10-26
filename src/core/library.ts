@@ -34,8 +34,11 @@ export interface LibraryDevice {
   groups: PortGroup[];
   routing?: LibraryRoute[];
   /** Knobs and switches (see library/README.md). `levelOf` lists port labels. */
-  controls?: Control[];
+  controls?: LibraryControl[];
 }
+
+/** A control, or with `count` one per channel: "{n}" in id, label, section and port labels becomes 1, 2, … */
+export type LibraryControl = Control & { count?: number };
 
 /**
  * Internal path by port label. `from` and `to` may be lists: every port in
@@ -47,6 +50,46 @@ export interface LibraryRoute {
   breakWhenPatched?: string[];
   /** The path exists only while the controls are in these positions. */
   when?: RouteCondition[];
+  /** One route per channel: "{n}" in ports and control IDs becomes 1, 2, … */
+  count?: number;
+}
+
+const fill = (s: string, n: number) => s.replaceAll('{n}', String(n));
+const range = (count: number | undefined) => Array.from({ length: Math.max(1, count ?? 1) }, (_, i) => i + 1);
+
+/** Expands per-channel controls and routes (`count` with "{n}") into plain ones. */
+export function expandLibraryDevice(d: LibraryDevice): LibraryDevice {
+  const controls = d.controls?.flatMap((c) =>
+    c.count === undefined
+      ? [c]
+      : range(c.count).map((n) => {
+          const { count: _count, ...rest } = c;
+          return {
+            ...rest,
+            id: fill(c.id, n),
+            label: fill(c.label, n),
+            ...(c.section ? { section: fill(c.section, n) } : {}),
+            ...(c.levelOf ? { levelOf: c.levelOf.map((l) => fill(l, n)) } : {}),
+            ...(c.phantomFor ? { phantomFor: c.phantomFor.map((l) => fill(l, n)) } : {}),
+          };
+        }),
+  );
+  const routing = d.routing?.flatMap((r) =>
+    r.count === undefined
+      ? [r]
+      : range(r.count).map((n) => {
+          const { count: _count, ...rest } = r;
+          const f = (x: string | string[]) => (Array.isArray(x) ? x.map((y) => fill(y, n)) : fill(x, n));
+          return {
+            ...rest,
+            from: f(r.from),
+            to: f(r.to),
+            ...(r.breakWhenPatched ? { breakWhenPatched: r.breakWhenPatched.map((y) => fill(y, n)) } : {}),
+            ...(r.when ? { when: r.when.map((c) => ({ ...c, control: fill(c.control, n) })) } : {}),
+          };
+        }),
+  );
+  return { ...d, ...(controls ? { controls } : {}), ...(routing ? { routing } : {}) };
 }
 
 const asList = (x: string | string[]) => (Array.isArray(x) ? x : [x]);
@@ -69,8 +112,8 @@ function expandRoutes(routes: LibraryRoute[] = []): NonNullable<GenericSpec['rou
 /** Checks a parsed library file. Returns a list of problems (empty = valid). */
 export function validateLibraryDevice(data: unknown): string[] {
   const errors: string[] = [];
-  const d = data as Partial<LibraryDevice>;
-  if (!d || typeof d !== 'object') return ['not an object'];
+  if (!data || typeof data !== 'object') return ['not an object'];
+  const d = expandLibraryDevice(data as LibraryDevice) as Partial<LibraryDevice>;
   if (d.format !== LIBRARY_FORMAT) errors.push(`format must be "${LIBRARY_FORMAT}"`);
   if (d.schemaVersion !== LIBRARY_SCHEMA_VERSION) errors.push(`schemaVersion must be ${LIBRARY_SCHEMA_VERSION}`);
   if (!d.id || !/^[a-z0-9-]+$/.test(d.id)) errors.push('id must be lowercase letters, digits and dashes');
@@ -132,7 +175,8 @@ export function validateLibraryDevice(data: unknown): string[] {
 }
 
 /** Creates a project template (with fresh IDs) from a library entry. */
-export function libraryToTemplate(device: LibraryDevice): DeviceTemplate {
+export function libraryToTemplate(raw: LibraryDevice): DeviceTemplate {
+  const device = expandLibraryDevice(raw);
   const groups = device.groups.map((g) => ({ ...g, count: g.labels?.length ?? g.count }));
   return {
     ...buildTemplate({ ...device, groups, routing: expandRoutes(device.routing) }, 'library'),
