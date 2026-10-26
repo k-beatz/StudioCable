@@ -46,7 +46,7 @@ export const en = {
   'notes.padLabel': 'Note',
   'notes.dropHint': 'Drag a note off the pad and drop it onto a device or a cable.',
   'notes.edit': 'Sticky note',
-  'notes.placeholder': 'Write something, e.g. "Gain at 2 o\'clock" or "Red cable, 5 m"…',
+  'notes.placeholder': 'Write something, e.g. "Couldn\'t find the right one. At least we got a crappy signal."',
   'notes.empty': '(empty note)',
   'notes.color': 'Colour',
   'notes.delete': 'Delete',
