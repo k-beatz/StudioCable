@@ -93,6 +93,11 @@ export function updateCable(project: Project, id: string, patch: Partial<Cable>)
   return { ...project, cables: project.cables.map((c) => (c.id === id ? { ...c, ...patch } : c)) };
 }
 
+/** The cable plugged into a port, if any. A jack takes one plug, so a port has at most one cable. */
+export function cableAt(project: Project, end: CableEnd): Cable | undefined {
+  return project.cables.find((c) => c.ends.some((e) => e.deviceId === end.deviceId && e.portId === end.portId));
+}
+
 export function removeCable(project: Project, id: string): Project {
   return {
     ...project,

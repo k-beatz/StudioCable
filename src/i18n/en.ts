@@ -192,6 +192,9 @@ export const en = {
   'inspector.collapse': 'Show less',
 
   'connect.fromHere': 'Connect a cable from here',
+  'connect.occupied': '"{port}" already has a cable ({cable}). A jack takes one plug: remove that cable first or pick a free port.',
+  'connect.inUse': 'This port already has a cable. Remove it to plug in a different one.',
+  'loupe.occupied': 'Already in use ({cable})',
   'connect.pick': 'Now tap the port to connect to',
   'connect.cancel': 'Cancel',
 

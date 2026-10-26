@@ -232,17 +232,21 @@ function PortInspector({ device, portId, project }: { device: DeviceInstance; po
               ))}
         </div>
       </div>
-      <div className="button-row">
-        <button
-          className="primary"
-          onClick={() => {
-            select(null);
-            useProjectStore.getState().startConnection({ deviceId: device.id, portId });
-          }}
-        >
-          {t('connect.fromHere')}
-        </button>
-      </div>
+      {cables.length === 0 ? (
+        <div className="button-row">
+          <button
+            className="primary"
+            onClick={() => {
+              select(null);
+              useProjectStore.getState().startConnection({ deviceId: device.id, portId });
+            }}
+          >
+            {t('connect.fromHere')}
+          </button>
+        </div>
+      ) : (
+        <p className="muted">{t('connect.inUse')}</p>
+      )}
     </>
   );
 }

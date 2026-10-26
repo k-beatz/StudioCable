@@ -1,6 +1,6 @@
 import { Panel, useConnection } from '@xyflow/react';
 import { useEffect, useRef } from 'react';
-import { getPort } from '../core/project';
+import { cableAt, getPort } from '../core/project';
 import { checkCable, worstSeverity } from '../core/validation';
 import { t } from '../i18n';
 import { useProjectStore } from '../store/projectStore';
@@ -83,12 +83,46 @@ export function ConnectLoupe() {
     from && to ? checkCable(project, { id: 'probe', label: '', ends: [from, to] }) : [];
   const worst = worstSeverity(issues);
 
+  // Over a port that already has a cable: React Flow reports it as an invalid target, or not at all.
+  let occupied: { name: string; port: string; cable: string } | null = null;
+  const takenCable = to ? cableAt(project, to) : undefined;
+  if (to && takenCable) {
+    occupied = { name: toDevice?.name ?? '?', port: toPort?.label ?? '?', cable: takenCable.label };
+  } else if (!to && pointer) {
+    const origin = document.querySelector('.react-flow')?.getBoundingClientRect();
+    const handle = origin
+      ? document
+          .elementsFromPoint(origin.left + pointer.x, origin.top + pointer.y)
+          .map((el) => el.closest('.react-flow__handle.connected'))
+          .find((el): el is Element => !!el)
+      : undefined;
+    const nodeId = handle?.closest('.react-flow__node')?.getAttribute('data-id');
+    const handleId = handle?.getAttribute('data-handleid');
+    if (nodeId && handleId) {
+      const end = parseHandleId(nodeId, handleId);
+      const cable = cableAt(project, end);
+      const port = getPort(project, end);
+      const device = project.devices.find((d) => d.id === end.deviceId);
+      if (cable && port && device) occupied = { name: device.name, port: port.label, cable: cable.label };
+    }
+  }
+
   return (
     <Panel position="top-center" className="connect-loupe-panel">
-      <div className={'connect-loupe' + (to ? (worst ? ` connect-loupe--${worst}` : ' connect-loupe--ok') : '')} aria-live="polite">
+      <div
+        className={'connect-loupe' + (occupied ? ' connect-loupe--error' : to ? (worst ? ` connect-loupe--${worst}` : ' connect-loupe--ok') : '')}
+        aria-live="polite"
+      >
         <div className="connect-loupe__view" ref={view} style={{ width: W, height: H }} />
         <div className="connect-loupe__text">
-          {toPort && toDevice ? (
+          {occupied ? (
+            <>
+              <strong>
+                {occupied.name} · {occupied.port}
+              </strong>
+              <span>⛔ {t('loupe.occupied', { cable: occupied.cable })}</span>
+            </>
+          ) : toPort && toDevice ? (
             <>
               <strong>
                 {toDevice.name} · {toPort.label}
