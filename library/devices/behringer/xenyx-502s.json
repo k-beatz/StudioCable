@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0601-AHT"
     }
   ],
-  "notes": "1 mono and 2 stereo channels, 2-band EQ, no phantom power, no monitor outputs and no FX send (from the panel drawing and controls description). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB (type B, stereo in/out) plays on the last stereo channel until a jack is plugged in there. MAIN OUT is impedance-balanced 6.35 mm TRS, PHONES unbalanced TRS, STREAM IN/OUT are RCA. Routing lists where a signal can go; knobs and STREAM buttons decide what actually reaches an output. DC power input not listed.",
+  "notes": "1 mono and 2 stereo channels, 2-band EQ, no phantom power, no monitor outputs and no FX send (from the panel drawing and controls description). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB (type B, stereo in/out) plays on the last stereo channel until a jack is plugged in there. MAIN OUT is impedance-balanced 6.35 mm TRS, PHONES unbalanced TRS, STREAM IN/OUT are RCA. Routing lists where a signal can go; knobs and STREAM buttons decide what actually reaches an output. DC power input not listed. Controls from the Quick Start Guide, 'Step 2: Controls': mono channels with GAIN, 2-band EQ (+/-15 dB), PAN and LEVEL; stereo channels with BAL and LEVEL; STREAM TO MIX (STREAM input = RCA plus USB audio to the main mix), STREAM TO MONITOR/PHONES, PHONES/MONITOR level and MAIN MIX. As the guide states, USB audio plays on the last stereo channel (4/5) unless STREAM TO MIX is pressed or a jack is plugged into that channel. Band names (high, low) as usual. Assumptions: the monitor/phones carry the main mix; the computer records the main mix; levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -153,23 +153,217 @@
       "channels": 2
     }
   ],
+  "controls": [
+    {
+      "id": "gain1",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "hi1",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "lo1",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "pan1",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 1"
+    },
+    {
+      "id": "level1",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "section": "CH 1"
+    },
+    {
+      "id": "bals2",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 2/3"
+    },
+    {
+      "id": "levels2",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "LINE IN 2/3 L",
+        "LINE IN 2/3 R"
+      ],
+      "section": "CH 2/3"
+    },
+    {
+      "id": "bals4",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 4/5"
+    },
+    {
+      "id": "levels4",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "LINE IN 4/5 L",
+        "LINE IN 4/5 R"
+      ],
+      "section": "CH 4/5"
+    },
+    {
+      "id": "str2mix",
+      "label": "STREAM TO MIX",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    },
+    {
+      "id": "str2mon",
+      "label": "STREAM TO MONITOR/PHONES",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    },
+    {
+      "id": "monitor",
+      "label": "PHONES/MONITOR",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "mainmix",
+      "label": "MAIN MIX",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "MIC 1",
-        "LINE IN 1",
+        "LINE IN 1"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
         "LINE IN 2/3 L",
-        "LINE IN 2/3 R",
+        "LINE IN 2/3 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
         "LINE IN 4/5 L",
         "LINE IN 4/5 R"
       ],
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "PHONES",
         "STREAM OUT L",
         "STREAM OUT R",
-        "USB"
+        "USB",
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "PHONES"
+      ],
+      "when": [
+        {
+          "control": "str2mix",
+          "is": [
+            "OFF"
+          ]
+        },
+        {
+          "control": "levels4",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "LINE IN 4/5 L",
+        "LINE IN 4/5 R"
       ]
     },
     {
@@ -181,9 +375,34 @@
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "PHONES",
         "STREAM OUT L",
         "STREAM OUT R"
+      ],
+      "when": [
+        {
+          "control": "str2mix",
+          "is": [
+            "ON"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "STREAM IN L",
+        "STREAM IN R",
+        "USB"
+      ],
+      "to": [
+        "PHONES"
+      ],
+      "when": [
+        {
+          "control": "str2mon",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     }
   ]

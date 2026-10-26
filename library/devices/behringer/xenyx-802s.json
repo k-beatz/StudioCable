@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0601-AHU"
     }
   ],
-  "notes": "2 mono and 3 stereo channels, 3-band EQ, +48 V phantom power, MONITOR OUT and FX SEND (from the panel drawing and controls description). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB (type B, stereo in/out) plays on the last stereo channel until a jack is plugged in there. MAIN OUT is impedance-balanced 6.35 mm TRS, PHONES unbalanced TRS, STREAM IN/OUT are RCA. Routing lists where a signal can go; knobs and STREAM buttons decide what actually reaches an output. DC power input not listed.",
+  "notes": "2 mono and 3 stereo channels, 3-band EQ, +48 V phantom power, MONITOR OUT and FX SEND (from the panel drawing and controls description). Each mono channel has MIC and LINE IN, but only one can be used at a time. USB (type B, stereo in/out) plays on the last stereo channel until a jack is plugged in there. MAIN OUT is impedance-balanced 6.35 mm TRS, PHONES unbalanced TRS, STREAM IN/OUT are RCA. Routing lists where a signal can go; knobs and STREAM buttons decide what actually reaches an output. DC power input not listed. Controls from the Quick Start Guide, 'Step 2: Controls': mono channels with GAIN, 3-band EQ (+/-15 dB), FX send, PAN and LEVEL; stereo channels with FX, BAL and LEVEL; STREAM TO MIX (STREAM input = RCA plus USB audio to the main mix), STREAM TO MONITOR/PHONES, PHANTOM (+48 V on all mono XLR inputs), PHONES/MONITOR level and MAIN MIX. As the guide states, USB audio plays on the last stereo channel (7/8) unless STREAM TO MIX is pressed or a jack is plugged into that channel. Band names (high, mid, low) as usual. Assumptions: the monitor/phones carry the main mix; the computer records the main mix; levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -188,30 +188,473 @@
       "channels": 2
     }
   ],
+  "controls": [
+    {
+      "id": "gain1",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "hi1",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "mid1",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "lo1",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "fx1",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "pan1",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 1"
+    },
+    {
+      "id": "level1",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "section": "CH 1"
+    },
+    {
+      "id": "gain2",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 2"
+    },
+    {
+      "id": "hi2",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "mid2",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "lo2",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "fx2",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 2"
+    },
+    {
+      "id": "pan2",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 2"
+    },
+    {
+      "id": "level2",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "section": "CH 2"
+    },
+    {
+      "id": "fxs3",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "bals3",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "levels3",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "LINE IN 3/4 L",
+        "LINE IN 3/4 R"
+      ],
+      "section": "CH 3/4"
+    },
+    {
+      "id": "fxs5",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "bals5",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "levels5",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "LINE IN 5/6 L",
+        "LINE IN 5/6 R"
+      ],
+      "section": "CH 5/6"
+    },
+    {
+      "id": "fxs7",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "bals7",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "levels7",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "LINE IN 7/8 L",
+        "LINE IN 7/8 R"
+      ],
+      "section": "CH 7/8"
+    },
+    {
+      "id": "str2mix",
+      "label": "STREAM TO MIX",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    },
+    {
+      "id": "str2mon",
+      "label": "STREAM TO MONITOR/PHONES",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    },
+    {
+      "id": "phantom",
+      "label": "PHANTOM",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
+        "MIC 1",
+        "MIC 2"
+      ]
+    },
+    {
+      "id": "monitor",
+      "label": "PHONES/MONITOR",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "mainmix",
+      "label": "MAIN MIX",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "MIC 1",
+        "LINE IN 1"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx1",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
         "MIC 2",
-        "LINE IN 1",
-        "LINE IN 2",
+        "LINE IN 2"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx2",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
         "LINE IN 3/4 L",
-        "LINE IN 3/4 R",
+        "LINE IN 3/4 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "LINE IN 3/4 L",
+        "LINE IN 3/4 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fxs3",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
         "LINE IN 5/6 L",
-        "LINE IN 5/6 R",
+        "LINE IN 5/6 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "USB",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "LINE IN 5/6 L",
+        "LINE IN 5/6 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fxs5",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
         "LINE IN 7/8 L",
         "LINE IN 7/8 R"
       ],
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "MONITOR OUT L",
-        "MONITOR OUT R",
-        "PHONES",
         "STREAM OUT L",
         "STREAM OUT R",
-        "FX SEND",
-        "USB"
+        "USB",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "LINE IN 7/8 L",
+        "LINE IN 7/8 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fxs7",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "STREAM OUT L",
+        "STREAM OUT R",
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ],
+      "when": [
+        {
+          "control": "str2mix",
+          "is": [
+            "OFF"
+          ]
+        },
+        {
+          "control": "levels7",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "LINE IN 7/8 L",
+        "LINE IN 7/8 R"
       ]
     },
     {
@@ -223,11 +666,36 @@
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "MONITOR OUT L",
-        "MONITOR OUT R",
-        "PHONES",
         "STREAM OUT L",
         "STREAM OUT R"
+      ],
+      "when": [
+        {
+          "control": "str2mix",
+          "is": [
+            "ON"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "STREAM IN L",
+        "STREAM IN R",
+        "USB"
+      ],
+      "to": [
+        "MONITOR OUT L",
+        "MONITOR OUT R",
+        "PHONES"
+      ],
+      "when": [
+        {
+          "control": "str2mon",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     }
   ]

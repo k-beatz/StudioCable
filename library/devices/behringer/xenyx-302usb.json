@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0601-ADN"
     }
   ],
-  "notes": "Small mixer with USB interface. MIC IN is an XLR/6.35 mm combo jack; HEADSET MIC IN and the headphone output are 3.5 mm TRS mini jacks. LINE IN, 2-TRACK IN and MAIN OUT are unbalanced RCA pairs. LINE/USB FROM selects LINE IN or USB playback for the line channel; 2-TRACK TO and LINE/USB TO send those sources to the phones or the main mix. USB type B; powered by an external USB power supply (not listed). Jack labels are partly hidden in the panel drawing and were named after the controls description.",
+  "notes": "Small mixer with USB interface. MIC IN is an XLR/6.35 mm combo jack; HEADSET MIC IN and the headphone output are 3.5 mm TRS mini jacks. LINE IN, 2-TRACK IN and MAIN OUT are unbalanced RCA pairs. LINE/USB FROM selects LINE IN or USB playback for the line channel; 2-TRACK TO and LINE/USB TO send those sources to the phones or the main mix. USB type B; powered by an external USB power supply (not listed). Jack labels are partly hidden in the panel drawing and were named after the controls description. Controls from the Quick Start Guide, 'Step 2: Controls': mic channel GAIN, EQ (high/low sliders), PAN slider and MIC level; LINE/USB channel FROM button (LINE IN or USB PLAY), TO button (MAIN MIX or PHONES), EQ, BAL slider and LINE/USB level; 2-TRACK TO button (MAIN MIX or PHONES); PHONES and MAIN MIX levels. Sliders are shown as knobs. Modelling assumptions: the headphones also hear the main mix; the computer records the main mix; level controls at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -137,13 +137,156 @@
       "channels": 2
     }
   ],
+  "controls": [
+    {
+      "id": "gain",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "MIC"
+    },
+    {
+      "id": "mhigh",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-",
+      "maxLabel": "+",
+      "section": "MIC"
+    },
+    {
+      "id": "mlow",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-",
+      "maxLabel": "+",
+      "section": "MIC"
+    },
+    {
+      "id": "pan",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "MIC"
+    },
+    {
+      "id": "mic",
+      "label": "MIC",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC IN",
+        "HEADSET MIC IN"
+      ],
+      "section": "MIC"
+    },
+    {
+      "id": "linefrom",
+      "label": "LINE/USB FROM",
+      "kind": "switch",
+      "positions": [
+        "LINE IN",
+        "USB PLAY"
+      ],
+      "default": "LINE IN",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "lineto",
+      "label": "LINE/USB TO",
+      "kind": "switch",
+      "positions": [
+        "MAIN MIX",
+        "PHONES"
+      ],
+      "default": "MAIN MIX",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "lhigh",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-",
+      "maxLabel": "+",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "llow",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-",
+      "maxLabel": "+",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "bal",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "line",
+      "label": "LINE/USB",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "LINE/USB"
+    },
+    {
+      "id": "trackto",
+      "label": "2-TRACK TO",
+      "kind": "switch",
+      "positions": [
+        "MAIN MIX",
+        "PHONES"
+      ],
+      "default": "MAIN MIX",
+      "section": "MAIN"
+    },
+    {
+      "id": "phones",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES (headset)"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "mainmix",
+      "label": "MAIN MIX",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "MIC IN",
-        "HEADSET MIC IN",
-        "LINE IN L",
-        "LINE IN R"
+        "HEADSET MIC IN"
       ],
       "to": [
         "MAIN OUT L",
@@ -154,14 +297,139 @@
     },
     {
       "from": [
-        "2-TRACK IN L",
-        "2-TRACK IN R",
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "PHONES (headset)",
         "USB"
+      ],
+      "when": [
+        {
+          "control": "linefrom",
+          "is": [
+            "LINE IN"
+          ]
+        },
+        {
+          "control": "line",
+          "min": 1
+        },
+        {
+          "control": "lineto",
+          "is": [
+            "MAIN MIX"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "to": "PHONES (headset)",
+      "when": [
+        {
+          "control": "linefrom",
+          "is": [
+            "LINE IN"
+          ]
+        },
+        {
+          "control": "line",
+          "min": 1
+        },
+        {
+          "control": "lineto",
+          "is": [
+            "PHONES"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "PHONES (headset)"
+      ],
+      "when": [
+        {
+          "control": "linefrom",
+          "is": [
+            "USB PLAY"
+          ]
+        },
+        {
+          "control": "line",
+          "min": 1
+        },
+        {
+          "control": "lineto",
+          "is": [
+            "MAIN MIX"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES (headset)",
+      "when": [
+        {
+          "control": "linefrom",
+          "is": [
+            "USB PLAY"
+          ]
+        },
+        {
+          "control": "line",
+          "min": 1
+        },
+        {
+          "control": "lineto",
+          "is": [
+            "PHONES"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "2-TRACK IN L",
+        "2-TRACK IN R"
       ],
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
         "PHONES (headset)"
+      ],
+      "when": [
+        {
+          "control": "trackto",
+          "is": [
+            "MAIN MIX"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "2-TRACK IN L",
+        "2-TRACK IN R"
+      ],
+      "to": "PHONES (headset)",
+      "when": [
+        {
+          "control": "trackto",
+          "is": [
+            "PHONES"
+          ]
+        }
       ]
     }
   ]

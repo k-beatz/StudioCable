@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0601-AHR"
     }
   ],
-  "notes": "Battery-powered 10-input mixer (from the panel drawing and specifications). Channels 1-2: XLR MIC, balanced 6.35 mm LINE IN and an unbalanced TRS insert (INS). Channels 3/4, 5/6, 7/8: XLR MIC plus a stereo line pair (L works as MONO). IN 9/10 is a stereo line pair; REC/STREAM IN/OUT are RCA. MAIN OUT is balanced TRS; MON SEND, FX SEND and PHONES are unbalanced TRS. The insert path is not modelled. DC input not listed.",
+  "notes": "Battery-powered 10-input mixer (from the panel drawing and specifications). Channels 1-2: XLR MIC, balanced 6.35 mm LINE IN and an unbalanced TRS insert (INS). Channels 3/4, 5/6, 7/8: XLR MIC plus a stereo line pair (L works as MONO). IN 9/10 is a stereo line pair; REC/STREAM IN/OUT are RCA. MAIN OUT is balanced TRS; MON SEND, FX SEND and PHONES are unbalanced TRS. The insert path is not modelled. DC input not listed. Controls from the Quick Start Guide, 'Step 2: Controls' (1-12) and its panel drawing: channels 1 and 2 with GAIN, PAN, MON, 3-band EQ (LOW/MID/HIGH), FX and channel fader; channels 3/4, 5/6 and 7/8 with separate MIC and LINE gain, BAL, MON, EQ, FX and fader; channel 9/10 with LINE gain, BAL, MON, EQ, FX and fader; PHANTOM (all XLR mic inputs), MON SEND and FX SEND masters, PHONES and the MAIN fader. The REC/STREAM input has no controls on the panel. Assumptions: the headphones and REC/STREAM OUT carry the main mix; faders and levels at MIN are silent; whether the MAIN fader also sets the headphones is not stated (modelled: no).",
   "groups": [
     {
       "count": 0,
@@ -209,33 +209,805 @@
       "signal": "line-unbal"
     }
   ],
-  "routing": [
+  "controls": [
     {
-      "from": [
+      "id": "gainmic1",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "pan1",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 1"
+    },
+    {
+      "id": "mon1",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "hi1",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "mid1",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "lo1",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 1"
+    },
+    {
+      "id": "fx1",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 1"
+    },
+    {
+      "id": "fader1",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "section": "CH 1"
+    },
+    {
+      "id": "gainmic2",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 2"
+    },
+    {
+      "id": "pan2",
+      "label": "PAN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 2"
+    },
+    {
+      "id": "mon2",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 2"
+    },
+    {
+      "id": "hi2",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "mid2",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "lo2",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 2"
+    },
+    {
+      "id": "fx2",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 2"
+    },
+    {
+      "id": "fader2",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "section": "CH 2"
+    },
+    {
+      "id": "gainmic3",
+      "label": "GAIN MIC",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "gainline3",
+      "label": "GAIN LINE",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "pan3",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "mon3",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "hi3",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "mid3",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "lo3",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "fx3",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 3/4"
+    },
+    {
+      "id": "fader3",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 3/4",
+        "LINE 3/4 L",
+        "LINE 3/4 R"
+      ],
+      "section": "CH 3/4"
+    },
+    {
+      "id": "gainmic5",
+      "label": "GAIN MIC",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "gainline5",
+      "label": "GAIN LINE",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "pan5",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "mon5",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "hi5",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "mid5",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "lo5",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "fx5",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 5/6"
+    },
+    {
+      "id": "fader5",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 5/6",
+        "LINE 5/6 L",
+        "LINE 5/6 R"
+      ],
+      "section": "CH 5/6"
+    },
+    {
+      "id": "gainmic7",
+      "label": "GAIN MIC",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "gainline7",
+      "label": "GAIN LINE",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "pan7",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "mon7",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "hi7",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "mid7",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "lo7",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "fx7",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 7/8"
+    },
+    {
+      "id": "fader7",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MIC 7/8",
+        "LINE 7/8 L",
+        "LINE 7/8 R"
+      ],
+      "section": "CH 7/8"
+    },
+    {
+      "id": "gainline9",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "pan9",
+      "label": "BAL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "L",
+      "maxLabel": "R",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "mon9",
+      "label": "MON",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "hi9",
+      "label": "EQ HIGH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "mid9",
+      "label": "EQ MID",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "lo9",
+      "label": "EQ LOW",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15",
+      "maxLabel": "+15",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "fx9",
+      "label": "FX",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH 9/10"
+    },
+    {
+      "id": "fader9",
+      "label": "FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "IN 9/10 L",
+        "IN 9/10 R"
+      ],
+      "section": "CH 9/10"
+    },
+    {
+      "id": "phantom",
+      "label": "PHANTOM",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
         "MIC 1",
         "MIC 2",
         "MIC 3/4",
         "MIC 5/6",
-        "MIC 7/8",
-        "LINE IN 1",
-        "LINE IN 2",
+        "MIC 7/8"
+      ]
+    },
+    {
+      "id": "monsend",
+      "label": "MON SEND",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MON SEND"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "fxsend",
+      "label": "FX SEND",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "FX SEND"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "phones",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "main",
+      "label": "MAIN FADER",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R"
+      ],
+      "section": "MAIN"
+    }
+  ],
+  "routing": [
+    {
+      "from": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon1",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx1",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon2",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx2",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 3/4",
         "LINE 3/4 L",
-        "LINE 3/4 R",
+        "LINE 3/4 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 3/4",
+        "LINE 3/4 L",
+        "LINE 3/4 R"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon3",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 3/4",
+        "LINE 3/4 L",
+        "LINE 3/4 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx3",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 5/6",
         "LINE 5/6 L",
-        "LINE 5/6 R",
+        "LINE 5/6 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 5/6",
+        "LINE 5/6 L",
+        "LINE 5/6 R"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon5",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 5/6",
+        "LINE 5/6 L",
+        "LINE 5/6 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx5",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 7/8",
         "LINE 7/8 L",
-        "LINE 7/8 R",
+        "LINE 7/8 R"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R",
+        "REC/STREAM OUT L",
+        "REC/STREAM OUT R",
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "MIC 7/8",
+        "LINE 7/8 L",
+        "LINE 7/8 R"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon7",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "MIC 7/8",
+        "LINE 7/8 L",
+        "LINE 7/8 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx7",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
         "IN 9/10 L",
         "IN 9/10 R"
       ],
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "PHONES",
         "REC/STREAM OUT L",
         "REC/STREAM OUT R",
-        "MON SEND",
-        "FX SEND"
+        "PHONES"
+      ]
+    },
+    {
+      "from": [
+        "IN 9/10 L",
+        "IN 9/10 R"
+      ],
+      "to": "MON SEND",
+      "when": [
+        {
+          "control": "mon9",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": [
+        "IN 9/10 L",
+        "IN 9/10 R"
+      ],
+      "to": "FX SEND",
+      "when": [
+        {
+          "control": "fx9",
+          "min": 1
+        }
       ]
     },
     {
@@ -246,9 +1018,7 @@
       "to": [
         "MAIN OUT L",
         "MAIN OUT R",
-        "PHONES",
-        "REC/STREAM OUT L",
-        "REC/STREAM OUT R"
+        "PHONES"
       ]
     }
   ]
