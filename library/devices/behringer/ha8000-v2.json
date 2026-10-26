@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0835-AAI"
     }
   ],
-  "notes": "8-channel headphone mixing and distribution amplifier (19\" rack, IEC mains). Two stereo MAIN IN pairs (6.35 mm TRS); each channel selects MAIN IN 1 or 2. A cable in a channel's DIRECT IN mutes the main signal for that channel. The guide mentions an extra rear PHONES OUT per channel, the specifications list 8 headphone outputs; the rear jacks are not listed.",
+  "notes": "8-channel headphone mixing and distribution amplifier (19\" rack, IEC mains). Two stereo MAIN IN pairs (6.35 mm TRS); each channel selects MAIN IN 1 or 2. A cable in a channel's DIRECT IN mutes the main signal for that channel. The guide mentions an extra rear PHONES OUT per channel, the specifications list 8 headphone outputs; the rear jacks are not listed. Controls from the Quick Start Guide (HA8000/HA6000): level knobs MAIN IN 1 and 2, per channel IN 1/IN 2 button (which MAIN input the channel hears), MONO and OUTPUT LEVEL, and POWER. A cable in DIRECT IN mutes the MAIN inputs on that channel. Assumption: levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -211,23 +211,117 @@
       "channels": 2
     }
   ],
+  "controls": [
+    {
+      "id": "main1",
+      "label": "MAIN IN 1",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "MAIN"
+    },
+    {
+      "id": "main2",
+      "label": "MAIN IN 2",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "MAIN"
+    },
+    {
+      "id": "in{n}",
+      "label": "IN 1 / IN 2",
+      "kind": "switch",
+      "positions": [
+        "IN 1",
+        "IN 2"
+      ],
+      "default": "IN 1",
+      "section": "CH {n}",
+      "count": 8
+    },
+    {
+      "id": "mono{n}",
+      "label": "MONO",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 8
+    },
+    {
+      "id": "out{n}",
+      "label": "OUTPUT LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES OUT {n}"
+      ],
+      "section": "CH {n}",
+      "count": 8
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON",
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "MAIN IN 1 L",
-        "MAIN IN 1 R",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 1",
+      "when": [
+        {
+          "control": "in1",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 1"
+      ]
+    },
+    {
+      "from": [
         "MAIN IN 2 L",
         "MAIN IN 2 R"
       ],
-      "to": [
-        "PHONES OUT 1",
-        "PHONES OUT 2",
-        "PHONES OUT 3",
-        "PHONES OUT 4",
-        "PHONES OUT 5",
-        "PHONES OUT 6",
-        "PHONES OUT 7",
-        "PHONES OUT 8"
+      "to": "PHONES OUT 1",
+      "when": [
+        {
+          "control": "in1",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 1"
       ]
     },
     {
@@ -235,28 +329,336 @@
       "to": "PHONES OUT 1"
     },
     {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 2",
+      "when": [
+        {
+          "control": "in2",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 2"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 2",
+      "when": [
+        {
+          "control": "in2",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 2"
+      ]
+    },
+    {
       "from": "DIRECT IN 2",
       "to": "PHONES OUT 2"
+    },
+    {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 3",
+      "when": [
+        {
+          "control": "in3",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 3"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 3",
+      "when": [
+        {
+          "control": "in3",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 3"
+      ]
     },
     {
       "from": "DIRECT IN 3",
       "to": "PHONES OUT 3"
     },
     {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 4",
+      "when": [
+        {
+          "control": "in4",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 4"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 4",
+      "when": [
+        {
+          "control": "in4",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 4"
+      ]
+    },
+    {
       "from": "DIRECT IN 4",
       "to": "PHONES OUT 4"
+    },
+    {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 5",
+      "when": [
+        {
+          "control": "in5",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 5"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 5",
+      "when": [
+        {
+          "control": "in5",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 5"
+      ]
     },
     {
       "from": "DIRECT IN 5",
       "to": "PHONES OUT 5"
     },
     {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 6",
+      "when": [
+        {
+          "control": "in6",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 6"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 6",
+      "when": [
+        {
+          "control": "in6",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 6"
+      ]
+    },
+    {
       "from": "DIRECT IN 6",
       "to": "PHONES OUT 6"
     },
     {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 7",
+      "when": [
+        {
+          "control": "in7",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 7"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 7",
+      "when": [
+        {
+          "control": "in7",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 7"
+      ]
+    },
+    {
       "from": "DIRECT IN 7",
       "to": "PHONES OUT 7"
+    },
+    {
+      "from": [
+        "MAIN IN 1 L",
+        "MAIN IN 1 R"
+      ],
+      "to": "PHONES OUT 8",
+      "when": [
+        {
+          "control": "in8",
+          "is": [
+            "IN 1"
+          ]
+        },
+        {
+          "control": "main1",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 8"
+      ]
+    },
+    {
+      "from": [
+        "MAIN IN 2 L",
+        "MAIN IN 2 R"
+      ],
+      "to": "PHONES OUT 8",
+      "when": [
+        {
+          "control": "in8",
+          "is": [
+            "IN 2"
+          ]
+        },
+        {
+          "control": "main2",
+          "min": 1
+        }
+      ],
+      "breakWhenPatched": [
+        "DIRECT IN 8"
+      ]
     },
     {
       "from": "DIRECT IN 8",

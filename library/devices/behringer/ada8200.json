@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0800-AAB"
     }
   ],
-  "notes": "8-channel mic preamp with AD/DA conversion over ADAT (19\" rack, IEC mains). Each channel has an XLR MIC IN and a 6.35 mm TRS LINE IN sharing one gain knob. ADAT OUT carries the 8 inputs; ADAT IN feeds the 8 XLR (male) LINE OUTs. Word clock in on BNC; sync via ADAT or word clock. MIC IN gender not stated (female by convention).",
+  "notes": "8-channel mic preamp with AD/DA conversion over ADAT (19\" rack, IEC mains). Each channel has an XLR MIC IN and a 6.35 mm TRS LINE IN sharing one gain knob. ADAT OUT carries the 8 inputs; ADAT IN feeds the 8 XLR (male) LINE OUTs. Word clock in on BNC; sync via ADAT or word clock. MIC IN gender not stated (female by convention). Controls from the Quick Start Guide, 'Step 2: Controls': GAIN per channel (for MIC IN or LINE IN), PHANTOM POWER +48 V (all mic inputs), SYNC selector (internal 44.1 / 48 kHz as clock master, or slave to WC IN / ADAT IN) and POWER. Modelled: nothing passes with POWER off; the SYNC setting is shown but not checked against the clock cabling. Start positions are app defaults.",
   "groups": [
     {
       "count": 0,
@@ -135,6 +135,63 @@
       "signal": "line-bal"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH {n}",
+      "count": 8
+    },
+    {
+      "id": "phantom",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
+        "MIC IN 1",
+        "MIC IN 2",
+        "MIC IN 3",
+        "MIC IN 4",
+        "MIC IN 5",
+        "MIC IN 6",
+        "MIC IN 7",
+        "MIC IN 8"
+      ]
+    },
+    {
+      "id": "sync",
+      "label": "SYNC",
+      "kind": "switch",
+      "positions": [
+        "44.1 kHz",
+        "48 kHz",
+        "WC IN",
+        "ADAT IN"
+      ],
+      "default": "48 kHz",
+      "section": "MAIN"
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON",
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
@@ -155,7 +212,15 @@
         "LINE IN 7",
         "LINE IN 8"
       ],
-      "to": "ADAT OUT"
+      "to": "ADAT OUT",
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
+      ]
     },
     {
       "from": "ADAT IN",
@@ -168,6 +233,14 @@
         "LINE OUT 6",
         "LINE OUT 7",
         "LINE OUT 8"
+      ],
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     }
   ]

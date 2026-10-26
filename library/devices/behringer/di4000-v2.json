@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0809-AAN"
     }
   ],
-  "notes": "4-channel active DI box (19\" rack, IEC mains). Per channel: 6.35 mm TS INPUT and an unbalanced XLR INPUT, LINK (unbalanced parallel output) and transformer-balanced XLR OUTPUT. The LINK connector type is not in the specifications (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "notes": "4-channel active DI box (19\" rack, IEC mains). Per channel: 6.35 mm TS INPUT and an unbalanced XLR INPUT, LINK (unbalanced parallel output) and transformer-balanced XLR OUTPUT. The LINK connector type is not in the specifications (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used. Controls from the Quick Start Guide: per channel +20 dB, HIGH CUT (8 kHz), PHASE REVERSE, GND LIFT and two -20 dB attenuation switches; POWER switch. Modelled: with POWER off the balanced OUTPUT carries nothing; LINK (parallel output) always works. The guide describes one channel; the switches are taken to exist on each of the 4 channels.",
   "groups": [
     {
       "count": 0,
@@ -101,15 +101,112 @@
       "signal": "mic"
     }
   ],
+  "controls": [
+    {
+      "id": "boost{n}",
+      "label": "+20 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "hicut{n}",
+      "label": "HIGH CUT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "phase{n}",
+      "label": "PHASE REVERSE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "gnd{n}",
+      "label": "GND LIFT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "pada{n}",
+      "label": "-20 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "padb{n}",
+      "label": "-20 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON",
+      "section": "POWER"
+    }
+  ],
   "routing": [
     {
       "from": [
         "INPUT 1",
         "XLR INPUT 1"
       ],
-      "to": [
-        "OUTPUT 1",
-        "LINK 1"
+      "to": "LINK 1"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "XLR INPUT 1"
+      ],
+      "to": "OUTPUT 1",
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {
@@ -117,9 +214,21 @@
         "INPUT 2",
         "XLR INPUT 2"
       ],
-      "to": [
-        "OUTPUT 2",
-        "LINK 2"
+      "to": "LINK 2"
+    },
+    {
+      "from": [
+        "INPUT 2",
+        "XLR INPUT 2"
+      ],
+      "to": "OUTPUT 2",
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {
@@ -127,9 +236,21 @@
         "INPUT 3",
         "XLR INPUT 3"
       ],
-      "to": [
-        "OUTPUT 3",
-        "LINK 3"
+      "to": "LINK 3"
+    },
+    {
+      "from": [
+        "INPUT 3",
+        "XLR INPUT 3"
+      ],
+      "to": "OUTPUT 3",
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {
@@ -137,9 +258,21 @@
         "INPUT 4",
         "XLR INPUT 4"
       ],
-      "to": [
-        "OUTPUT 4",
-        "LINK 4"
+      "to": "LINK 4"
+    },
+    {
+      "from": [
+        "INPUT 4",
+        "XLR INPUT 4"
+      ],
+      "to": "OUTPUT 4",
+      "when": [
+        {
+          "control": "power",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     }
   ]

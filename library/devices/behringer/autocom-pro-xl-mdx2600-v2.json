@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0817-ABD"
     }
   ],
-  "notes": "2-channel compressor/limiter/gate (19\" rack, IEC mains). Per channel: balanced inputs and outputs on XLR and 6.35 mm TRS (the two output connectors are wired in parallel). Unbalanced 6.35 mm SIDECHAIN SEND and RETURN per channel (the return is a control input, not part of the audio path); hard bypass links input to output when the channel is OUT or unpowered. OPERATING LEVEL switch: -10 dBV or +4 dBu. XLR genders follow the usual convention (not stated).",
+  "notes": "2-channel compressor/limiter/gate (19\" rack, IEC mains). Per channel: balanced inputs and outputs on XLR and 6.35 mm TRS (the two output connectors are wired in parallel). Unbalanced 6.35 mm SIDECHAIN SEND and RETURN per channel (the return is a control input, not part of the audio path); hard bypass links input to output when the channel is OUT or unpowered. OPERATING LEVEL switch: -10 dBV or +4 dBu. XLR genders follow the usual convention (not stated). Controls from the Quick Start Guide, 'Controls' (1-32), per channel: expander/gate (TRIGGER, RELEASE short/long, GATE), compressor (THRESHOLD, RATIO, LO CONTOUR, INTERACT KNEE, AUTO, ATTACK, RELEASE, SC EXT, SC MON, TUBE), OUTPUT (+/-20 dB), IN/OUT METER, IN/OUT (hard bypass), de-esser (LEVEL, MALE, IN/OUT), LIMITER (fully right = off), OPERATING LEVEL (+4 dBu / -10 dBV, rear) and COUPLE (stereo link). Modelled: SC MON puts the SIDECHAIN RETURN signal on the output and mutes the input signal. The guide describes one channel; all channels are taken to be identical. Start positions are app defaults.",
   "groups": [
     {
       "count": 0,
@@ -121,6 +121,250 @@
       "signal": "line-unbal"
     }
   ],
+  "controls": [
+    {
+      "id": "trigger{n}",
+      "label": "TRIGGER",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "OFF",
+      "maxLabel": "+10 dB",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "gaterel{n}",
+      "label": "RELEASE (gate)",
+      "kind": "switch",
+      "positions": [
+        "SHORT",
+        "LONG"
+      ],
+      "default": "SHORT",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "gate{n}",
+      "label": "GATE",
+      "kind": "switch",
+      "positions": [
+        "EXPANDER",
+        "GATE"
+      ],
+      "default": "EXPANDER",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "thr{n}",
+      "label": "THRESHOLD",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-40 dB",
+      "maxLabel": "+20 dB",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "ratio{n}",
+      "label": "RATIO",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "1:1",
+      "maxLabel": "∞:1",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "locontour{n}",
+      "label": "LO CONTOUR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "knee{n}",
+      "label": "INTERACT KNEE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "auto{n}",
+      "label": "AUTO",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "out{n}",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-20 dB",
+      "maxLabel": "+20 dB",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "meter{n}",
+      "label": "IN/OUT METER",
+      "kind": "switch",
+      "positions": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "inout{n}",
+      "label": "IN/OUT",
+      "kind": "switch",
+      "positions": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "limiter{n}",
+      "label": "LIMITER",
+      "kind": "knob",
+      "default": 10,
+      "maxLabel": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "oplevel{n}",
+      "label": "OPERATING LEVEL",
+      "kind": "switch",
+      "positions": [
+        "+4 dBu",
+        "-10 dBV"
+      ],
+      "default": "+4 dBu",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "scext{n}",
+      "label": "SC EXT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "scmon{n}",
+      "label": "SC MON",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "attack{n}",
+      "label": "ATTACK",
+      "kind": "knob",
+      "default": 5,
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "release{n}",
+      "label": "RELEASE",
+      "kind": "knob",
+      "default": 5,
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "tube{n}",
+      "label": "TUBE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "deess{n}",
+      "label": "DE-ESSER LEVEL",
+      "kind": "knob",
+      "default": 0,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "male{n}",
+      "label": "MALE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "deessio{n}",
+      "label": "DE-ESSER IN/OUT",
+      "kind": "switch",
+      "positions": [
+        "OUT",
+        "IN"
+      ],
+      "default": "OUT",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "couple",
+      "label": "COUPLE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
@@ -129,8 +373,37 @@
       ],
       "to": [
         "OUTPUT 1 (XLR)",
-        "OUTPUT 1 (TRS)",
-        "SIDECHAIN SEND 1"
+        "OUTPUT 1 (TRS)"
+      ],
+      "when": [
+        {
+          "control": "scmon1",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 1 (XLR)",
+        "INPUT 1 (TRS)"
+      ],
+      "to": "SIDECHAIN SEND 1"
+    },
+    {
+      "from": "SIDECHAIN RETURN 1",
+      "to": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 1 (TRS)"
+      ],
+      "when": [
+        {
+          "control": "scmon1",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {
@@ -140,8 +413,37 @@
       ],
       "to": [
         "OUTPUT 2 (XLR)",
-        "OUTPUT 2 (TRS)",
-        "SIDECHAIN SEND 2"
+        "OUTPUT 2 (TRS)"
+      ],
+      "when": [
+        {
+          "control": "scmon2",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 2 (XLR)",
+        "INPUT 2 (TRS)"
+      ],
+      "to": "SIDECHAIN SEND 2"
+    },
+    {
+      "from": "SIDECHAIN RETURN 2",
+      "to": [
+        "OUTPUT 2 (XLR)",
+        "OUTPUT 2 (TRS)"
+      ],
+      "when": [
+        {
+          "control": "scmon2",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     }
   ]

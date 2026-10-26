@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0809-AAA"
     }
   ],
-  "notes": "Active DI box, battery or phantom powered. INPUT (6.35 mm jack) and the unbalanced XLR input both feed the box. LINK OUT is the unbalanced parallel output for an amp; OUTPUT is the balanced mic-level output to the mixer. Two -20 dB pads allow up to speaker level. XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "notes": "Active DI box, battery or phantom powered. INPUT (6.35 mm jack) and the unbalanced XLR input both feed the box. LINK OUT is the unbalanced parallel output for an amp; OUTPUT is the balanced mic-level output to the mixer. Two -20 dB pads allow up to speaker level. XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used. Controls from the Quick Start Guide: battery ON/OFF (the box still works on phantom power when off), two -20 dB attenuation switches (both pressed = -40 dB) and GROUND LIFT. These switches change level, sound or grounding, not where the signal goes.",
   "groups": [
     {
       "count": 0,
@@ -87,6 +87,48 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "battery",
+      "label": "ON/OFF (battery)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "pad1",
+      "label": "-20 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "pad2",
+      "label": "-20 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "gndlift",
+      "label": "GROUND LIFT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
     }
   ],
   "routing": [

@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0809-AAC"
     }
   ],
-  "notes": "Active guitar DI with cabinet simulation, battery or phantom powered. INPUT is a 6.35 mm mono jack; OUTPUT TO MIXER is balanced XLR at mic level. DIRECT LINK TO CABINET passes the input on to an amp; its connector type is not stated in the guide (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "notes": "Active guitar DI with cabinet simulation, battery or phantom powered. INPUT is a 6.35 mm mono jack; OUTPUT TO MIXER is balanced XLR at mic level. DIRECT LINK TO CABINET passes the input on to an amp; its connector type is not stated in the guide (listed as 6.35 mm jack). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used. Controls from the Quick Start Guide: SIMULATOR ON/OFF (virtual 4x12\" cabinet), GND LIFT and two -20 dB PAD switches (both = -40 dB). These switches change level, sound or grounding, not where the signal goes. Start position SIMULATOR ON is an app default.",
   "groups": [
     {
       "count": 0,
@@ -67,6 +67,48 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "sim",
+      "label": "SIMULATOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
+    },
+    {
+      "id": "gndlift",
+      "label": "GND LIFT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "pad1",
+      "label": "-20 dB PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "pad2",
+      "label": "-20 dB PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
     }
   ],
   "routing": [

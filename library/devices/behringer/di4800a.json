@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0809-AAT"
     }
   ],
-  "notes": "4-channel active DI, booster and line isolator. Inputs are balanced XLR/6.35 mm combo jacks; each channel has a front and a rear transformer-balanced XLR output (rear with -20 dB pad). Powered by an external DC supply (not listed). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "notes": "4-channel active DI, booster and line isolator. Inputs are balanced XLR/6.35 mm combo jacks; each channel has a front and a rear transformer-balanced XLR output (rear with -20 dB pad). Powered by an external DC supply (not listed). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used. Controls from the Quick Start Guide: per channel GND LIFT, GAIN buttons +6 / +12 dB (both = +18 dB) and a -20 dB PAD for the rear output. The guide describes one channel; the switches are taken to exist on each of the 4 channels. These switches change level, sound or grounding, not where the signal goes.",
   "groups": [
     {
       "count": 0,
@@ -80,6 +80,56 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "gnd{n}",
+      "label": "GND LIFT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "g6{n}",
+      "label": "+6 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "g12{n}",
+      "label": "+12 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
+    },
+    {
+      "id": "pad{n}",
+      "label": "-20 dB PAD (rear)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 4
     }
   ],
   "routing": [

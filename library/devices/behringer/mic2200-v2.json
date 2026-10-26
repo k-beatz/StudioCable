@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0838-AAS"
     }
   ],
-  "notes": "2-channel tube (12AX7) mic/line preamp with EQ (19\" rack). Per channel, from the specifications: XLR mic input, line input on XLR and 6.35 mm jack, servo-balanced output on XLR and 6.35 mm jack. Jack type (TRS) assumed from 'balanced and unbalanced'; XLR genders follow the usual convention (not stated).",
+  "notes": "2-channel tube (12AX7) mic/line preamp with EQ (19\" rack). Per channel, from the specifications: XLR mic input, line input on XLR and 6.35 mm jack, servo-balanced output on XLR and 6.35 mm jack. Jack type (TRS) assumed from 'balanced and unbalanced'; XLR genders follow the usual convention (not stated). Controls from the Quick Start Guide, 'Controls' (1-18), per channel: +48 V, MIC/LINE, MIC GAIN (10-60 dB, MIC mode only), PHASE REV., LO CUT with its FREQUENCY (12-320 Hz), parametric EQ (FREQUENCY with x0.1 / x10 range switches, BANDWIDTH, LEVEL +/-15 dB, EQ IN/OUT) and OUTPUT (+/-20 dB). Modelled: in MIC mode only the MIC input is used, in LINE mode the line inputs (the guide: phantom power is disabled in LINE mode). OUTPUT at minimum is -20 dB, not silent. The guide describes one channel; both channels are taken to be identical.",
   "groups": [
     {
       "count": 0,
@@ -105,27 +105,218 @@
       "signal": "line-bal"
     }
   ],
+  "controls": [
+    {
+      "id": "p48{n}",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "phantomFor": [
+        "MIC IN {n}"
+      ],
+      "count": 2
+    },
+    {
+      "id": "mode{n}",
+      "label": "MIC / LINE",
+      "kind": "switch",
+      "positions": [
+        "MIC",
+        "LINE"
+      ],
+      "default": "MIC",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "gain{n}",
+      "label": "MIC GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "10 dB",
+      "maxLabel": "60 dB",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "phase{n}",
+      "label": "PHASE REV.",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "locut{n}",
+      "label": "LO CUT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "locutf{n}",
+      "label": "LO CUT FREQ",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "12 Hz",
+      "maxLabel": "320 Hz",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "freq{n}",
+      "label": "FREQUENCY",
+      "kind": "knob",
+      "default": 5,
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "x01{n}",
+      "label": "x0.1",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "x10{n}",
+      "label": "x10",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "bw{n}",
+      "label": "BANDWIDTH",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "0.03 oct",
+      "maxLabel": "2 oct",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "eqlevel{n}",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-15 dB",
+      "maxLabel": "+15 dB",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "eq{n}",
+      "label": "EQ IN/OUT",
+      "kind": "switch",
+      "positions": [
+        "OUT",
+        "IN"
+      ],
+      "default": "OUT",
+      "section": "CH {n}",
+      "count": 2
+    },
+    {
+      "id": "out{n}",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "-20 dB",
+      "maxLabel": "+20 dB",
+      "section": "CH {n}",
+      "count": 2
+    }
+  ],
   "routing": [
     {
+      "from": "MIC IN 1",
+      "to": [
+        "OUTPUT 1 (XLR)",
+        "OUTPUT 1 (jack)"
+      ],
+      "when": [
+        {
+          "control": "mode1",
+          "is": [
+            "MIC"
+          ]
+        }
+      ]
+    },
+    {
       "from": [
-        "MIC IN 1",
         "LINE IN 1 (XLR)",
         "LINE IN 1 (jack)"
       ],
       "to": [
         "OUTPUT 1 (XLR)",
         "OUTPUT 1 (jack)"
+      ],
+      "when": [
+        {
+          "control": "mode1",
+          "is": [
+            "LINE"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "MIC IN 2",
+      "to": [
+        "OUTPUT 2 (XLR)",
+        "OUTPUT 2 (jack)"
+      ],
+      "when": [
+        {
+          "control": "mode2",
+          "is": [
+            "MIC"
+          ]
+        }
       ]
     },
     {
       "from": [
-        "MIC IN 2",
         "LINE IN 2 (XLR)",
         "LINE IN 2 (jack)"
       ],
       "to": [
         "OUTPUT 2 (XLR)",
         "OUTPUT 2 (jack)"
+      ],
+      "when": [
+        {
+          "control": "mode2",
+          "is": [
+            "LINE"
+          ]
+        }
       ]
     }
   ]

@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0811-AAC"
     }
   ],
-  "notes": "Passive transformer DI box. Input is 6.35 mm TS (instrument, or amp speaker output with the 30 dB INST/AMP pad); output is balanced XLR. The THRU/OUT jack sends the unbalanced signal to an on-stage amp; its connector is described only as a jack (listed as 6.35 mm). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used.",
+  "notes": "Passive transformer DI box. Input is 6.35 mm TS (instrument, or amp speaker output with the 30 dB INST/AMP pad); output is balanced XLR. The THRU/OUT jack sends the unbalanced signal to an on-stage amp; its connector is described only as a jack (listed as 6.35 mm). XLR genders are not stated in the guide; the usual convention (inputs female, outputs male) is used. Controls from the technical specifications: INST/AMP switch (30 dB pad), FILTER switch (low pass at 7.5 kHz) and GROUND LIFT. These switches change level, sound or grounding, not where the signal goes.",
   "groups": [
     {
       "count": 0,
@@ -67,6 +67,38 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "pad",
+      "label": "INST / AMP",
+      "kind": "switch",
+      "positions": [
+        "INST",
+        "AMP"
+      ],
+      "default": "INST"
+    },
+    {
+      "id": "filter",
+      "label": "FILTER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "gndlift",
+      "label": "GROUND LIFT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
     }
   ],
   "routing": [
