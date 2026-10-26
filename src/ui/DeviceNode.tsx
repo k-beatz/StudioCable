@@ -350,8 +350,9 @@ function PortRow({ row, side, connected, unused, traced, selected, groups, pendi
         type="source"
         position={side === 'left' ? Position.Left : Position.Right}
         className={'port-handle' + (connected ? ' connected' : '')}
-        // A jack takes one plug: a port with a cable is no start or end for another one.
-        isConnectable={!connected}
+        // A jack takes one plug: a port with a cable is no end for another one. Dragging from it pulls its plug out.
+        isConnectableStart
+        isConnectableEnd={!connected}
         style={{ '--glow': color } as CSSProperties}
       >
         <ConnectorIcon connectors={port.connectors} color={color} />

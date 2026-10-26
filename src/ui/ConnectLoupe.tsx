@@ -6,6 +6,7 @@ import { t } from '../i18n';
 import { useProjectStore } from '../store/projectStore';
 import { isTouchDevice } from './device';
 import { parseHandleId } from './DeviceNode';
+import { usePull } from './connect';
 import { issueText, SEVERITY_ICONS } from './labels';
 
 /** Window size and magnification of the loupe. */
@@ -25,7 +26,9 @@ export function ConnectLoupe() {
   const active = connection.inProgress && isTouchDevice();
 
   const to = active && connection.toHandle?.id ? parseHandleId(connection.toHandle.nodeId, connection.toHandle.id) : null;
-  const from = active && connection.fromHandle?.id ? parseHandleId(connection.fromHandle.nodeId, connection.fromHandle.id) : null;
+  const pull = usePull((s) => s.pull);
+  // A pulled plug: the cable comes from its other, still plugged-in end.
+  const from = !active ? null : pull ? pull.fixed : connection.fromHandle?.id ? parseHandleId(connection.fromHandle.nodeId, connection.fromHandle.id) : null;
   const pointer = active ? connection.pointer : null;
 
   // Copy what is under the finger into the loupe (a snapshot of the device, moved and scaled).
@@ -85,7 +88,8 @@ export function ConnectLoupe() {
 
   // Over a port that already has a cable: React Flow reports it as an invalid target, or not at all.
   let occupied: { name: string; port: string; cable: string } | null = null;
-  const takenCable = to ? cableAt(project, to) : undefined;
+  const taken = to ? cableAt(project, to) : undefined;
+  const takenCable = taken?.id === pull?.cableId ? undefined : taken;
   if (to && takenCable) {
     occupied = { name: toDevice?.name ?? '?', port: toPort?.label ?? '?', cable: takenCable.label };
   } else if (!to && pointer) {
@@ -100,7 +104,8 @@ export function ConnectLoupe() {
     const handleId = handle?.getAttribute('data-handleid');
     if (nodeId && handleId) {
       const end = parseHandleId(nodeId, handleId);
-      const cable = cableAt(project, end);
+      const found = cableAt(project, end);
+      const cable = found?.id === pull?.cableId ? undefined : found;
       const port = getPort(project, end);
       const device = project.devices.find((d) => d.id === end.deviceId);
       if (cable && port && device) occupied = { name: device.name, port: port.label, cable: cable.label };
@@ -130,7 +135,7 @@ export function ConnectLoupe() {
               <span>{worst ? `${SEVERITY_ICONS[worst]} ${issueText(issues[0])}` : `✓ ${t('loupe.fits')}`}</span>
             </>
           ) : (
-            <span>{t('loupe.dropOnPort')}</span>
+            <span>{t(pull ? 'loupe.dropToUnplug' : 'loupe.dropOnPort')}</span>
           )}
         </div>
       </div>

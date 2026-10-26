@@ -41,6 +41,7 @@ export const en = {
   'view.showNotes': 'Sticky notes',
   'view.sound': 'Sounds',
   'loupe.fits': 'Fits',
+  'loupe.dropToUnplug': 'Let go here to pull the cable out, or move onto a free port',
   'loupe.dropOnPort': 'Move onto a port to connect',
   'test.start': 'Send test signal',
   'test.stop': 'Stop test signal',
@@ -214,6 +215,7 @@ export const en = {
   'inspector.collapse': 'Show less',
 
   'connect.fromHere': 'Connect a cable from here',
+  'connect.unplugged': 'Cable pulled out. Undo brings it back.',
   'connect.occupied': '"{port}" already has a cable ({cable}). A jack takes one plug: remove that cable first or pick a free port.',
   'connect.inUse': 'This port already has a cable. Remove it to plug in a different one.',
   'loupe.occupied': 'Already in use ({cable})',

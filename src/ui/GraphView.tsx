@@ -16,7 +16,7 @@ import { shownDevices } from '../core/layout';
 import { connectChain } from '../core/autowire';
 import { isPowerCable } from '../core/power';
 import { findCrossings, routeCables, type CableEnds, type Point, type Rect } from '../core/routing';
-import { getPort, removeCable, removeDevice, updateDevice } from '../core/project';
+import { cableAt, getPort, removeCable, removeDevice, updateDevice } from '../core/project';
 import { worstSeverity } from '../core/validation';
 import { t } from '../i18n';
 import { useAnalysis } from '../store/analysis';
@@ -32,7 +32,8 @@ import {
   type ExternalNodeType,
 } from './DeviceNode';
 import { SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
-import { connectPorts } from './connect';
+import { connectPorts, replug, unplug, usePull } from './connect';
+import { PullLine } from './PullLine';
 import { RoutedEdge, type RoutedEdgeType } from './RoutedEdge';
 import { HangingEdge } from './HangingEdge';
 import { ChainOverlay } from './ChainOverlay';
@@ -141,6 +142,7 @@ export function GraphView() {
   const [cutting, setCutting] = useState<string[]>([]);
   const { byCable } = useAnalysis();
   const highlight = useHighlight();
+  const pulled = usePull((s) => s.pull?.cableId);
   const groups = useGroupIndex();
   const flow = useReactFlow();
 
@@ -213,7 +215,8 @@ export function GraphView() {
           (severity === 'error' ? ' cable-edge--error' : '') +
           (dimmed ? ' dimmed' : '') +
           (suggested?.includes(cable.id) ? ' cable-edge--suggested' : '') +
-          (cutting.includes(cable.id) ? ' cable-edge--cutting' : ''),
+          (cutting.includes(cable.id) ? ' cable-edge--cutting' : '') +
+          (pulled === cable.id ? ' cable-edge--pulled' : ''),
         style: {
           stroke: color,
           strokeWidth: selected || lit ? 4.5 : 3,
@@ -229,7 +232,7 @@ export function GraphView() {
       });
     }
     return result;
-  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting, look]);
+  }, [project, boardId, byCable, selection, highlight, groups, cableStyle, showPower, suggested, cutting, look, pulled]);
 
   // Escape ends the active tool.
   useEffect(() => {
@@ -347,12 +350,68 @@ export function GraphView() {
       })),
     [baseEdges, routing, cableStyle],
   );
+  const edgesRef = useRef(edges);
+  edgesRef.current = edges;
+
+  /** Set when a pulled plug was put into a port, so the end of the drag does not remove the cable. */
+  const replugged = useRef(false);
 
   const onConnect = useCallback((c: Connection) => {
     if (!c.sourceHandle || !c.targetHandle) return;
     if (c.source.startsWith('ext-') || c.target.startsWith('ext-')) return;
-    connectPorts(parseHandleId(c.source, c.sourceHandle), parseHandleId(c.target, c.targetHandle));
+    const a = parseHandleId(c.source, c.sourceHandle);
+    const b = parseHandleId(c.target, c.targetHandle);
+    const pull = usePull.getState().pull;
+    if (pull) {
+      replugged.current = true;
+      const same = (e: CableEnd) => e.deviceId === pull.grabbed.deviceId && e.portId === pull.grabbed.portId;
+      replug(pull, same(a) ? b : a);
+      return;
+    }
+    connectPorts(a, b);
   }, []);
+
+  // Dragging from a port that has a cable pulls that plug out (see Pull in connect.ts).
+  const onConnectStart = useCallback(
+    (event: MouseEvent | TouchEvent, { nodeId, handleId }: { nodeId: string | null; handleId: string | null }) => {
+      replugged.current = false;
+      if (!nodeId || !handleId || nodeId.startsWith('ext-')) return;
+      const grabbed = parseHandleId(nodeId, handleId);
+      const project = useProjectStore.getState().project;
+      const cable = cableAt(project, grabbed);
+      const edge = cable && edgesRef.current.find((e) => e.id === cable.id);
+      if (!cable || !edge) return;
+      const grabbedIsSource = edge.source === nodeId && edge.sourceHandle === handleId;
+      const fixed = cable.ends.find((e) => !(e.deviceId === grabbed.deviceId && e.portId === grabbed.portId)) ?? cable.ends[1];
+      const point = 'touches' in event ? event.touches[0] ?? event.changedTouches[0] : event;
+      usePull.getState().set({
+        cableId: cable.id,
+        grabbed,
+        fixed,
+        fixedNode: grabbedIsSource ? edge.target : edge.source,
+        fixedHandle: (grabbedIsSource ? edge.targetHandle : edge.sourceHandle) ?? '',
+        startX: point?.clientX ?? 0,
+        startY: point?.clientY ?? 0,
+      });
+      play('unplug');
+    },
+    [],
+  );
+
+  const onConnectEnd = useCallback((event: MouseEvent | TouchEvent) => {
+    const pull = usePull.getState().pull;
+    usePull.getState().set(null);
+    if (!pull || replugged.current) return;
+    const point = 'changedTouches' in event ? event.changedTouches[0] : event;
+    // Let go close to where it was grabbed: the plug goes back in.
+    const moved = point ? Math.hypot(point.clientX - pull.startX, point.clientY - pull.startY) : Infinity;
+    if (moved < 40) {
+      play('plug');
+      return;
+    }
+    unplug(pull);
+  }, []);
+
 
   return (
     <ReactFlow<DiagramNode, RoutedEdgeType>
@@ -371,6 +430,11 @@ export function GraphView() {
         );
       }}
       onConnect={onConnect}
+      onConnectStart={onConnectStart}
+      onConnectEnd={onConnectEnd}
+      connectionLineComponent={PullLine}
+      // Tap-to-connect is our own (pendingConnection); React Flow's click-connect would fight with it.
+      connectOnClick={false}
       onNodeClick={(_, n) => n.type !== 'external' && select({ kind: 'device', id: n.id })}
       onNodeDoubleClick={(_, n) => n.type === 'board' && openBoard(n.id)}
       onEdgeClick={(_, e) => select({ kind: 'cable', id: e.id })}

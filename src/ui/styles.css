@@ -2806,3 +2806,15 @@ select.switch {
   background: var(--accent);
   color: #fff;
 }
+
+/* A plug being pulled out: the cable is drawn by the connection line meanwhile. */
+.react-flow__edge.cable-edge--pulled {
+  opacity: 0;
+}
+.react-flow__connection-path.pull-line {
+  stroke-width: 4.5;
+}
+.pull-line__plug {
+  stroke: #0e1524;
+  stroke-width: 2;
+}
