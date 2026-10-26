@@ -821,14 +821,16 @@ select {
   color: var(--warning);
 }
 .library-note {
-  padding: 8px 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  margin: 12px 0 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
   background: var(--panel-2);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  opacity: 0.8;
 }
 .library-note--unverified {
-  border-left: 4px solid var(--warning);
+  border-left: 3px solid var(--warning);
 }
 .source-list {
   margin: 0;

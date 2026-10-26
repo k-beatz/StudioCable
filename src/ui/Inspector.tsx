@@ -121,11 +121,6 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           {template && template.category !== 'pedalboard' && <StarButton fav={favoriteFor(template)} />}
         </div>
       </div>
-      {template?.origin === 'library' && (
-        <div className={'library-note' + (template.verified ? '' : ' library-note--unverified')}>
-          {template.verified ? `✓ ${t('library.verified')}` : `⚠️ ${t('library.unverifiedHint')}`}
-        </div>
-      )}
       {template?.sources && template.sources.length > 0 && (
         <div className="field">
           <span>{t('library.sources')}</span>
@@ -176,6 +171,11 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           </li>
         ))}
       </ul>
+      {template?.origin === 'library' && (
+        <div className={'library-note' + (template.verified ? '' : ' library-note--unverified')}>
+          {template.verified ? `✓ ${t('library.verified')}` : `⚠️ ${t('library.unverifiedHint')}`}
+        </div>
+      )}
       <div className="button-row">
         <button onClick={duplicate}>{t('device.duplicate')}</button>
         <button

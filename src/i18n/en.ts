@@ -205,7 +205,7 @@ export const en = {
   'checks.empty': 'Nothing to check yet.',
 
   'library.unverified': 'Unverified',
-  'library.unverifiedHint': 'These specs come from the sources below but have not been checked yet. Please compare them with your device.',
+  'library.unverifiedHint': 'These specs come from the sources above but have not been checked yet. Please compare them with your device.',
   'library.verified': 'Checked against the device',
   'library.sources': 'Sources',
 
