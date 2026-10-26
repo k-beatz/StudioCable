@@ -1,0 +1,1922 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "cambridge-audio-cxa81",
+  "manufacturer": "Cambridge Audio",
+  "model": "CXA81",
+  "category": "amp",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "CXA61/81 manual (Cambridge Audio, copy hosted by AV-Connection)",
+      "url": "https://doc.av-connection.com/Products/CambridgeAudio/CXA-61-81-EN.pdf"
+    },
+    {
+      "title": "CXA61/81/81 Mk II manuals (Cambridge Audio)",
+      "url": "https://www.cambridgeaudio.com/row/en/manuals/cxa618181-mk-ii"
+    }
+  ],
+  "notes": "Integrated stereo amplifier, 80 W RMS into 8 ohms. Everything from the CXA61/81 manual (Rear panel connections, Front panel controls, Remote control, Specifications); the rear panel drawing gives D1 and D2 as Toslink optical and D3 as S/P DIF coaxial. Bluetooth (aptX HD) is an input without a socket, so it is only a SOURCE position here. Controls: the source buttons (on the CXA81 the A1 button toggles between the unbalanced RCA and the balanced XLR A1 input), Speaker A/B (A, B or A and B), Mute (remote control), Volume ('affects the level of all outputs', so the pre-out and sub out follow it), and the USB Ground/Lift switch, which only helps against hum. From the manual: plugging in headphones mutes the loudspeaker, pre-out and sub outputs; the sub out is low-pass filtered (about 2.3 kHz). Left out: the AC power inlet, RS232C, Control Bus, IR in and the 12 V trigger in/out, the Bluetooth antenna, and the standby button. Volume at MIN is treated as silent; start positions (A1, speakers A, volume low) are app defaults. Socket genders are not stated; female assumed.",
+  "groups": [
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "A1 BALANCED L",
+        "A1 BALANCED R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "A1 L",
+        "A1 R",
+        "A2 L",
+        "A2 R",
+        "A3 L",
+        "A3 R",
+        "A4 L",
+        "A4 R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "D1 OPTICAL",
+        "D2 OPTICAL"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "toslink",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "D3 COAXIAL"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "spdif-coax",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB AUDIO IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "SPEAKERS A L",
+        "SPEAKERS A R",
+        "SPEAKERS B L",
+        "SPEAKERS B R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "speaker-terminal",
+          "gender": "female"
+        }
+      ],
+      "signal": "speaker"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PRE-OUT L",
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "PHONES"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-3.5",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    }
+  ],
+  "controls": [
+    {
+      "id": "input",
+      "label": "SOURCE",
+      "kind": "switch",
+      "positions": [
+        "A1",
+        "A1 BAL",
+        "A2",
+        "A3",
+        "A4",
+        "D1",
+        "D2",
+        "D3",
+        "USB",
+        "BLUETOOTH"
+      ],
+      "default": "A1"
+    },
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "kind": "knob",
+      "default": 3,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "SPEAKERS A L",
+        "SPEAKERS A R",
+        "SPEAKERS B L",
+        "SPEAKERS B R",
+        "PRE-OUT L",
+        "PRE-OUT R",
+        "SUB OUT",
+        "PHONES"
+      ]
+    },
+    {
+      "id": "speakers",
+      "label": "SPEAKER A/B",
+      "kind": "switch",
+      "positions": [
+        "A",
+        "B",
+        "A+B"
+      ],
+      "default": "A"
+    },
+    {
+      "id": "mute",
+      "label": "MUTE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "ground",
+      "label": "USB GROUND/LIFT",
+      "kind": "switch",
+      "positions": [
+        "GND",
+        "LIFT"
+      ],
+      "default": "GND"
+    }
+  ],
+  "routing": [
+    {
+      "from": "A1 L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 L",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A1 R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 R",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A1 BALANCED L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED L",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A1 BALANCED R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED R",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A1 BALANCED R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A1 BAL"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A2 L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 L",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A2 R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 R",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A2 R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A3 L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 L",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A3 R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 R",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A3 R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A4 L",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 L",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 L",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 L",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "A4 R",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 R",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 R",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "A4 R",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "A4"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D1 OPTICAL",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D1"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D2 OPTICAL",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D2"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "D3 COAXIAL",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "D3"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": "SPEAKERS A L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": "SPEAKERS B L",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": [
+        "PRE-OUT L",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": "SPEAKERS A R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "A",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": "SPEAKERS B R",
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "speakers",
+          "is": [
+            "B",
+            "A+B"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    },
+    {
+      "from": "USB AUDIO IN",
+      "to": [
+        "PRE-OUT R",
+        "SUB OUT"
+      ],
+      "when": [
+        {
+          "control": "input",
+          "is": [
+            "USB"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ],
+      "breakWhenPatched": [
+        "PHONES"
+      ]
+    }
+  ]
+}

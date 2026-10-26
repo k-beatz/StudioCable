@@ -1,0 +1,289 @@
+{
+  "format": "studiocable-device",
+  "schemaVersion": 1,
+  "id": "behringer-x32",
+  "manufacturer": "Behringer",
+  "model": "X32",
+  "category": "mixer",
+  "status": "unverified",
+  "sources": [
+    {
+      "title": "X32 Quick Start Guide (Behringer, copy hosted by Protolight)",
+      "url": "https://protolight.com/files/2019/08/Behringer-X32_Quick-Start-Guide.pdf"
+    }
+  ],
+  "notes": "Digital mixer (40 inputs, 25 buses). Connectors from the 'Specifications' of the X32 Quick Start Guide: 32 XLR inputs with programmable MIDAS preamps (48 V phantom switchable per input, set in the software), 1 XLR talkback input, 2/2 RCA in/out, 16 XLR outputs, monitor outputs 2 XLR and 2 balanced 1/4\" TRS, 6/6 balanced 1/4\" TRS aux in/out, 2 stereo 1/4\" TRS phones outputs, 1 AES/EBU XLR output, 2 AES50 ports (etherCON), 1 P-16 (Ultranet, no power supplied), MIDI in/out, USB type A on the top panel (audio and data export/import), USB type B on the rear panel and Ethernet, both for remote control. The expansion card slot (32 channels in/out, 'various standards') is left out: which card is fitted varies; the guide describes the X-USB card for 32 channels to and from a computer. No routing and no controls: inputs and outputs are patched freely in the software ('Output Signals can be freely assigned from any internal signal'), and the faders and encoders work on layers, not on fixed ports, so the app cannot know where a signal goes. Signal tracing and the test signal therefore stop at the X32. Not stated and assumed: XLR inputs female, XLR outputs (and AES/EBU) male, other sockets female.",
+  "groups": [
+    {
+      "count": 32,
+      "label": "INPUT",
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic",
+      "alsoAccepts": [
+        "line-bal",
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "TALKBACK"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
+      "signal": "mic"
+    },
+    {
+      "count": 6,
+      "label": "AUX IN",
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "RCA IN L",
+        "RCA IN R"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 16,
+      "label": "OUTPUT",
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 6,
+      "label": "AUX OUT",
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "RCA OUT L",
+        "RCA OUT R"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rca",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-unbal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MONITOR OUT L (XLR)",
+        "MONITOR OUT R (XLR)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MONITOR OUT L (TRS)",
+        "MONITOR OUT R (TRS)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "line-bal"
+    },
+    {
+      "count": 2,
+      "label": "PHONES",
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
+      "signal": "headphone",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "AES/EBU OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "aes-xlr",
+          "gender": "male"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 2
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "AES50 A",
+        "AES50 B"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "rj45",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 48
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "P-16 (ULTRANET)"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "rj45",
+          "gender": "female"
+        }
+      ],
+      "signal": "digital-audio",
+      "channels": 16
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI IN"
+      ],
+      "direction": "in",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "MIDI OUT"
+      ],
+      "direction": "out",
+      "connectors": [
+        {
+          "type": "midi-din",
+          "gender": "female"
+        }
+      ],
+      "signal": "midi"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB (REMOTE)"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-b",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "USB (TOP, STORAGE)"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "usb-a",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    },
+    {
+      "count": 0,
+      "label": "",
+      "labels": [
+        "ETHERNET (REMOTE)"
+      ],
+      "direction": "bidi",
+      "connectors": [
+        {
+          "type": "rj45",
+          "gender": "female"
+        }
+      ],
+      "signal": "data"
+    }
+  ]
+}

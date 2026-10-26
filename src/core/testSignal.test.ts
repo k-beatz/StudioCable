@@ -114,4 +114,24 @@ describe('test signal', () => {
     expect(r.listeners.find((l) => l.deviceId === h.right)?.effects).toEqual(['phase']);
     expect(r.listeners.find((l) => l.deviceId === h.left)?.effects).toEqual([]);
   });
+
+  it('Cambridge CXA81: the selected source plays; plugging in headphones mutes the speakers', () => {
+    const s = plan();
+    const synth = s.add(preset('synth'), 'Synth');
+    const amp = s.add(lib('cambridge-audio-cxa81'), 'CXA81');
+    const left = s.add(preset('passiveSpeaker'), 'Left');
+    const right = s.add(preset('passiveSpeaker'), 'Right');
+    s.connect(s.port(synth, 'Out L'), s.port(amp, 'A2 L'));
+    s.connect(s.port(synth, 'Out R'), s.port(amp, 'A2 R'));
+    s.connect(s.port(amp, 'SPEAKERS A L'), s.port(left, 'Speaker In'));
+    s.connect(s.port(amp, 'SPEAKERS A R'), s.port(right, 'Speaker In'));
+    const heard = () => testSignal(s.p, synth).listeners.map((l) => l.deviceId).sort();
+    expect(heard()).toEqual([]); // the CXA81 starts on A1
+    s.set(amp, { input: 'A2' });
+    expect(heard()).toEqual([left, right].sort());
+    const phones = s.add(preset('headphones'), 'Phones');
+    const plug = s.p.templates[s.p.devices.find((d) => d.id === phones)!.templateId].ports[0].label;
+    s.connect(s.port(amp, 'PHONES'), s.port(phones, plug));
+    expect(heard()).toEqual([phones]);
+  });
 });
