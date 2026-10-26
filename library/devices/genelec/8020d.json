@@ -10,9 +10,13 @@
     {
       "title": "8020D product page and specifications (Genelec)",
       "url": "https://www.genelec.com/8020d"
+    },
+    {
+      "title": "8020D operating manual (copy at a Genelec dealer)",
+      "url": "https://www.la-bs.com/Objets/8020DPM_me.pdf"
     }
   ],
-  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs).",
+  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs). Controls from the operating manual: rotary input sensitivity control, ISS switch (automatic standby), tone control switches DESKTOP (-4 dB @ 200 Hz), TREBLE TILT (-2 dB > 5 kHz), BASS TILT (-2 / -4 / -6 dB) and BASS ROLL-OFF (-4 dB @ 65 Hz), power switch. These switches shape the frequency response; they do not change where the signal goes. All off = flat (factory setting).",
   "groups": [
     {
       "count": 0,
@@ -28,6 +32,76 @@
         }
       ],
       "signal": "line-bal"
+    }
+  ],
+  "controls": [
+    {
+      "id": "sens",
+      "label": "SENSITIVITY",
+      "kind": "knob",
+      "default": 10
+    },
+    {
+      "id": "iss",
+      "label": "ISS",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
+    },
+    {
+      "id": "desktop",
+      "label": "DESKTOP (-4 dB @ 200 Hz)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "treble",
+      "label": "TREBLE TILT (-2 dB > 5 kHz)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "basstilt",
+      "label": "BASS TILT",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-2 dB",
+        "-4 dB",
+        "-6 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "rolloff",
+      "label": "BASS ROLL-OFF (-4 dB @ 65 Hz)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
     }
   ]
 }

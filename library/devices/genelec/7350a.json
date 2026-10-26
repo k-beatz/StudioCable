@@ -10,9 +10,13 @@
     {
       "title": "7350A product page and specifications (Genelec)",
       "url": "https://www.genelec.com/7350a"
+    },
+    {
+      "title": "7350A operating manual, Japanese (Genelec)",
+      "url": "https://www.genelec.jp/documents/op-manual/sam-studio-monitors-subwoofers/7350A/7350_op-man_Jp.pdf"
     }
   ],
-  "notes": "SAM subwoofer with bass management. Specifications list 6 x XLR analog input, 5 x XLR analog output, XLR AES/EBU input and output, and 2 x RJ45 control ports for GLM. The channel mapping of inputs to outputs is not stated; routing assumes input n feeds output n. XLR gender not stated (female by convention for inputs).",
+  "notes": "SAM subwoofer with bass management. Specifications list 6 x XLR analog input, 5 x XLR analog output, XLR AES/EBU input and output, and 2 x RJ45 control ports for GLM. The channel mapping of inputs to outputs is not stated; routing assumes input n feeds output n. XLR gender not stated (female by convention for inputs). Controls: Smart Active Monitor: level, delay, room equalisation and the other settings are made in the Genelec GLM software, not on the device; only the power switch is on the back panel (from the rear panel drawing in the manual).",
   "groups": [
     {
       "count": 0,
@@ -100,6 +104,18 @@
         }
       ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
     }
   ],
   "routing": [

@@ -10,9 +10,13 @@
     {
       "title": "8010A product page and specifications (Genelec)",
       "url": "https://www.genelec.com/8010a"
+    },
+    {
+      "title": "8010A operating manual (Genelec)",
+      "url": "https://www.genelec.jp/documents/op-manual/active-monitors-subwoofers/8010A/8010a_opman.pdf"
     }
   ],
-  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs).",
+  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs). Controls from the operating manual: ISS DISABLE (automatic standby off), SENSITIVITY -10 dB, DESKTOP control (-4 dB at 200 Hz) and BASS TILT (-2 / -4 / -6 dB with two switches), power switch. These switches shape the frequency response; they do not change where the signal goes. All off = flat (factory setting).",
   "groups": [
     {
       "count": 0,
@@ -28,6 +32,60 @@
         }
       ],
       "signal": "line-bal"
+    }
+  ],
+  "controls": [
+    {
+      "id": "iss",
+      "label": "ISS DISABLE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "sens",
+      "label": "SENSITIVITY -10 dB",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "desktop",
+      "label": "DESKTOP (-4 dB @ 200 Hz)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "basstilt",
+      "label": "BASS TILT",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-2 dB",
+        "-4 dB",
+        "-6 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
     }
   ]
 }

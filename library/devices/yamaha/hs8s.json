@@ -12,7 +12,7 @@
       "url": "https://usa.yamaha.com/products/proaudio/speakers/hs_series/specs.html"
     }
   ],
-  "notes": "Powered subwoofer. I/O connectors per the specifications: INPUT XLR3-31 (female) x2 and PHONE (6.35 mm balanced) x2; OUTPUT XLR3-32 (male) x2 (L&R) to the satellite monitors, plus XLR3-32 EXT SUB output (listed on the US page). Routing: inputs feed the L/R outputs and the sub output; any high-pass filtering of the L/R outputs is not modelled.",
+  "notes": "Powered subwoofer. I/O connectors per the specifications: INPUT XLR3-31 (female) x2 and PHONE (6.35 mm balanced) x2; OUTPUT XLR3-32 (male) x2 (L&R) to the satellite monitors, plus XLR3-32 EXT SUB output (listed on the US page). Routing: inputs feed the L/R outputs and the sub output; any high-pass filtering of the L/R outputs is not modelled. Controls from the specifications: LEVEL, PHASE (NORM./REV.), HIGH CUT (80-120 Hz), LOW CUT frequency (80-120 Hz) and LOW CUT on/off. They change the sound, not where the signal goes.",
   "groups": [
     {
       "count": 0,
@@ -82,6 +82,50 @@
         }
       ],
       "signal": "line-bal"
+    }
+  ],
+  "controls": [
+    {
+      "id": "level",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5
+    },
+    {
+      "id": "phase",
+      "label": "PHASE",
+      "kind": "switch",
+      "positions": [
+        "NORM.",
+        "REV."
+      ],
+      "default": "NORM."
+    },
+    {
+      "id": "highcut",
+      "label": "HIGH CUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "80 Hz",
+      "maxLabel": "120 Hz"
+    },
+    {
+      "id": "lowcutf",
+      "label": "LOW CUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "80 Hz",
+      "maxLabel": "120 Hz"
+    },
+    {
+      "id": "lowcut",
+      "label": "LOW CUT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
     }
   ],
   "routing": [

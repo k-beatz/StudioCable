@@ -12,7 +12,7 @@
       "url": "https://jblpro.com/products/308p-mkii"
     }
   ],
-  "notes": "Active studio monitor with balanced XLR and 6.35 mm TRS inputs and a +4 dBu / -10 dBV input sensitivity switch (per the product page). Whether both inputs can be used at the same time is not stated. XLR gender not stated (female by convention).",
+  "notes": "Active studio monitor with balanced XLR and 6.35 mm TRS inputs and a +4 dBu / -10 dBV input sensitivity switch (per the product page). Whether both inputs can be used at the same time is not stated. XLR gender not stated (female by convention). Controls from the product page (features and specifications): volume control, +4 dBu / -10 dBV input sensitivity switch, 3-position HF TRIM (-2 / 0 / +2 dB) and BOUNDARY EQ (LF shelf at 50 Hz: 0 / -1.5 / -3 dB). Whether the volume control at minimum is fully silent is not stated, so it does not change the signal paths here.",
   "groups": [
     {
       "count": 0,
@@ -49,6 +49,46 @@
       "alsoAccepts": [
         "line-unbal"
       ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "kind": "knob",
+      "default": 5
+    },
+    {
+      "id": "sens",
+      "label": "INPUT SENSITIVITY",
+      "kind": "switch",
+      "positions": [
+        "+4 dBu",
+        "-10 dBV"
+      ],
+      "default": "+4 dBu"
+    },
+    {
+      "id": "hf",
+      "label": "HF TRIM",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "+2 dB",
+        "-2 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "boundary",
+      "label": "BOUNDARY EQ",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-1.5 dB",
+        "-3 dB"
+      ],
+      "default": "0 dB"
     }
   ]
 }

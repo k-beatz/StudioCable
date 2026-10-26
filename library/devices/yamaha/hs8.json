@@ -12,7 +12,7 @@
       "url": "https://usa.yamaha.com/products/proaudio/speakers/hs_series/specs.html"
     }
   ],
-  "notes": "Active studio monitor. I/O connectors per the specifications: XLR3-31 type (female, balanced) and PHONE (6.35 mm, balanced). Whether both inputs can be used at the same time is not stated.",
+  "notes": "Active studio monitor. I/O connectors per the specifications: XLR3-31 type (female, balanced) and PHONE (6.35 mm, balanced). Whether both inputs can be used at the same time is not stated. Controls from the specifications: LEVEL control (+4 dB at the centre click), HIGH TRIM switch (+/-2 dB at high frequencies) and ROOM CONTROL switch (0 / -2 / -4 dB below 500 Hz). They change the sound, not where the signal goes.",
   "groups": [
     {
       "count": 0,
@@ -49,6 +49,36 @@
       "alsoAccepts": [
         "line-unbal"
       ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "level",
+      "label": "LEVEL",
+      "kind": "knob",
+      "default": 5
+    },
+    {
+      "id": "hightrim",
+      "label": "HIGH TRIM",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "+2 dB",
+        "-2 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "room",
+      "label": "ROOM CONTROL",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-2 dB",
+        "-4 dB"
+      ],
+      "default": "0 dB"
     }
   ]
 }

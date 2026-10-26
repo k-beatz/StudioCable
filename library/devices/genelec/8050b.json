@@ -10,9 +10,13 @@
     {
       "title": "8050B product page and specifications (Genelec)",
       "url": "https://www.genelec.com/8050b"
+    },
+    {
+      "title": "8040B/8050B operating manual (copy at Full Compass)",
+      "url": "https://www.fullcompass.com/common/files/20585-8050BUserManual.pdf"
     }
   ],
-  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs).",
+  "notes": "Active studio monitor. Specifications list 1 x XLR analog input. XLR gender not stated (female by convention for inputs). Controls from the 8040B/8050B operating manual: input sensitivity control (factory -6 dBu, fully clockwise), ISS DISABLE, switch groups TREBLE TILT (+2 to -4 dB and MUTE at 15 kHz), DESKTOP (-4 dB at 160 Hz), BASS TILT (0 to -6 dB at 100 Hz and MUTE) and BASS ROLL-OFF (0 to -6 dB at 35 Hz), power switch. MUTE silences that driver only. These switches shape the frequency response; they do not change where the signal goes. All off = flat (factory setting).",
   "groups": [
     {
       "count": 0,
@@ -28,6 +32,83 @@
         }
       ],
       "signal": "line-bal"
+    }
+  ],
+  "controls": [
+    {
+      "id": "sens",
+      "label": "INPUT SENSITIVITY",
+      "kind": "knob",
+      "default": 10,
+      "maxLabel": "-6 dBu"
+    },
+    {
+      "id": "iss",
+      "label": "ISS DISABLE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "treble",
+      "label": "TREBLE TILT",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "+2 dB",
+        "-2 dB",
+        "-4 dB",
+        "MUTE"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "desktop",
+      "label": "DESKTOP (-4 dB @ 160 Hz)",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "basstilt",
+      "label": "BASS TILT",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-2 dB",
+        "-4 dB",
+        "-6 dB",
+        "MUTE"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "rolloff",
+      "label": "BASS ROLL-OFF",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-2 dB",
+        "-4 dB",
+        "-6 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
     }
   ]
 }

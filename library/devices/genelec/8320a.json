@@ -10,9 +10,13 @@
     {
       "title": "8320A product page and specifications (Genelec)",
       "url": "https://www.genelec.com/8320a"
+    },
+    {
+      "title": "8320A / 8330A operating manual, Japanese (Genelec)",
+      "url": "https://www.genelec.jp/documents/op-manual/sam-studio-monitors-subwoofers/8330A/8320_and_8330%20opman_jpn.pdf"
     }
   ],
-  "notes": "Smart Active Monitor (SAM). Specifications list 1 x XLR analog input and 2 x RJ45 control ports for the GLM calibration network. XLR gender not stated (female by convention for inputs).",
+  "notes": "Smart Active Monitor (SAM). Specifications list 1 x XLR analog input and 2 x RJ45 control ports for the GLM calibration network. XLR gender not stated (female by convention for inputs). Controls: Smart Active Monitor: level, delay, room equalisation and the other settings are made in the Genelec GLM software, not on the device; only the power switch is on the back panel (from the rear panel drawing in the manual). The RESET TO FACTORY function (a button held down) is not shown.",
   "groups": [
     {
       "count": 0,
@@ -44,6 +48,18 @@
         }
       ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "power",
+      "label": "POWER",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "ON"
     }
   ]
 }
