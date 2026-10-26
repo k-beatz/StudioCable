@@ -12,36 +12,62 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/scarlett_solo_4th_gen_user_guide_v4-pdf-en.pdf"
     }
   ],
-  "notes": "Input 1 is a front 6.35 mm jack for line or instrument (Inst button); Input 2 is the rear XLR mic input. The speaker outputs and the headphone output share the same feed. Kensington lock not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring; computer playback reaches the speaker and headphone outputs.",
+  "notes": "Input 1 is a front 6.35 mm jack for line or instrument (Inst button); Input 2 is the rear XLR mic input. The speaker outputs and the headphone output share the same feed. Kensington lock not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring; computer playback reaches the speaker and headphone outputs. Controls from the user guide, 'Front Panel': gain for input 1 (line/instrument) and input 2 (mic), INST, 48V, AIR, speaker output level, DIRECT MONITOR on/off and headphone level. Inputs reach the speaker and headphone outputs only with DIRECT MONITOR on. Assumption: output levels at MIN are silent.",
   "groups": [
     {
       "count": 1,
       "label": "Input 1 (Line/Inst)",
       "direction": "in",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "line-bal",
-      "alsoAccepts": ["line-unbal", "instrument"]
+      "alsoAccepts": [
+        "line-unbal",
+        "instrument"
+      ]
     },
     {
       "count": 1,
       "label": "Input 2 (Mic)",
       "direction": "in",
-      "connectors": [{ "type": "xlr", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
       "signal": "mic"
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["Speaker Output L", "Speaker Output R"],
+      "labels": [
+        "Speaker Output L",
+        "Speaker Output R"
+      ],
       "direction": "out",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "line-bal"
     },
     {
       "count": 1,
       "label": "Headphones",
       "direction": "out",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "headphone",
       "channels": 2
     },
@@ -49,15 +75,141 @@
       "count": 1,
       "label": "USB",
       "direction": "bidi",
-      "connectors": [{ "type": "usb-c", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "usb-c",
+          "gender": "female"
+        }
+      ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "gain1",
+      "label": "GAIN 1 (LINE/INST)",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUTS"
+    },
+    {
+      "id": "inst",
+      "label": "INST",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUTS"
+    },
+    {
+      "id": "gain2",
+      "label": "GAIN 2 (MIC)",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUTS"
+    },
+    {
+      "id": "phantom",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUTS",
+      "phantomFor": [
+        "Input 2 (Mic)"
+      ]
+    },
+    {
+      "id": "air",
+      "label": "AIR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUTS"
+    },
+    {
+      "id": "speaker",
+      "label": "SPEAKER OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Speaker Output L",
+        "Speaker Output R"
+      ],
+      "section": "OUTPUTS"
+    },
+    {
+      "id": "direct",
+      "label": "DIRECT MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "OUTPUTS"
+    },
+    {
+      "id": "phones",
+      "label": "HEADPHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones"
+      ],
+      "section": "OUTPUTS"
     }
   ],
   "routing": [
     {
-      "from": ["Input 1 (Line/Inst)", "Input 2 (Mic)"],
-      "to": ["USB", "Speaker Output L", "Speaker Output R", "Headphones"]
+      "from": [
+        "Input 1 (Line/Inst)",
+        "Input 2 (Mic)"
+      ],
+      "to": "USB"
     },
-    { "from": "USB", "to": ["Speaker Output L", "Speaker Output R", "Headphones"] }
+    {
+      "from": [
+        "Input 1 (Line/Inst)",
+        "Input 2 (Mic)"
+      ],
+      "to": [
+        "Speaker Output L",
+        "Speaker Output R",
+        "Headphones"
+      ],
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "ON"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
+        "Speaker Output L",
+        "Speaker Output R",
+        "Headphones"
+      ]
+    }
   ]
 }

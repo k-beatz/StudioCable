@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAM"
     }
   ],
-  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). Main outputs exist as XLR and as 6.35 mm TRS; the guide does not state the XLR gender, male is the usual convention for outputs. INSERT jacks are TRS send/return (100 \u03a9 send, 10 k\u03a9 return); the signal path through them is not modelled. MIDI IN/OUT are 5-pin DIN. Powered by the included adapter (DC IN, not listed) or USB. Routing: the MIX knob blends inputs with playback 1-2 on MAIN OUT; MONITOR A/B selects playback 1-2 or 3-4 for the headphones.",
+  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). Main outputs exist as XLR and as 6.35 mm TRS; the guide does not state the XLR gender, male is the usual convention for outputs. INSERT jacks are TRS send/return (100 Ω send, 10 kΩ return); the signal path through them is not modelled. MIDI IN/OUT are 5-pin DIN. Powered by the included adapter (DC IN, not listed) or USB. Routing: the MIX knob blends inputs with playback 1-2 on MAIN OUT; MONITOR A/B selects playback 1-2 or 3-4 for the headphones. Controls from the U-PHORIA Quick Start Guide, 'Step 2: Controls'. MIX sets the balance of the input signals against playback 1-2 at MAIN OUT and the headphones; MONITOR A/B puts playback 3-4 on the headphones; STEREO/MONO switches the input monitoring to mono. Modelling assumptions: MIX fully to INPUT means no playback on MAIN OUT, fully to PLAYBACK means no direct input signal; MAIN OUT and PHONES at MIN are silent; STEREO/MONO and MONITOR A/B are shown but do not change the paths here (which input goes to which side in stereo is not stated). The single +48 V switch is taken to feed all inputs.",
   "groups": [
     {
       "count": 0,
@@ -193,6 +193,117 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "inst{n}",
+      "label": "LINE / INST",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "INST"
+      ],
+      "default": "LINE",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "pad{n}",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "phantom",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ]
+    },
+    {
+      "id": "mono",
+      "label": "STEREO / MONO",
+      "kind": "switch",
+      "positions": [
+        "STEREO",
+        "MONO"
+      ],
+      "default": "STEREO",
+      "section": "MAIN"
+    },
+    {
+      "id": "mix",
+      "label": "MIX",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "INPUT",
+      "maxLabel": "PLAYBACK",
+      "section": "MAIN"
+    },
+    {
+      "id": "monitor",
+      "label": "MONITOR A/B",
+      "kind": "switch",
+      "positions": [
+        "A",
+        "B"
+      ],
+      "default": "A",
+      "section": "MAIN"
+    },
+    {
+      "id": "phones",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "main",
+      "label": "MAIN OUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L (XLR)",
+        "MAIN OUT R (XLR)",
+        "MAIN OUT L (TRS)",
+        "MAIN OUT R (TRS)"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
@@ -201,13 +312,27 @@
         "INPUT 3",
         "INPUT 4"
       ],
+      "to": "USB"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ],
       "to": [
-        "USB",
         "MAIN OUT L (XLR)",
         "MAIN OUT R (XLR)",
         "MAIN OUT L (TRS)",
         "MAIN OUT R (TRS)",
         "PHONES"
+      ],
+      "when": [
+        {
+          "control": "mix",
+          "max": 9
+        }
       ]
     },
     {
@@ -216,7 +341,22 @@
         "MAIN OUT L (XLR)",
         "MAIN OUT R (XLR)",
         "MAIN OUT L (TRS)",
-        "MAIN OUT R (TRS)",
+        "MAIN OUT R (TRS)"
+      ],
+      "when": [
+        {
+          "control": "mix",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES"
+    },
+    {
+      "from": "USB",
+      "to": [
         "PLAYBACK A 1/L (TRS)",
         "PLAYBACK A 2/R (TRS)",
         "PLAYBACK B 3/L (TRS)",
@@ -224,8 +364,7 @@
         "PLAYBACK A 1/L (RCA)",
         "PLAYBACK A 2/R (RCA)",
         "PLAYBACK B 3/L (RCA)",
-        "PLAYBACK B 4/R (RCA)",
-        "PHONES"
+        "PLAYBACK B 4/R (RCA)"
       ]
     }
   ]

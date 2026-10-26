@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAF"
     }
   ],
-  "notes": "USB audio interface with built-in phono preamp for turntables (PHONO/LINE switch on the input; the app has no separate phono signal type yet, so the input is listed as line). Line in/out unbalanced RCA, 3.5 mm stereo headphone jack, USB 1.1 type A (attached cable), bus-powered.",
+  "notes": "USB audio interface with built-in phono preamp for turntables (LINE/PHONO switch on the input; the input is listed as phono and also accepts line level). Line in/out unbalanced RCA, 3.5 mm stereo headphone jack, USB 1.1 type A (attached cable), bus-powered. Controls from the user manual, chapter 3: LINE/PHONO input switch (PHONO for record players with moving magnet cartridges) and the headphone VOLUME. The app does not yet check whether the switch matches the source. Assumption: VOLUME at MIN is silent; start position PHONO is an app default.",
   "groups": [
     {
       "count": 0,
@@ -32,7 +32,10 @@
           "gender": "female"
         }
       ],
-      "signal": "line-unbal"
+      "signal": "phono",
+      "alsoAccepts": [
+        "line-unbal"
+      ]
     },
     {
       "count": 0,
@@ -80,6 +83,29 @@
         }
       ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "phono",
+      "label": "LINE / PHONO",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "PHONO"
+      ],
+      "default": "PHONO"
+    },
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ]
     }
   ],
   "routing": [

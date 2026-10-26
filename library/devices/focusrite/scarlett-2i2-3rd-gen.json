@@ -12,7 +12,7 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/Scarlett%202i2%203rd%20Gen%20User%20Guide%20V2.pdf"
     }
   ],
-  "notes": "Inputs 1-2 are combo XLR/6.35 mm jack: mic on XLR, line or instrument (INST) on jack. Kensington lock not listed. USB bus-powered. Routing: Direct Monitor sends the inputs straight to the outputs; inputs reach the computer via USB.",
+  "notes": "Inputs 1-2 are combo XLR/6.35 mm jack: mic on XLR, line or instrument (INST) on jack. Kensington lock not listed. USB bus-powered. Routing: Direct Monitor sends the inputs straight to the outputs; inputs reach the computer via USB. Controls from the user guide, 'Front Panel': GAIN, INST and AIR per input, one 48V switch for both inputs, MONITOR (main output level), DIRECT MONITOR OFF/MONO/STEREO and headphone level. As the guide states, with DIRECT MONITOR in MONO both inputs go to both outputs and the headphones; in STEREO input 1 goes left and input 2 right; OFF = monitoring via the computer only. Assumption: MONITOR and headphone level at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -87,18 +87,101 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "inst{n}",
+      "label": "INST",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "air{n}",
+      "label": "AIR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "phantom",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR",
+      "phantomFor": [
+        "Input 1",
+        "Input 2"
+      ]
+    },
+    {
+      "id": "direct",
+      "label": "DIRECT MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "MONO",
+        "STEREO"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "monitor",
+      "label": "MONITOR",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Line Output Left",
+        "Line Output Right"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones",
+      "label": "HEADPHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones"
+      ],
+      "section": "MONITOR"
+    }
+  ],
   "routing": [
     {
       "from": [
         "Input 1",
         "Input 2"
       ],
-      "to": [
-        "USB",
-        "Line Output Left",
-        "Line Output Right",
-        "Headphones"
-      ]
+      "to": "USB"
     },
     {
       "from": "USB",
@@ -106,6 +189,72 @@
         "Line Output Left",
         "Line Output Right",
         "Headphones"
+      ]
+    },
+    {
+      "from": "Input 1",
+      "to": "Line Output Left",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2",
+      "to": "Line Output Right",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 1",
+      "to": "Line Output Right",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2",
+      "to": "Line Output Left",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "Input 1",
+        "Input 2"
+      ],
+      "to": "Headphones",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
       ]
     }
   ]

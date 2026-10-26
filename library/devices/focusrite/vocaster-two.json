@@ -12,7 +12,7 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/vocaster_two_user_guide_v2_en.pdf"
     }
   ],
-  "notes": "Podcast interface. Host and Guest mic inputs are XLR. Speaker outputs L/R are 6.35 mm TRS. Headphone outputs are 6.35 mm on the front. Camera Out is a 3.5 mm TRS jack, Phone is a 3.5 mm TRRS jack (4-pole; listed as 3.5 mm TRS because the app has no TRRS type yet). Bluetooth audio not listed. Routing: all sources are mixed to the outputs, camera, phone and computer.",
+  "notes": "Podcast interface. Host and Guest mic inputs are XLR. Speaker outputs L/R are 6.35 mm TRS. Headphone outputs are 6.35 mm on the front. Camera Out is a 3.5 mm TRS jack, Phone is a 3.5 mm TRRS jack (4-pole; listed as 3.5 mm TRS because the app has no TRRS type yet). Bluetooth audio not listed. Routing: all sources are mixed to the outputs, camera, phone and computer. Controls from the user guide, 'Hardware features': one multi-function knob sets the gain of either microphone (shown here once per mic), per microphone Auto Gain, Enhance and Mute buttons, a Host knob (host headphones and the speaker outputs) and a Guest knob (guest headphones), 48V and Bluetooth buttons on the rear. Modelled: MUTE stops that microphone everywhere. Whether 48V feeds both mic inputs is assumed. Assumption: levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -126,20 +126,183 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain1",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "HOST"
+    },
+    {
+      "id": "auto1",
+      "label": "AUTO GAIN",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "HOST"
+    },
+    {
+      "id": "enhance1",
+      "label": "ENHANCE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "HOST"
+    },
+    {
+      "id": "mute1",
+      "label": "MUTE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "HOST"
+    },
+    {
+      "id": "gain2",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "GUEST"
+    },
+    {
+      "id": "auto2",
+      "label": "AUTO GAIN",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "GUEST"
+    },
+    {
+      "id": "enhance2",
+      "label": "ENHANCE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "GUEST"
+    },
+    {
+      "id": "mute2",
+      "label": "MUTE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "GUEST"
+    },
+    {
+      "id": "host",
+      "label": "HOST LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Host Headphones",
+        "Output L",
+        "Output R"
+      ],
+      "section": "OUTPUTS"
+    },
+    {
+      "id": "guest",
+      "label": "GUEST LEVEL",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Guest Headphones"
+      ],
+      "section": "OUTPUTS"
+    },
+    {
+      "id": "phantom",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "OUTPUTS",
+      "phantomFor": [
+        "Host Mic",
+        "Guest Mic"
+      ]
+    },
+    {
+      "id": "bluetooth",
+      "label": "BLUETOOTH",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "OUTPUTS"
+    }
+  ],
   "routing": [
     {
-      "from": [
-        "Host Mic",
-        "Guest Mic",
-        "Phone"
-      ],
+      "from": "Host Mic",
       "to": [
         "USB",
         "Output L",
         "Output R",
         "Host Headphones",
         "Guest Headphones",
-        "Camera Out"
+        "Camera Out",
+        "Phone"
+      ],
+      "when": [
+        {
+          "control": "mute1",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Guest Mic",
+      "to": [
+        "USB",
+        "Output L",
+        "Output R",
+        "Host Headphones",
+        "Guest Headphones",
+        "Camera Out",
+        "Phone"
+      ],
+      "when": [
+        {
+          "control": "mute2",
+          "is": [
+            "OFF"
+          ]
+        }
       ]
     },
     {
@@ -154,11 +317,15 @@
       ]
     },
     {
-      "from": [
-        "Host Mic",
-        "Guest Mic"
-      ],
-      "to": "Phone"
+      "from": "Phone",
+      "to": [
+        "USB",
+        "Output L",
+        "Output R",
+        "Host Headphones",
+        "Guest Headphones",
+        "Camera Out"
+      ]
     }
   ]
 }

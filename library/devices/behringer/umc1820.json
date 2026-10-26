@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAN"
     }
   ],
-  "notes": "8 XLR/6.35 mm TRS combo inputs (2 front, 6 rear); LINE/INST switching applies to the front inputs 1-2. MAIN OUT and LINE OUT 3-10 are balanced 6.35 mm TRS; LINE OUT levels are controlled only by the DAW. Two stereo headphone outputs. OPT I/O switch: S/PDIF mode (optical in = ch 9-10) or ADAT mode (optical in = ch 11-18, out = 13-20; coax S/PDIF in 9-10, out 11-12). MIDI IN/OUT 5-pin DIN, USB type B, external power adapter (not listed).",
+  "notes": "8 XLR/6.35 mm TRS combo inputs (2 front, 6 rear); LINE/INST switching applies to the front inputs 1-2. MAIN OUT and LINE OUT 3-10 are balanced 6.35 mm TRS; LINE OUT levels are controlled only by the DAW. Two stereo headphone outputs. OPT I/O switch: S/PDIF mode (optical in = ch 9-10) or ADAT mode (optical in = ch 11-18, out = 13-20; coax S/PDIF in 9-10, out 11-12). MIDI IN/OUT 5-pin DIN, USB type B, external power adapter (not listed). Controls from the UMC1820 Quick Start Guide, 'Step 2: Controls': GAIN per input, LINE/INST for the front inputs 1-2, PAD, P+48V for inputs 1-4 and 5-8, IN 1-2/1-8 (inputs heard on the monitor outputs), STEREO/MONO, MONITORING (IN = only direct inputs, MIX, PB 1-2 = only computer playback), DIM, MUTE (cuts MAIN OUT), MAIN OUT level, OPT I/O, PHONES source (1-2 = monitor mix, 3-4 = playback 3-4) and level. Not clear from the guide and checked on the device still: whether PAD exists on inputs 3-8 (shown here only on 1-2, like LINE/INST), and whether each of the two headphone outputs has its own source switch and level (shown here per output). Modelling assumptions: MAIN OUT and PHONES at MIN are silent; DIM and STEREO/MONO do not change the paths; the digital inputs go to the computer only.",
   "groups": [
     {
       "count": 0,
@@ -251,6 +251,198 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 8
+    },
+    {
+      "id": "inst1",
+      "label": "LINE / INST",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "INST"
+      ],
+      "default": "LINE",
+      "section": "INPUT 1"
+    },
+    {
+      "id": "inst2",
+      "label": "LINE / INST",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "INST"
+      ],
+      "default": "LINE",
+      "section": "INPUT 2"
+    },
+    {
+      "id": "pad1",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT 1"
+    },
+    {
+      "id": "pad2",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT 2"
+    },
+    {
+      "id": "p48a",
+      "label": "P+48V 1-4",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR",
+      "phantomFor": [
+        "INPUT 1",
+        "INPUT 2",
+        "INPUT 3",
+        "INPUT 4"
+      ]
+    },
+    {
+      "id": "p48b",
+      "label": "P+48V 5-8",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR",
+      "phantomFor": [
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ]
+    },
+    {
+      "id": "inputs",
+      "label": "IN 1-2 / 1-8",
+      "kind": "switch",
+      "positions": [
+        "1-2",
+        "1-8"
+      ],
+      "default": "1-2",
+      "section": "MONITOR"
+    },
+    {
+      "id": "mono",
+      "label": "STEREO / MONO",
+      "kind": "switch",
+      "positions": [
+        "STEREO",
+        "MONO"
+      ],
+      "default": "STEREO",
+      "section": "MONITOR"
+    },
+    {
+      "id": "monitoring",
+      "label": "MONITORING",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "IN",
+      "maxLabel": "PB 1-2",
+      "section": "MONITOR"
+    },
+    {
+      "id": "dim",
+      "label": "DIM",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "mute",
+      "label": "MUTE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "main",
+      "label": "MAIN OUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "opt",
+      "label": "OPT I/O",
+      "kind": "switch",
+      "positions": [
+        "SPDIF",
+        "ADAT"
+      ],
+      "default": "SPDIF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "phsrc{n}",
+      "label": "PHONES SOURCE",
+      "kind": "switch",
+      "positions": [
+        "1-2",
+        "3-4"
+      ],
+      "default": "1-2",
+      "section": "PHONES {n}",
+      "count": 2
+    },
+    {
+      "id": "phones{n}",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES {n}"
+      ],
+      "section": "PHONES {n}",
+      "count": 2
+    }
+  ],
   "routing": [
     {
       "from": [
@@ -261,23 +453,93 @@
         "INPUT 5",
         "INPUT 6",
         "INPUT 7",
-        "INPUT 8",
+        "INPUT 8"
+      ],
+      "to": "USB"
+    },
+    {
+      "from": [
         "OPTICAL IN",
         "S/PDIF IN (coax)"
       ],
+      "to": "USB"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
       "to": [
-        "USB",
         "MAIN OUT L",
-        "MAIN OUT R",
-        "PHONES 1",
-        "PHONES 2"
+        "MAIN OUT R"
+      ],
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ],
+      "to": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "inputs",
+          "is": [
+            "1-8"
+          ]
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
       ]
     },
     {
       "from": "USB",
       "to": [
         "MAIN OUT L",
-        "MAIN OUT R",
+        "MAIN OUT R"
+      ],
+      "when": [
+        {
+          "control": "monitoring",
+          "min": 1
+        },
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
         "LINE OUT 3",
         "LINE OUT 4",
         "LINE OUT 5",
@@ -286,8 +548,6 @@
         "LINE OUT 8",
         "LINE OUT 9",
         "LINE OUT 10",
-        "PHONES 1",
-        "PHONES 2",
         "OPTICAL OUT",
         "S/PDIF OUT (coax)"
       ]
@@ -299,6 +559,158 @@
     {
       "from": "USB",
       "to": "MIDI OUT"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
+      "to": "PHONES 1",
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "phsrc1",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ],
+      "to": "PHONES 1",
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "inputs",
+          "is": [
+            "1-8"
+          ]
+        },
+        {
+          "control": "phsrc1",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES 1",
+      "when": [
+        {
+          "control": "monitoring",
+          "min": 1
+        },
+        {
+          "control": "phsrc1",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES 1",
+      "when": [
+        {
+          "control": "phsrc1",
+          "is": [
+            "3-4"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
+      "to": "PHONES 2",
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "phsrc2",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "INPUT 3",
+        "INPUT 4",
+        "INPUT 5",
+        "INPUT 6",
+        "INPUT 7",
+        "INPUT 8"
+      ],
+      "to": "PHONES 2",
+      "when": [
+        {
+          "control": "monitoring",
+          "max": 9
+        },
+        {
+          "control": "inputs",
+          "is": [
+            "1-8"
+          ]
+        },
+        {
+          "control": "phsrc2",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES 2",
+      "when": [
+        {
+          "control": "monitoring",
+          "min": 1
+        },
+        {
+          "control": "phsrc2",
+          "is": [
+            "1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES 2",
+      "when": [
+        {
+          "control": "phsrc2",
+          "is": [
+            "3-4"
+          ]
+        }
+      ]
     }
   ]
 }

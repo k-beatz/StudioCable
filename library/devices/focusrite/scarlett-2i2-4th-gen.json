@@ -12,38 +12,70 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/scarlett_2i2_4th_gen_user_guide_v4-pdf-en.pdf"
     }
   ],
-  "notes": "Mic inputs are XLR on the back; the 6.35 mm jack inputs on the front take line or instrument (Inst button). Plugging into a front jack disables the XLR input of the same channel. The optional 5V DC USB-C power input and the Kensington lock are not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring; computer playback reaches the speaker and headphone outputs.",
+  "notes": "Mic inputs are XLR on the back; the 6.35 mm jack inputs on the front take line or instrument (Inst button). Plugging into a front jack disables the XLR input of the same channel. The optional 5V DC USB-C power input and the Kensington lock are not listed. Routing: inputs reach the computer via USB and the outputs via direct monitoring; computer playback reaches the speaker and headphone outputs. Controls from the user guide, 'Front Panel': two gain controls; INST, AIR, SAFE (Clip Safe) and AUTO (Auto Gain, a one-shot function, not shown) act on the input chosen with the SELECT button - shown here once per input; one 48V button for both inputs; main output level; DIRECT MONITOR Off / On Mono / On Stereo; headphone level. Stereo routing (input 1 left, input 2 right) as for the 3rd gen. Assumption: output levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
       "label": "",
-      "labels": ["Input 1 (Mic)", "Input 2 (Mic)"],
+      "labels": [
+        "Input 1 (Mic)",
+        "Input 2 (Mic)"
+      ],
       "direction": "in",
-      "connectors": [{ "type": "xlr", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "xlr",
+          "gender": "female"
+        }
+      ],
       "signal": "mic"
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["Input 1 (Line/Inst)", "Input 2 (Line/Inst)"],
+      "labels": [
+        "Input 1 (Line/Inst)",
+        "Input 2 (Line/Inst)"
+      ],
       "direction": "in",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "line-bal",
-      "alsoAccepts": ["line-unbal", "instrument"]
+      "alsoAccepts": [
+        "line-unbal",
+        "instrument"
+      ]
     },
     {
       "count": 0,
       "label": "",
-      "labels": ["Speaker Output L", "Speaker Output R"],
+      "labels": [
+        "Speaker Output L",
+        "Speaker Output R"
+      ],
       "direction": "out",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "line-bal"
     },
     {
       "count": 1,
       "label": "Headphones",
       "direction": "out",
-      "connectors": [{ "type": "trs-6.3", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "trs-6.3",
+          "gender": "female"
+        }
+      ],
       "signal": "headphone",
       "channels": 2
     },
@@ -51,15 +83,269 @@
       "count": 1,
       "label": "USB",
       "direction": "bidi",
-      "connectors": [{ "type": "usb-c", "gender": "female" }],
+      "connectors": [
+        {
+          "type": "usb-c",
+          "gender": "female"
+        }
+      ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "inst{n}",
+      "label": "INST",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "air{n}",
+      "label": "AIR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "safe{n}",
+      "label": "SAFE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "phantom",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR",
+      "phantomFor": [
+        "Input 1 (Mic)",
+        "Input 2 (Mic)"
+      ]
+    },
+    {
+      "id": "direct",
+      "label": "DIRECT MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "MONO",
+        "STEREO"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "speaker",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Speaker Output L",
+        "Speaker Output R"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones",
+      "label": "HEADPHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones"
+      ],
+      "section": "MONITOR"
     }
   ],
   "routing": [
     {
-      "from": ["Input 1 (Mic)", "Input 2 (Mic)", "Input 1 (Line/Inst)", "Input 2 (Line/Inst)"],
-      "to": ["USB", "Speaker Output L", "Speaker Output R", "Headphones"]
+      "from": [
+        "Input 1 (Mic)",
+        "Input 2 (Mic)"
+      ],
+      "to": "USB"
     },
-    { "from": "USB", "to": ["Speaker Output L", "Speaker Output R", "Headphones"] }
+    {
+      "from": "USB",
+      "to": [
+        "Speaker Output L",
+        "Speaker Output R",
+        "Headphones"
+      ]
+    },
+    {
+      "from": "Input 1 (Mic)",
+      "to": "Speaker Output L",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2 (Mic)",
+      "to": "Speaker Output R",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 1 (Mic)",
+      "to": "Speaker Output R",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2 (Mic)",
+      "to": "Speaker Output L",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "Input 1 (Mic)",
+        "Input 2 (Mic)"
+      ],
+      "to": "Headphones",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "Input 1 (Line/Inst)",
+        "Input 2 (Line/Inst)"
+      ],
+      "to": "USB"
+    },
+    {
+      "from": "Input 1 (Line/Inst)",
+      "to": "Speaker Output L",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2 (Line/Inst)",
+      "to": "Speaker Output R",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 1 (Line/Inst)",
+      "to": "Speaker Output R",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "Input 2 (Line/Inst)",
+      "to": "Speaker Output L",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO"
+          ]
+        }
+      ]
+    },
+    {
+      "from": [
+        "Input 1 (Line/Inst)",
+        "Input 2 (Line/Inst)"
+      ],
+      "to": "Headphones",
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "MONO",
+            "STEREO"
+          ]
+        }
+      ]
+    }
   ]
 }

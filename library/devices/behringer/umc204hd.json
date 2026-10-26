@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAS"
     }
   ],
-  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). INSERT jacks are TRS send/return; the signal path through them is not modelled. Playback outputs are RCA. MIDI IN/OUT are 5-pin DIN. USB bus-powered. Routing: the MIX knob blends inputs with playback 1-2 on MAIN OUT; MONITOR A/B selects playback 1-2 or 3-4 for the headphones.",
+  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). INSERT jacks are TRS send/return; the signal path through them is not modelled. Playback outputs are RCA. MIDI IN/OUT are 5-pin DIN. USB bus-powered. Routing: the MIX knob blends inputs with playback 1-2 on MAIN OUT; MONITOR A/B selects playback 1-2 or 3-4 for the headphones. Controls from the U-PHORIA Quick Start Guide, 'Step 2: Controls'. MIX sets the balance of the input signals against playback 1-2 at MAIN OUT and the headphones; MONITOR A/B puts playback 3-4 on the headphones; STEREO/MONO switches the input monitoring to mono. Modelling assumptions: MIX fully to INPUT means no playback on MAIN OUT, fully to PLAYBACK means no direct input signal; MAIN OUT and PHONES at MIN are silent; STEREO/MONO and MONITOR A/B are shown but do not change the paths here (which input goes to which side in stereo is not stated). The single +48 V switch is taken to feed all inputs.",
   "groups": [
     {
       "count": 0,
@@ -155,29 +155,162 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "inst{n}",
+      "label": "LINE / INST",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "INST"
+      ],
+      "default": "LINE",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "pad{n}",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "phantom",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
+        "INPUT 1",
+        "INPUT 2"
+      ]
+    },
+    {
+      "id": "mono",
+      "label": "STEREO / MONO",
+      "kind": "switch",
+      "positions": [
+        "STEREO",
+        "MONO"
+      ],
+      "default": "STEREO",
+      "section": "MAIN"
+    },
+    {
+      "id": "mix",
+      "label": "MIX",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "INPUT",
+      "maxLabel": "PLAYBACK",
+      "section": "MAIN"
+    },
+    {
+      "id": "monitor",
+      "label": "MONITOR A/B",
+      "kind": "switch",
+      "positions": [
+        "A",
+        "B"
+      ],
+      "default": "A",
+      "section": "MAIN"
+    },
+    {
+      "id": "phones",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "main",
+      "label": "MAIN OUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "MAIN OUT L",
+        "MAIN OUT R"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "INPUT 1",
         "INPUT 2"
       ],
+      "to": "USB"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
       "to": [
-        "USB",
         "MAIN OUT L",
         "MAIN OUT R",
         "PHONES"
+      ],
+      "when": [
+        {
+          "control": "mix",
+          "max": 9
+        }
       ]
     },
     {
       "from": "USB",
       "to": [
         "MAIN OUT L",
-        "MAIN OUT R",
+        "MAIN OUT R"
+      ],
+      "when": [
+        {
+          "control": "mix",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": "PHONES"
+    },
+    {
+      "from": "USB",
+      "to": [
         "PLAYBACK A 1",
         "PLAYBACK A 2",
         "PLAYBACK B 3",
-        "PLAYBACK B 4",
-        "PHONES"
+        "PLAYBACK B 4"
       ]
     }
   ]

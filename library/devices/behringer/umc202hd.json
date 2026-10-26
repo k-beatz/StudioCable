@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAR"
     }
   ],
-  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). USB bus-powered. Routing: inputs reach the outputs only with DIRECT MONITOR switched on.",
+  "notes": "Input sockets are XLR/6.35 mm combo jacks (mic, line or instrument via the LINE/INST switch where present). USB bus-powered. Routing: inputs reach the outputs only with DIRECT MONITOR switched on. Controls from the U-PHORIA Quick Start Guide, 'Step 2: Controls'. LINE/INST and PAD are shown once per input, as on the front panel. Inputs reach the outputs only with DIRECT MONITOR on. Assumption: OUTPUT and PHONES at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -91,17 +91,118 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "inst{n}",
+      "label": "LINE / INST",
+      "kind": "switch",
+      "positions": [
+        "LINE",
+        "INST"
+      ],
+      "default": "LINE",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "pad{n}",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "phantom",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN",
+      "phantomFor": [
+        "INPUT 1",
+        "INPUT 2"
+      ]
+    },
+    {
+      "id": "direct",
+      "label": "DIRECT MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MAIN"
+    },
+    {
+      "id": "phones",
+      "label": "PHONES",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ],
+      "section": "MAIN"
+    },
+    {
+      "id": "output",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "OUTPUT 1 (L)",
+        "OUTPUT 2 (R)"
+      ],
+      "section": "MAIN"
+    }
+  ],
   "routing": [
     {
       "from": [
         "INPUT 1",
         "INPUT 2"
       ],
+      "to": "USB"
+    },
+    {
+      "from": [
+        "INPUT 1",
+        "INPUT 2"
+      ],
       "to": [
-        "USB",
         "OUTPUT 1 (L)",
         "OUTPUT 2 (R)",
         "PHONES"
+      ],
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {

@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAC"
     }
   ],
-  "notes": "Small USB audio interface, USB bus-powered. Line in/out are unbalanced RCA, digital S/PDIF output on TOSLINK, 3.5 mm stereo headphone jack. USB 1.1 type A (attached cable, so the device side is a plug).",
+  "notes": "Small USB audio interface, USB bus-powered. Line in/out are unbalanced RCA, digital S/PDIF output on TOSLINK, 3.5 mm stereo headphone jack. USB 1.1 type A (attached cable, so the device side is a plug). Controls from the user manual, chapter 3: VOLUME sets the headphone level; the OFF/ON-MONITOR switch routes the input signal directly to the headphones. Assumption: VOLUME at MIN is silent.",
   "groups": [
     {
       "count": 0,
@@ -98,15 +98,50 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "monitor",
+      "label": "OFF/ON-MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "PHONES"
+      ]
+    }
+  ],
   "routing": [
     {
       "from": [
         "LINE IN L",
         "LINE IN R"
       ],
-      "to": [
-        "USB",
-        "PHONES"
+      "to": "USB"
+    },
+    {
+      "from": [
+        "LINE IN L",
+        "LINE IN R"
+      ],
+      "to": "PHONES",
+      "when": [
+        {
+          "control": "monitor",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {

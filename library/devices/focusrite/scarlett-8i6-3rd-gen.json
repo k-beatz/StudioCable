@@ -12,7 +12,7 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/Scarlett%208i6%203rd%20Gen%20User%20Guide%20V2.pdf"
     }
   ],
-  "notes": "Inputs 1-2 are combo XLR/6.35 mm jack: mic on XLR, line or instrument (INST) on jack. Kensington lock not listed. Line Inputs 3-6 and Line Outputs 1-4 are rear 6.35 mm TRS jacks. Two front headphone outputs. S/PDIF in/out on RCA (inputs 7-8, outputs 5-6). MIDI In/Out are 5-pin DIN. Powered by the supplied 12 V DC adapter (not listed); not USB bus-powered. Routing via Focusrite Control.",
+  "notes": "Inputs 1-2 are combo XLR/6.35 mm jack: mic on XLR, line or instrument (INST) on jack. Kensington lock not listed. Line Inputs 3-6 and Line Outputs 1-4 are rear 6.35 mm TRS jacks. Two front headphone outputs. S/PDIF in/out on RCA (inputs 7-8, outputs 5-6). MIDI In/Out are 5-pin DIN. Powered by the supplied 12 V DC adapter (not listed); not USB bus-powered. Routing via Focusrite Control. Controls from the user guide, 'Front Panel': GAIN 1 and 2, 48V, MONITOR (outputs 1 and 2) and two headphone levels. INST, AIR and PAD (where present) are set in the Focusrite Control software, not on the device (it only shows LEDs), so they are not shown here; which input reaches which output is also set there. Assumption: levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -186,6 +186,70 @@
         }
       ],
       "signal": "data"
+    }
+  ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 2
+    },
+    {
+      "id": "phantom",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR",
+      "phantomFor": [
+        "Input 1",
+        "Input 2"
+      ]
+    },
+    {
+      "id": "monitor",
+      "label": "MONITOR",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Line Output 1",
+        "Line Output 2"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones1",
+      "label": "HEADPHONES 1",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones 1"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones2",
+      "label": "HEADPHONES 2",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones 2"
+      ],
+      "section": "MONITOR"
     }
   ],
   "routing": [

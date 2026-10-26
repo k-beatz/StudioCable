@@ -16,7 +16,7 @@
       "url": "https://www.behringer.com/products/0805-AAL"
     }
   ],
-  "notes": "MIC/LINE 1 is an XLR/6.35 mm combo jack (mic or line); INST 2 is a 6.35 mm jack for instruments. XENYX preamp. USB bus-powered. Routing: inputs reach the outputs only with DIRECT MONITOR switched on.",
+  "notes": "MIC/LINE 1 is an XLR/6.35 mm combo jack (mic or line); INST 2 is a 6.35 mm jack for instruments. XENYX preamp. USB bus-powered. Routing: inputs reach the outputs only with DIRECT MONITOR switched on. Controls from the U-PHORIA Quick Start Guide, 'Step 2: Controls'. Inputs reach the outputs and headphones only with DIRECT MONITOR on. The guide names no separate headphone level control for this model. Assumption: OUTPUT at MIN is silent; the +48 V switch powers the XLR input (MIC/LINE 1).",
   "groups": [
     {
       "count": 0,
@@ -104,17 +104,84 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain1",
+      "label": "MIC/LINE GAIN 1",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX"
+    },
+    {
+      "id": "gain2",
+      "label": "INST GAIN 2",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX"
+    },
+    {
+      "id": "phantom",
+      "label": "+48 V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "phantomFor": [
+        "MIC/LINE 1"
+      ]
+    },
+    {
+      "id": "direct",
+      "label": "DIRECT MONITOR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF"
+    },
+    {
+      "id": "output",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "OUTPUT 1 (L)",
+        "OUTPUT 2 (R)"
+      ]
+    }
+  ],
   "routing": [
     {
       "from": [
         "MIC/LINE 1",
         "INST 2"
       ],
+      "to": "USB"
+    },
+    {
+      "from": [
+        "MIC/LINE 1",
+        "INST 2"
+      ],
       "to": [
-        "USB",
         "OUTPUT 1 (L)",
         "OUTPUT 2 (R)",
         "PHONES"
+      ],
+      "when": [
+        {
+          "control": "direct",
+          "is": [
+            "ON"
+          ]
+        }
       ]
     },
     {

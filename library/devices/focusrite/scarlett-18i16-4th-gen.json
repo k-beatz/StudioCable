@@ -12,7 +12,7 @@
       "url": "https://fael-downloads-prod.focusrite.com/customer/prod/downloads/scarlett_18i16_4th_gen_user_guide_v3_en.pdf"
     }
   ],
-  "notes": "Inputs 1-4 are front combo XLR/jack; only inputs 1-2 take instrument level. Line Inputs 5-8 are rear jacks. Line Outputs 1-2 are the main speaker outputs, 3-4 the Alt pair. Two headphone outputs per the front panel description (the specification table was not checked for this model). Optional power inputs and the Kensington lock are not listed. Routing: inputs reach the computer via USB and the outputs via the Focusrite Control 2 mixer; computer playback reaches all outputs.",
+  "notes": "Inputs 1-4 are front combo XLR/jack; only inputs 1-2 take instrument level. Line Inputs 5-8 are rear jacks. Line Outputs 1-2 are the main speaker outputs, 3-4 the Alt pair. Two headphone outputs per the front panel description (the specification table was not checked for this model). Optional power inputs and the Kensington lock are not listed. Routing: inputs reach the computer via USB and the outputs via the Focusrite Control 2 mixer; computer playback reaches all outputs. Controls from the user guide, 'Front Panel': gain for inputs 1-4, 48V per input, INST (inputs 1 and 2 take instruments), AIR, SAFE, ALT (switches between monitor pairs 1-2 and 3-4), MUTE, main output level and two headphone levels. The INST, AIR, SAFE and 48V buttons act on the input chosen with SELECT and are shown once per input; AUTO (Auto Gain) is a one-shot function and not shown. Modelled: MUTE or ALT silence outputs 1 and 2. Assumption: levels at MIN are silent.",
   "groups": [
     {
       "count": 0,
@@ -244,6 +244,138 @@
       "signal": "data"
     }
   ],
+  "controls": [
+    {
+      "id": "gain{n}",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "phantom{n}",
+      "label": "48V",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "phantomFor": [
+        "Input {n}"
+      ],
+      "count": 4
+    },
+    {
+      "id": "inst1",
+      "label": "INST",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT 1"
+    },
+    {
+      "id": "inst2",
+      "label": "INST",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT 2"
+    },
+    {
+      "id": "air{n}",
+      "label": "AIR",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "safe{n}",
+      "label": "SAFE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "INPUT {n}",
+      "count": 4
+    },
+    {
+      "id": "alt",
+      "label": "ALT",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "mute",
+      "label": "MUTE",
+      "kind": "switch",
+      "positions": [
+        "OFF",
+        "ON"
+      ],
+      "default": "OFF",
+      "section": "MONITOR"
+    },
+    {
+      "id": "monitor",
+      "label": "OUTPUT",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Line Output 1",
+        "Line Output 2"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones1",
+      "label": "HEADPHONES 1",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones 1"
+      ],
+      "section": "MONITOR"
+    },
+    {
+      "id": "phones2",
+      "label": "HEADPHONES 2",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "levelOf": [
+        "Headphones 2"
+      ],
+      "section": "MONITOR"
+    }
+  ],
   "routing": [
     {
       "from": [
@@ -260,8 +392,49 @@
       ],
       "to": [
         "USB",
+        "Line Output 3",
+        "Line Output 4",
+        "Headphones 1",
+        "Headphones 2",
+        "S/PDIF Out",
+        "Optical Out"
+      ]
+    },
+    {
+      "from": [
+        "Input 1",
+        "Input 2",
+        "Input 3",
+        "Input 4",
+        "Line Input 5",
+        "Line Input 6",
+        "Line Input 7",
+        "Line Input 8",
+        "S/PDIF In",
+        "Optical In"
+      ],
+      "to": [
         "Line Output 1",
-        "Line Output 2",
+        "Line Output 2"
+      ],
+      "when": [
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        },
+        {
+          "control": "alt",
+          "is": [
+            "OFF"
+          ]
+        }
+      ]
+    },
+    {
+      "from": "USB",
+      "to": [
         "Line Output 3",
         "Line Output 4",
         "Headphones 1",
@@ -274,22 +447,34 @@
       "from": "USB",
       "to": [
         "Line Output 1",
-        "Line Output 2",
-        "Line Output 3",
-        "Line Output 4",
-        "Headphones 1",
-        "Headphones 2",
-        "S/PDIF Out",
-        "Optical Out"
+        "Line Output 2"
+      ],
+      "when": [
+        {
+          "control": "mute",
+          "is": [
+            "OFF"
+          ]
+        },
+        {
+          "control": "alt",
+          "is": [
+            "OFF"
+          ]
+        }
       ]
     },
     {
       "from": "MIDI In",
-      "to": "USB"
+      "to": [
+        "USB"
+      ]
     },
     {
       "from": "USB",
-      "to": "MIDI Out"
+      "to": [
+        "MIDI Out"
+      ]
     }
   ]
 }
