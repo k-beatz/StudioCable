@@ -145,6 +145,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC IN"
+      ],
       "section": "MIC"
     },
     {

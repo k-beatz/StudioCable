@@ -92,6 +92,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Input 1 (Line/Inst)"
+      ],
       "section": "INPUTS"
     },
     {
@@ -112,6 +115,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Input 2 (Mic)"
+      ],
       "section": "INPUTS"
     },
     {
@@ -123,10 +129,10 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "INPUTS",
       "phantomFor": [
         "Input 2 (Mic)"
-      ]
+      ],
+      "section": "INPUTS"
     },
     {
       "id": "air",

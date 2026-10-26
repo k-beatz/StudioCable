@@ -134,6 +134,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Host Mic"
+      ],
       "section": "HOST"
     },
     {
@@ -176,6 +179,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Guest Mic"
+      ],
       "section": "GUEST"
     },
     {
@@ -246,11 +252,11 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "OUTPUTS",
       "phantomFor": [
         "Host Mic",
         "Guest Mic"
-      ]
+      ],
+      "section": "OUTPUTS"
     },
     {
       "id": "bluetooth",

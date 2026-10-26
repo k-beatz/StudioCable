@@ -56,7 +56,11 @@
       "id": "level",
       "label": "LEVEL",
       "kind": "knob",
-      "default": 5
+      "default": 5,
+      "gainOf": [
+        "Input (XLR)",
+        "Input (TRS)"
+      ]
     },
     {
       "id": "hightrim",

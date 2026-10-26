@@ -1,5 +1,6 @@
 import type { Group, Project } from '../core/model';
 import { useProjectStore } from './projectStore';
+import { useTestResult } from './testSignal';
 import { useTrace } from './trace';
 
 export interface GroupIndex {
@@ -36,7 +37,7 @@ export function useGroupIndex(): GroupIndex {
 
 /** What the diagram currently emphasises: a traced signal path or a focused system. */
 export interface Highlight {
-  kind: 'trace' | 'group';
+  kind: 'trace' | 'group' | 'test';
   /** Devices that stay fully visible (anything the highlight touches). */
   deviceIds: Set<string>;
   /** Devices that get the highlight outline (fully part of it). */
@@ -48,8 +49,16 @@ export interface Highlight {
 
 export function useHighlight(): Highlight | undefined {
   const trace = useTrace();
+  const test = useTestResult();
   const project = useProjectStore((s) => s.project);
   const focusGroupId = useProjectStore((s) => s.focusGroupId);
+  if (test) {
+    // A running test signal: where it actually gets to, with the ones who hear it outlined.
+    const portKeys = new Set<string>();
+    for (const id of test.cableIds) for (const e of project.cables.find((c) => c.id === id)?.ends ?? []) portKeys.add(`${e.deviceId}/${e.portId}`);
+    const outlinedIds = new Set([test.sourceId, ...test.listeners.map((l) => l.deviceId)]);
+    return { kind: 'test', deviceIds: test.deviceIds, outlinedIds, cableIds: test.cableIds, portKeys };
+  }
   if (trace) {
     return { kind: 'trace', deviceIds: trace.deviceIds, outlinedIds: trace.deviceIds, cableIds: trace.cableIds, portKeys: trace.portKeys };
   }

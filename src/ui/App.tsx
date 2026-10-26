@@ -9,6 +9,7 @@ import { useProjectStore } from '../store/projectStore';
 import { AddDeviceDialog } from './AddDeviceDialog';
 import { CableTable } from './CableTable';
 import { ControlLoupe } from './Controls';
+import { TestSignalPanel } from './TestSignal';
 import { NoteEditor } from './Notes';
 import { Logo } from './Logo';
 import { ChecksList } from './ChecksList';
@@ -132,6 +133,7 @@ function Shell() {
             <>
               <GraphView />
               <ControlLoupe />
+              <TestSignalPanel />
               <NoteEditor />
               {project.devices.length === 0 && (
                 <div className="empty-state">

@@ -206,7 +206,7 @@ export function GraphView() {
         labelStyle: { fill: '#0e1524', fontWeight: 800, fontSize: 10 },
         labelBgStyle: { fill: color ?? '#888' },
         // Animated dashes show the signal direction along the traced path.
-        animated: lit && highlight?.kind === 'trace',
+        animated: lit && (highlight?.kind === 'trace' || highlight?.kind === 'test'),
         zIndex: lit ? 1 : 0,
         className:
           'cable-edge' +

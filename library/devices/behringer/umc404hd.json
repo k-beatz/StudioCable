@@ -201,6 +201,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "INPUT {n}"
+      ],
       "section": "INPUT {n}",
       "count": 4
     },
@@ -237,13 +240,13 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MAIN",
       "phantomFor": [
         "INPUT 1",
         "INPUT 2",
         "INPUT 3",
         "INPUT 4"
-      ]
+      ],
+      "section": "MAIN"
     },
     {
       "id": "mono",

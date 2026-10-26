@@ -39,7 +39,10 @@
       "id": "sens",
       "label": "SENSITIVITY",
       "kind": "knob",
-      "default": 10
+      "default": 10,
+      "gainOf": [
+        "Analog Input"
+      ]
     },
     {
       "id": "iss",

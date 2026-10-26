@@ -142,6 +142,8 @@ export interface Control {
   maxLabel?: string;
   /** Knobs: sets the level of these ports (port IDs). Turned fully down (0), nothing passes them. */
   levelOf?: string[];
+  /** Knobs: input gain of these ports (port IDs). Changes how loud they come through, but never silences them. */
+  gainOf?: string[];
   /** Phantom power switch for these inputs (port IDs): the position "ON" powers them. */
   phantomFor?: string[];
   /** On/off switch for these ports (port IDs): they carry signal only in the position "ON" (e.g. a mic's on/off switch). */

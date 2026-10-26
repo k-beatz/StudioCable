@@ -111,7 +111,10 @@
       "kind": "knob",
       "default": 5,
       "minLabel": "MIN",
-      "maxLabel": "MAX"
+      "maxLabel": "MAX",
+      "gainOf": [
+        "MIC/LINE 1"
+      ]
     },
     {
       "id": "gain2",
@@ -119,7 +122,10 @@
       "kind": "knob",
       "default": 5,
       "minLabel": "MIN",
-      "maxLabel": "MAX"
+      "maxLabel": "MAX",
+      "gainOf": [
+        "INST 2"
+      ]
     },
     {
       "id": "phantom",

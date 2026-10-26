@@ -70,6 +70,7 @@ export function expandLibraryDevice(d: LibraryDevice): LibraryDevice {
             label: fill(c.label, n),
             ...(c.section ? { section: fill(c.section, n) } : {}),
             ...(c.levelOf ? { levelOf: c.levelOf.map((l) => fill(l, n)) } : {}),
+            ...(c.gainOf ? { gainOf: c.gainOf.map((l) => fill(l, n)) } : {}),
             ...(c.phantomFor ? { phantomFor: c.phantomFor.map((l) => fill(l, n)) } : {}),
             ...(c.onFor ? { onFor: c.onFor.map((l) => fill(l, n)) } : {}),
           };
@@ -155,7 +156,7 @@ export function validateLibraryDevice(data: unknown): string[] {
       else if (!c.positions.includes(String(c.default))) errors.push(`${where}: default must be one of the positions`);
     } else if (c.kind === 'knob') {
       if (typeof c.default !== 'number' || c.default < 0 || c.default > KNOB_MAX) errors.push(`${where}: default must be 0 to ${KNOB_MAX}`);
-      for (const label of c.levelOf ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
+      for (const label of [...(c.levelOf ?? []), ...(c.gainOf ?? [])]) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
     } else errors.push(`${where}: kind must be knob or switch`);
     if (c.phantomFor && !(c.kind === 'switch' && c.positions?.includes('ON'))) errors.push(`${where}: a phantom switch needs an "ON" position`);
     for (const label of c.phantomFor ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);

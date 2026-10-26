@@ -249,14 +249,102 @@
   ],
   "controls": [
     {
-      "id": "gain{n}",
+      "id": "gain1",
       "label": "GAIN",
       "kind": "knob",
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
-      "section": "INPUT {n}",
-      "count": 8
+      "gainOf": [
+        "Input 1",
+        "Input 1 (front)"
+      ],
+      "section": "INPUT 1"
+    },
+    {
+      "id": "gain2",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 2",
+        "Input 2 (front)"
+      ],
+      "section": "INPUT 2"
+    },
+    {
+      "id": "gain3",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 3"
+      ],
+      "section": "INPUT 3"
+    },
+    {
+      "id": "gain4",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 4"
+      ],
+      "section": "INPUT 4"
+    },
+    {
+      "id": "gain5",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 5"
+      ],
+      "section": "INPUT 5"
+    },
+    {
+      "id": "gain6",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 6"
+      ],
+      "section": "INPUT 6"
+    },
+    {
+      "id": "gain7",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 7"
+      ],
+      "section": "INPUT 7"
+    },
+    {
+      "id": "gain8",
+      "label": "GAIN",
+      "kind": "knob",
+      "default": 5,
+      "minLabel": "MIN",
+      "maxLabel": "MAX",
+      "gainOf": [
+        "Input 8"
+      ],
+      "section": "INPUT 8"
     },
     {
       "id": "phantom{n}",
@@ -267,10 +355,10 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "INPUT {n}",
       "phantomFor": [
         "Input {n}"
       ],
+      "section": "INPUT {n}",
       "count": 8
     },
     {

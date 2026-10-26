@@ -217,6 +217,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
       "section": "CH 1"
     },
     {
@@ -293,6 +297,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
       "section": "CH 2"
     },
     {
@@ -369,6 +377,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 3/4"
+      ],
       "section": "CH 3/4"
     },
     {
@@ -378,6 +389,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "LINE 3/4 L",
+        "LINE 3/4 R"
+      ],
       "section": "CH 3/4"
     },
     {
@@ -455,6 +470,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 5/6"
+      ],
       "section": "CH 5/6"
     },
     {
@@ -464,6 +482,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "LINE 5/6 L",
+        "LINE 5/6 R"
+      ],
       "section": "CH 5/6"
     },
     {
@@ -541,6 +563,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 7/8"
+      ],
       "section": "CH 7/8"
     },
     {
@@ -550,6 +575,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "LINE 7/8 L",
+        "LINE 7/8 R"
+      ],
       "section": "CH 7/8"
     },
     {
@@ -627,6 +656,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "IN 9/10 L",
+        "IN 9/10 R"
+      ],
       "section": "CH 9/10"
     },
     {
@@ -705,14 +738,14 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MAIN",
       "phantomFor": [
         "MIC 1",
         "MIC 2",
         "MIC 3/4",
         "MIC 5/6",
         "MIC 7/8"
-      ]
+      ],
+      "section": "MAIN"
     },
     {
       "id": "monsend",

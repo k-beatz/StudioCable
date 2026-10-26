@@ -258,6 +258,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Input {n}"
+      ],
       "section": "INPUT {n}",
       "count": 8
     },
@@ -304,13 +307,13 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MONITOR",
       "phantomFor": [
         "Input 1",
         "Input 2",
         "Input 3",
         "Input 4"
-      ]
+      ],
+      "section": "MONITOR"
     },
     {
       "id": "p48b",
@@ -321,13 +324,13 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MONITOR",
       "phantomFor": [
         "Input 5",
         "Input 6",
         "Input 7",
         "Input 8"
-      ]
+      ],
+      "section": "MONITOR"
     },
     {
       "id": "monitor",

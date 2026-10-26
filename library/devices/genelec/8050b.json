@@ -40,7 +40,10 @@
       "label": "INPUT SENSITIVITY",
       "kind": "knob",
       "default": 10,
-      "maxLabel": "-6 dBu"
+      "maxLabel": "-6 dBu",
+      "gainOf": [
+        "Analog Input"
+      ]
     },
     {
       "id": "iss",

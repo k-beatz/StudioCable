@@ -334,6 +334,12 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MAIN IN L (XLR)",
+        "MAIN IN R (XLR)",
+        "MAIN IN L",
+        "MAIN IN R"
+      ],
       "section": "MAIN"
     },
     {

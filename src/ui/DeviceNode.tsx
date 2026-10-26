@@ -171,7 +171,8 @@ function NodeFrame(props: {
         (props.board ? ' device-node--board' : '') +
         (props.selected ? ' selected' : '') +
         (dimmed ? ' dimmed' : '') +
-        (highlight && outlined ? ' in-trace' : '')
+        (highlight && outlined ? ' in-trace' : '') +
+        (highlight?.kind === 'test' && outlined ? ' in-test' : '')
       }
       style={style}
     >

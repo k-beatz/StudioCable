@@ -143,6 +143,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC IN {n}"
+      ],
       "section": "CH {n}",
       "count": 8
     },
@@ -155,7 +158,6 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MAIN",
       "phantomFor": [
         "MIC IN 1",
         "MIC IN 2",
@@ -165,7 +167,8 @@
         "MIC IN 6",
         "MIC IN 7",
         "MIC IN 8"
-      ]
+      ],
+      "section": "MAIN"
     },
     {
       "id": "sync",

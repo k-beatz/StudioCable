@@ -196,6 +196,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
       "section": "CH 1"
     },
     {
@@ -263,6 +267,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
       "section": "CH 2"
     },
     {
@@ -447,11 +455,11 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MAIN",
       "phantomFor": [
         "MIC 1",
         "MIC 2"
-      ]
+      ],
+      "section": "MAIN"
     },
     {
       "id": "monitor",

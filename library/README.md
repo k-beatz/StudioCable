@@ -85,12 +85,15 @@ turn and flip them in the app, and troubleshooting takes them into account.
   `{ "id": "level{n}", "label": "LEVEL", "kind": "knob", "default": 5, "count": 8, "section": "CH {n}", "levelOf": ["MIC {n}"] }`.
 - `section` groups controls on screen like on the panel ("CH 1", "MAIN").
 - Knobs go from 0 to 10. `levelOf`: the knob sets the level of these ports;
-  at 0 nothing passes them.
+  at 0 nothing passes them. `gainOf`: an input gain (trim) knob for these
+  ports; it makes them louder or quieter but never silences them.
 - `when` on a route: the path only exists while every condition holds
   (`is` = switch positions, `min` / `max` = knob range, inclusive).
 - `phantomFor`: a phantom power switch for these inputs; the position `"ON"`
   powers them. A mic output with `"needsPhantom": true` (condenser mic) on such
   an input gives no signal while it is off.
+- `onFor`: an on/off switch for these ports (e.g. a mic's own switch); they
+  carry signal only in the position `"ON"`.
 - What a control does must come from the source. Where the manual leaves it
   open (e.g. whether "MIN" is fully silent), say so in `notes`. Default
   positions are app defaults, not factory settings.

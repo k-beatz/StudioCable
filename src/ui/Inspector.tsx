@@ -31,6 +31,7 @@ import { useProjectStore } from '../store/projectStore';
 import { traceForSelection } from '../store/trace';
 import { CommitInput } from './CommitInput';
 import { SignalPathList } from './SignalPathList';
+import { canSendTest, TestSignalButton } from './TestSignal';
 import { CABLE_COLORS, connectorsText, issueText, SEVERITY_ICONS, SIGNAL_COLORS } from './labels';
 
 /** Edit panel for the selected device or cable. */
@@ -139,6 +140,12 @@ function DeviceInspector({ device, project }: { device: DeviceInstance; project:
           </ul>
         </div>
       )}
+      {canSendTest(template) && (
+        <div className="field">
+          <TestSignalButton deviceId={device.id} />
+          <small className="muted">{t('test.hint')}</small>
+        </div>
+      )}
       {template?.controls?.length ? (
         <div className="field">
           <span>{t('device.controls')}</span>
@@ -220,6 +227,11 @@ function PortInspector({ device, portId, project }: { device: DeviceInstance; po
         <span>{t('port.connector')}</span>
         <div>{connectorsText(port.connectors)}</div>
       </div>
+      {port.direction !== 'in' && canSendTest(project.templates[device.templateId]) && (
+        <div className="field">
+          <TestSignalButton deviceId={device.id} />
+        </div>
+      )}
       <div className="field">
         <span>{t('port.cables')}</span>
         <div>

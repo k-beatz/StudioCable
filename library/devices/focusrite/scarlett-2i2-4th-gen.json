@@ -100,6 +100,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Input {n} (Mic)",
+        "Input {n} (Line/Inst)"
+      ],
       "section": "INPUT {n}",
       "count": 2
     },
@@ -148,11 +152,11 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MONITOR",
       "phantomFor": [
         "Input 1 (Mic)",
         "Input 2 (Mic)"
-      ]
+      ],
+      "section": "MONITOR"
     },
     {
       "id": "direct",

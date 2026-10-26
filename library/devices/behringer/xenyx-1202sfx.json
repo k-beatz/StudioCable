@@ -187,6 +187,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 1",
+        "LINE IN 1"
+      ],
       "section": "CH 1"
     },
     {
@@ -265,6 +269,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 2",
+        "LINE IN 2"
+      ],
       "section": "CH 2"
     },
     {
@@ -343,6 +351,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 3",
+        "LINE IN 3"
+      ],
       "section": "CH 3"
     },
     {
@@ -421,6 +433,10 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "MIC 4",
+        "LINE IN 4"
+      ],
       "section": "CH 4"
     },
     {
@@ -720,13 +736,13 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MAIN",
       "phantomFor": [
         "MIC 1",
         "MIC 2",
         "MIC 3",
         "MIC 4"
-      ]
+      ],
+      "section": "MAIN"
     },
     {
       "id": "monitor",

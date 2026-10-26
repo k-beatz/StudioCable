@@ -115,10 +115,10 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "CH {n}",
       "phantomFor": [
         "MIC IN {n}"
       ],
+      "section": "CH {n}",
       "count": 2
     },
     {
@@ -140,6 +140,9 @@
       "default": 5,
       "minLabel": "10 dB",
       "maxLabel": "60 dB",
+      "gainOf": [
+        "MIC IN {n}"
+      ],
       "section": "CH {n}",
       "count": 2
     },

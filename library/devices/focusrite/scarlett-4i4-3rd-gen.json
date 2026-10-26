@@ -146,6 +146,9 @@
       "default": 5,
       "minLabel": "MIN",
       "maxLabel": "MAX",
+      "gainOf": [
+        "Input {n}"
+      ],
       "section": "INPUT {n}",
       "count": 2
     },
@@ -158,11 +161,11 @@
         "ON"
       ],
       "default": "OFF",
-      "section": "MONITOR",
       "phantomFor": [
         "Input 1",
         "Input 2"
-      ]
+      ],
+      "section": "MONITOR"
     },
     {
       "id": "monitor",

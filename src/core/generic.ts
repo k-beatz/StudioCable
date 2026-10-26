@@ -71,6 +71,7 @@ export function buildTemplate(spec: GenericSpec, origin: TemplateOrigin = 'gener
     ...c,
     ...(c.positions ? { positions: [...c.positions] } : {}),
     ...(c.levelOf ? { levelOf: c.levelOf.flatMap((l) => byLabel.get(l) ?? []) } : {}),
+    ...(c.gainOf ? { gainOf: c.gainOf.flatMap((l) => byLabel.get(l) ?? []) } : {}),
     ...(c.phantomFor ? { phantomFor: c.phantomFor.flatMap((l) => byLabel.get(l) ?? []) } : {}),
     ...(c.onFor ? { onFor: c.onFor.flatMap((l) => byLabel.get(l) ?? []) } : {}),
   }));

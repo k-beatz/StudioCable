@@ -89,7 +89,13 @@
       "id": "level",
       "label": "LEVEL",
       "kind": "knob",
-      "default": 5
+      "default": 5,
+      "gainOf": [
+        "INPUT L (XLR)",
+        "INPUT R (XLR)",
+        "INPUT L (TRS)",
+        "INPUT R (TRS)"
+      ]
     },
     {
       "id": "phase",
