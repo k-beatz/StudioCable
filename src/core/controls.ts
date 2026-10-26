@@ -81,3 +81,11 @@ export function phantomBlocker(template: DeviceTemplate, device: DeviceInstance 
   const value = controlValue(control, device);
   return value === 'ON' ? undefined : { control, value, needed: 'ON' };
 }
+
+/** A port that carries signal only while an on/off switch is ON (e.g. a mic switched off): that switch, if it is off. */
+export function switchedOff(template: DeviceTemplate, device: DeviceInstance | undefined, portId: string): Blocker | undefined {
+  const control = template.controls?.find((c) => c.onFor?.includes(portId));
+  if (!control) return undefined;
+  const value = controlValue(control, device);
+  return value === 'ON' ? undefined : { control, value, needed: 'ON' };
+}

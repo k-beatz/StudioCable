@@ -1,5 +1,5 @@
 import { connectDevices } from './autowire';
-import { phantomBlocker, routeBlockers, type Setting } from './controls';
+import { phantomBlocker, routeBlockers, switchedOff, type Blocker, type Setting } from './controls';
 import { isPowerSignal, type CableEnd, type Port, type Project } from './model';
 import { getPort } from './project';
 import { checkCable, type Issue } from './validation';
@@ -100,7 +100,7 @@ function search(project: Project, sourceId: string, targetId: string, ignoreCont
   while (queue.length) {
     const out = queue.shift()!;
     for (const { cableId, to } of cablesFrom.get(key(out)) ?? []) {
-      if (!ignoreControls && cablePhantom(project, out, to)) continue;
+      if (!ignoreControls && cableBlocker(project, out, to)) continue;
       if (!via.has(to.deviceId)) {
         const cable = project.cables.find((c) => c.id === cableId)!;
         const issues = checkCable(project, cable).filter((i) => i.severity !== 'info');
@@ -200,8 +200,8 @@ function devicesLeadingTo(
 function blockingSettings(project: Project, steps: DiagnosisStep[]): SettingChange[] {
   const changes: SettingChange[] = [];
   for (let i = 0; i < steps.length; i++) {
-    const b = cablePhantom(project, steps[i].from, steps[i].to);
-    if (b) changes.push({ deviceId: steps[i].to.deviceId, controlId: b.control.id, label: b.control.label, from: b.value, to: b.needed });
+    const b = cableBlocker(project, steps[i].from, steps[i].to);
+    if (b) changes.push({ deviceId: b.deviceId, controlId: b.control.id, label: b.control.label, from: b.value, to: b.needed });
     if (i + 1 === steps.length) break;
     const at = steps[i].to;
     const out = steps[i + 1].from;
@@ -235,10 +235,20 @@ export function applySettings(project: Project, changes: SettingChange[]): Proje
   };
 }
 
-/** A condenser mic cable into an input whose phantom power is switched off. */
-function cablePhantom(project: Project, from: CableEnd, to: CableEnd) {
+/**
+ * A switch that keeps a cable silent: the sending port is switched off (a mic's
+ * on/off switch), or a condenser mic goes into an input whose phantom power is off.
+ */
+function cableBlocker(project: Project, from: CableEnd, to: CableEnd): (Blocker & { deviceId: string }) | undefined {
+  const at = (end: CableEnd) => {
+    const device = project.devices.find((x) => x.id === end.deviceId);
+    return { device, template: device && project.templates[device.templateId] };
+  };
+  const src = at(from);
+  const off = src.template && switchedOff(src.template, src.device, from.portId);
+  if (off) return { ...off, deviceId: from.deviceId };
   if (!getPort(project, from)?.needsPhantom) return undefined;
-  const d = project.devices.find((x) => x.id === to.deviceId);
-  const template = d && project.templates[d.templateId];
-  return template ? phantomBlocker(template, d, to.portId) : undefined;
+  const dst = at(to);
+  const phantom = dst.template && phantomBlocker(dst.template, dst.device, to.portId);
+  return phantom ? { ...phantom, deviceId: to.deviceId } : undefined;
 }

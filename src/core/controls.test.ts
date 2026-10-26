@@ -150,4 +150,33 @@ describe('knobs and switches', () => {
     // A typo in a per-channel reference is still caught.
     expect(validateLibraryDevice({ ...mixer, routing: [{ count: 2, from: 'IN {n}', to: 'MAIN L', when: [{ control: 'mut{n}', is: ['OFF'] }] }] }).join()).toContain('unknown control "mut1"');
   });
+
+  it('a mic with its on/off switch off sends nothing; troubleshooting switches it on', () => {
+    const mic: LibraryDevice = {
+      format: 'studiocable-device',
+      schemaVersion: 1,
+      id: 'test-switch-mic',
+      manufacturer: 'Test',
+      model: 'Switch Mic',
+      category: 'microphone',
+      status: 'unverified',
+      sources: [{ url: 'https://example.com' }],
+      groups: [{ count: 0, label: '', labels: ['Out'], direction: 'out', connectors: [{ type: 'xlr', gender: 'male' }], signal: 'mic' }],
+      controls: [{ id: 'onoff', label: 'ON/OFF', kind: 'switch', positions: ['ON', 'OFF'], default: 'ON', onFor: ['Out'] }],
+    };
+    expect(validateLibraryDevice(mic)).toEqual([]);
+    let p: Project = createProject();
+    const m = addDevice(p, libraryToTemplate(mic), 'Mic', { x: 0, y: 0 });
+    p = m.project;
+    const iface = addDevice(p, audio2(), 'Audio 2', { x: 300, y: 0 });
+    p = iface.project;
+    const micPort = p.templates[m.device.templateId].ports[0].id;
+    const ch1 = p.templates[iface.device.templateId].ports.find((x) => x.label === 'CH1')!.id;
+    p = addCable(p, { deviceId: m.device.id, portId: micPort }, { deviceId: iface.device.id, portId: ch1 }).project;
+    expect(diagnose(p, m.device.id, iface.device.id).arrives).toBe(true);
+    p = updateDevice(p, m.device.id, { settings: { onoff: 'OFF' } });
+    const d = diagnose(p, m.device.id, iface.device.id);
+    expect(d.problem).toBe('setting');
+    expect(d.settings).toEqual([{ deviceId: m.device.id, controlId: 'onoff', label: 'ON/OFF', from: 'OFF', to: 'ON' }]);
+  });
 });

@@ -144,6 +144,8 @@ export interface Control {
   levelOf?: string[];
   /** Phantom power switch for these inputs (port IDs): the position "ON" powers them. */
   phantomFor?: string[];
+  /** On/off switch for these ports (port IDs): they carry signal only in the position "ON" (e.g. a mic's on/off switch). */
+  onFor?: string[];
   /** Where it sits on the panel, e.g. "CH 1" or "MAIN"; controls are shown grouped by it. */
   section?: string;
 }

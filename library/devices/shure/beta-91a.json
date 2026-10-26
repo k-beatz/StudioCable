@@ -12,7 +12,7 @@
       "url": "https://pubs.shure.com/guide/Beta91A/en-US"
     }
   ],
-  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power. Half-cardioid boundary microphone (Beta 91A has its own XLR preamplifier).",
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male, balanced. Needs phantom power. Half-cardioid boundary microphone (Beta 91A has its own XLR preamplifier). Contour switch from the Shure user guide (about 7 dB cut around 400 Hz); it shapes the sound only.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,20 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "contour",
+      "label": "CONTOUR",
+      "kind": "switch",
+      "positions": [
+        "FLAT",
+        "CONTOUR"
+      ],
+      "default": "FLAT"
     }
   ]
 }

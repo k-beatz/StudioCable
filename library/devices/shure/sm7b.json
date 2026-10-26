@@ -12,7 +12,7 @@
       "url": "https://pubs.shure.com/guide/SM7B/en-US"
     }
   ],
-  "notes": "Dynamic microphone. Output: XLR connector (gender not stated; male by convention). No phantom power needed.",
+  "notes": "Dynamic microphone. Output: XLR connector (gender not stated; male by convention). No phantom power needed. Switches from the Shure user guide; they shape the sound only and do not block the signal.",
   "groups": [
     {
       "count": 0,
@@ -28,6 +28,28 @@
         }
       ],
       "signal": "mic"
+    }
+  ],
+  "controls": [
+    {
+      "id": "bass",
+      "label": "BASS ROLLOFF",
+      "kind": "switch",
+      "positions": [
+        "FLAT",
+        "ROLLOFF"
+      ],
+      "default": "FLAT"
+    },
+    {
+      "id": "presence",
+      "label": "PRESENCE",
+      "kind": "switch",
+      "positions": [
+        "FLAT",
+        "BOOST"
+      ],
+      "default": "FLAT"
     }
   ]
 }

@@ -71,6 +71,7 @@ export function expandLibraryDevice(d: LibraryDevice): LibraryDevice {
             ...(c.section ? { section: fill(c.section, n) } : {}),
             ...(c.levelOf ? { levelOf: c.levelOf.map((l) => fill(l, n)) } : {}),
             ...(c.phantomFor ? { phantomFor: c.phantomFor.map((l) => fill(l, n)) } : {}),
+            ...(c.onFor ? { onFor: c.onFor.map((l) => fill(l, n)) } : {}),
           };
         }),
   );
@@ -158,6 +159,8 @@ export function validateLibraryDevice(data: unknown): string[] {
     } else errors.push(`${where}: kind must be knob or switch`);
     if (c.phantomFor && !(c.kind === 'switch' && c.positions?.includes('ON'))) errors.push(`${where}: a phantom switch needs an "ON" position`);
     for (const label of c.phantomFor ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
+    if (c.onFor && !(c.kind === 'switch' && c.positions?.includes('ON'))) errors.push(`${where}: an on/off switch needs an "ON" position`);
+    for (const label of c.onFor ?? []) if (!labels.has(label)) errors.push(`${where}: unknown port "${label}"`);
   }
   for (const r of d.routing ?? []) {
     for (const label of [...asList(r.from), ...asList(r.to), ...(r.breakWhenPatched ?? [])]) {

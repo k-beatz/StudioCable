@@ -12,7 +12,7 @@
       "url": "https://pubs.shure.com/guide/PGA27/en-US"
     }
   ],
-  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male. Needs phantom power.",
+  "notes": "Condenser microphone. Output: Three-pin professional audio (XLR), male. Needs phantom power. Switches from the Shure user guide; they shape the sound only and do not block the signal.",
   "groups": [
     {
       "count": 0,
@@ -27,7 +27,30 @@
           "gender": "male"
         }
       ],
-      "signal": "mic", "needsPhantom": true
+      "signal": "mic",
+      "needsPhantom": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "pad",
+      "label": "PAD",
+      "kind": "switch",
+      "positions": [
+        "0 dB",
+        "-15 dB"
+      ],
+      "default": "0 dB"
+    },
+    {
+      "id": "hpf",
+      "label": "HPF",
+      "kind": "switch",
+      "positions": [
+        "FLAT",
+        "HPF"
+      ],
+      "default": "FLAT"
     }
   ]
 }
